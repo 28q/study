@@ -70,9 +70,10 @@
 <body>
   <h1>小テスト 3　概要</h1>
   <div class="meta">
-    <div>概要　　第2課　所有詞（後置形）</div>
-    <div>　　　　第3課　1　現在　規則活用</div>
-    <div>　　　　　　　5　指示詞</div>
+    <div>1.　日本語に合うように、かっこ内に適切な所有詞（後置形）または定冠詞を入れてください。 1×3</div>
+    <div>2.　日本語に合うように、かっこ内に適切な指示詞を入れてください。 1×3</div>
+    <div>3.　日本語に合うように、かっこ内に適切な動詞の活用形を入れてください。 1×4</div>
+    <div style="margin-left: 2.2em;">⇒　動詞の範囲は「第３課　１　現在　規則活用」に出ているもののみ</div>
   </div>
 
   <button type="button" onclick="generateQuiz()">問題生成</button>
@@ -317,26 +318,26 @@
       result.innerHTML = '';
       currentAnswers = [];
 
-      form.innerHTML += '<div class="section"><h3>1. 所有詞（後置形）</h3><div class="note">性数を含めて出題します。</div></div>';
-      shuffle(possessives).slice(0, 12).forEach(x => {
+      form.innerHTML += '<div class="section"><h3>1. 所有詞（後置形）</h3><div class="note">日本語に合うように、かっこ内に適切な所有詞（後置形）または定冠詞を入れてください。</div></div>';
+      shuffle(possessives).slice(0, 3).forEach(x => {
         addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
       });
 
-      form.innerHTML += '<div class="section"><h3>2. 指示詞</h3><div class="note">日本語訳を見て、適切な指示詞を入れてください。</div></div>';
-      demonstratives.forEach(x => {
+      form.innerHTML += '<div class="section"><h3>2. 指示詞</h3><div class="note">日本語に合うように、かっこ内に適切な指示詞を入れてください。</div></div>';
+      shuffle(demonstratives).slice(0, 3).forEach(x => {
         addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
       });
 
-      form.innerHTML += '<div class="section"><h3>3. 現在形・規則活用</h3><div class="note">各動詞について 6 パターンずつ。</div></div>';
+      form.innerHTML += '<div class="section"><h3>3. 現在形・規則活用</h3><div class="note">日本語に合うように、かっこ内に適切な動詞の活用形を入れてください。</div><div class="note">⇒　動詞の範囲は「第３課　１　現在　規則活用」に出ているもののみ</div></div>';
       shuffle(presentVerbs).forEach(verb => {
+        const picked = shuffle(verb.forms).slice(0, 4);
         form.innerHTML += `<div class="note" style="margin-top:10px;"><b>${verb.label}</b></div>`;
-        shuffle(verb.forms).forEach(x => {
+        picked.forEach(x => {
           addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
         });
       });
 
       if (showAnswers) {
-        // 新しく作った問題に対しても答え表示を維持
         document.querySelectorAll('.translation').forEach(e => {
           e.style.display = 'inline';
         });
