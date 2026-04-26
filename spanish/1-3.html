@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>スペイン語 1-3 演習</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    line-height: 1.8;
+    color: #111;
+  }
+  h1, h2, h3 {
+    text-align: center;
+    margin: 0.4em 0;
+  }
+  .meta {
+    margin: 24px 0 30px;
+    font-size: 18px;
+  }
+  .meta div {
+    margin: 4px 0;
+  }
+  button {
+    padding: 10px 18px;
+    margin: 6px 6px 6px 0;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  input {
+    margin-left: 10px;
+    padding: 5px 8px;
+    font-size: 16px;
+    width: 240px;
+    max-width: 100%;
+  }
+  .question {
+    margin: 14px 0 18px;
+  }
+  .section {
+    margin-top: 22px;
+    padding-top: 8px;
+  }
+  .correct { color: #0a7a0a; }
+  .incorrect { color: #b00020; }
+  #result {
+    margin-top: 18px;
+    font-weight: bold;
+  }
+  .translation {
+    display: none;
+    color: #666;
+    margin-left: 10px;
+  }
+  .wordbox {
+    color: #666;
+    font-size: 0.92em;
+    margin-top: 4px;
+  }
+  .note {
+    color: #444;
+    font-size: 0.95em;
+    margin-top: 2px;
+  }
+  canvas {
+    max-width: 520px;
+    margin-top: 20px;
+  }
+  .footer {
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+  <h1>小テスト 3　概要</h1>
+  <div class="meta">
+    <div>概要　　第2課　所有詞（後置形）</div>
+    <div>　　　　第3課　1　現在　規則活用</div>
+    <div>　　　　　　　5　指示詞</div>
+  </div>
+
+  <button onclick="generateQuiz()">問題生成</button>
+  <button onclick="toggleAnswers()" id="toggleBtn">答え表示</button>
+  <button onclick="gradeQuiz()">採点</button>
+  <button onclick="resetHistory()">履歴リセット</button>
+
+  <form id="quizForm"></form>
+  <div id="result"></div>
+  <canvas id="chart" height="200"></canvas>
+
+  <p class="footer"><a href="../spanish.html">← 目次に戻る</a></p>
+
+  <script>
+    let showAnswers = false;
+    let currentAnswers = [];
+    let history = JSON.parse(localStorage.getItem('scoreHistory_spanish13') || '[]');
+    let chart = null;
+
+    function shuffle(array) {
+      const result = [...array];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function norm(s) {
+      return String(s)
+        .toLowerCase()
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ');
+    }
+
+    function toggleAnswers() {
+      showAnswers = !showAnswers;
+      document.querySelectorAll('.translation').forEach(e => {
+        e.style.display = showAnswers ? 'inline' : 'none';
+      });
+      document.getElementById('toggleBtn').textContent = showAnswers ? '答え非表示' : '答え表示';
+    }
+
+    function drawChart() {
+      const ctx = document.getElementById('chart');
+      if (!ctx || typeof Chart === 'undefined') return;
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: history.map((_, i) => `回${i + 1}`),
+          datasets: [{
+            label: '得点(%)',
+            data: history,
+            fill: false,
+            tension: 0.25
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              min: 0,
+              max: 100,
+              ticks: { stepSize: 20 }
+            }
+          }
+        }
+      });
+    }
+
+    // 1. 所有詞（後置形）
+    const possessives = [
+      // 名詞の後に置くパターン（性数を増やす）
+      { q: 'Tengo un libro ___.（私は自分の本を1冊持っています）', a: 'mío' },
+      { q: 'Tengo unos libros ___.（私は自分の本を何冊か持っています）', a: 'míos' },
+      { q: 'Vi una amiga ___.（私は私の友達の女性に会いました）', a: 'mía' },
+      { q: 'Vi unas amigas ___.（私は私の女友達に会いました）', a: 'mías' },
+      { q: 'Buscamos un cuaderno ___.（私たちは私たちのノートを探しています）', a: 'nuestro' },
+      { q: 'Buscamos unos cuadernos ___.（私たちは私たちのノートを探しています）', a: 'nuestros' },
+      { q: 'Compró una casa ___.（彼らは自分たちの家を買いました）', a: 'suya' },
+      { q: 'Compró unas casas ___.（彼らは自分たちの家を買いました）', a: 'suyas' },
+      { q: '¿Dónde está un cuaderno ___.?（君のノートはどこですか）', a: 'tuyo' },
+      { q: '¿Dónde están unos cuadernos ___.?（君のノートはどこですか）', a: 'tuyos' },
+      { q: 'Es una decisión ___.（それはあなた方の判断です）', a: 'vuestra' },
+      { q: 'Son unas decisiones ___.（それらはあなた方の判断です）', a: 'vuestras' },
+      { q: 'Usted tiene un libro ___.（あなたは本を1冊お持ちです）', a: 'suyo' },
+      { q: 'Usted tiene unos libros ___.（あなたは本を何冊かお持ちです）', a: 'suyos' },
+      { q: 'Ustedes compraron una mochila ___.（あなた方はかばんを1つ買いました）', a: 'suya' },
+      { q: 'Ustedes compraron unas mochilas ___.（あなた方はかばんをいくつか買いました）', a: 'suyas' },
+
+      // ser の補語にするパターン
+      { q: 'Este libro es ___.（これは私の本です）', a: 'mío' },
+      { q: 'Estos libros son ___.（これらは私の本です）', a: 'míos' },
+      { q: 'Esa casa es ___.（それは君の家です）', a: 'tuya' },
+      { q: 'Esas casas son ___.（それらは君の家です）', a: 'tuyas' },
+      { q: 'Aquel coche es ___.（あれは彼の車です）', a: 'suyo' },
+      { q: 'Aquellos coches son ___.（あれらは彼の車です）', a: 'suyos' },
+      { q: 'Estas mochilas son ___.（これらは私たちのかばんです）', a: 'nuestras' },
+      { q: 'Esos libros son ___.（それらは君たちの本です）', a: 'vuestros' },
+      { q: 'Aquellas flores son ___.（あれらは彼女たちの花です）', a: 'suyas' },
+      { q: 'Este problema es ___.（これはあなたの問題です）', a: 'suyo' },
+      { q: 'Usted está seguro: esta idea es ___.（これはあなたの考えです）', a: 'suya' },
+
+      // 定冠詞の後におくパターン（el mío, la tuya など）
+      { q: 'Quiero el libro ___.（私は私の本がほしいです）', a: 'mío' },
+      { q: 'Quiero los libros ___.（私は私の本がほしいです）', a: 'míos' },
+      { q: 'Ella busca la casa ___.（彼女は自分の家を探しています）', a: 'suya' },
+      { q: 'Ella busca las casas ___.（彼女は自分の家を探しています）', a: 'suyas' },
+      { q: 'Necesitamos los cuadernos ___.（私たちは私たちのノートが必要です）', a: 'nuestros' },
+      { q: 'Prefiero las mochilas ___.（私は君たちのかばんの方が好きです）', a: 'vuestras' },
+      { q: 'Veo el coche ___.（私は彼の車を見ます）', a: 'suyo' },
+      { q: 'Veo los coches ___.（私は彼の車を見ます）', a: 'suyos' },
+      { q: 'Compramos la camiseta ___.（私たちは私たちのシャツを買います）', a: 'nuestra' },
+      { q: 'Buscan los libros ___.（彼らは自分たちの本を探しています）', a: 'suyos' },
+      { q: 'Tomó la decisión ___.（彼は自分の判断をしました）', a: 'suya' }
+    ];
+
+    // 2. 指示詞 12パターン
+    const demonstratives = [
+      { q: '___ libro（この本）', a: 'este' },
+      { q: '___ cuaderno（このノート）', a: 'este' },
+      { q: '___ casa（この家）', a: 'esta' },
+      { q: '___ mesa（この机）', a: 'esta' },
+      { q: '___ libros（これらの本）', a: 'estos' },
+      { q: '___ coches（これらの車）', a: 'estos' },
+      { q: '___ casas（これらの家）', a: 'estas' },
+      { q: '___ flores（これらの花）', a: 'estas' },
+      { q: '___ libro（その本）', a: 'ese' },
+      { q: '___ perro（その犬）', a: 'ese' },
+      { q: '___ casa（その家）', a: 'esa' },
+      { q: '___ ciudad（その町）', a: 'esa' },
+      { q: '___ libros（それらの本）', a: 'esos' },
+      { q: '___ estudiantes（それらの学生）', a: 'esos' },
+      { q: '___ casas（それらの家）', a: 'esas' },
+      { q: '___ ideas（それらの考え）', a: 'esas' },
+      { q: '___ libro（あの本）', a: 'aquel' },
+      { q: '___ cuaderno（あのノート）', a: 'aquel' },
+      { q: '___ casa（あの家）', a: 'aquella' },
+      { q: '___ estación（あの駅）', a: 'aquella' },
+      { q: '___ libros（あれらの本）', a: 'aquellos' },
+      { q: '___ coches（あれらの車）', a: 'aquellos' },
+      { q: '___ casas（あれらの家）', a: 'aquellas' },
+      { q: '___ flores（あれらの花）', a: 'aquellas' }
+    ];
+
+    // 3. 現在形 規則活用
+    const presentVerbs = [
+      {
+        label: 'hablar',
+        forms: [
+          { q: 'Yo ___ español.（私はスペイン語を話します）', a: 'hablo' },
+          { q: 'Tú ___ español.（君はスペイン語を話します）', a: 'hablas' },
+          { q: 'Él ___ español.（彼はスペイン語を話します）', a: 'habla' },
+          { q: 'Nosotros ___ español.（私たちはスペイン語を話します）', a: 'hablamos' },
+          { q: 'Vosotros ___ español.（君たちはスペイン語を話します）', a: 'habláis' },
+          { q: 'Ellos ___ español.（彼らはスペイン語を話します）', a: 'hablan' }
+        ]
+      },
+      {
+        label: 'comer',
+        forms: [
+          { q: 'Yo ___ arroz.（私はご飯を食べます）', a: 'como' },
+          { q: 'Tú ___ arroz.（君はご飯を食べます）', a: 'comes' },
+          { q: 'Usted ___ arroz.（あなたはご飯を食べます）', a: 'come' },
+          { q: 'Nosotros ___ arroz.（私たちはご飯を食べます）', a: 'comemos' },
+          { q: 'Vosotros ___ arroz.（君たちはご飯を食べます）', a: 'coméis' },
+          { q: 'Ustedes ___ arroz.（あなた方はご飯を食べます）', a: 'comen' }
+        ]
+      },
+      {
+        label: 'vivir',
+        forms: [
+          { q: 'Yo ___ en Tokio.（私は東京に住んでいます）', a: 'vivo' },
+          { q: 'Tú ___ en Tokio.（君は東京に住んでいます）', a: 'vives' },
+          { q: 'Él ___ en Tokio.（彼は東京に住んでいます）', a: 'vive' },
+          { q: 'Nosotros ___ en Tokio.（私たちは東京に住んでいます）', a: 'vivimos' },
+          { q: 'Vosotros ___ en Tokio.（君たちは東京に住んでいます）', a: 'vivís' },
+          { q: 'Ellas ___ en Tokio.（彼女たちは東京に住んでいます）', a: 'viven' }
+        ]
+      },
+      {
+        label: 'buscar',
+        forms: [
+          { q: 'Yo ___ el diccionario.（私は辞書を探します）', a: 'busco' },
+          { q: 'Tú ___ el diccionario.（君は辞書を探します）', a: 'buscas' },
+          { q: 'Él ___ el diccionario.（彼は辞書を探します）', a: 'busca' },
+          { q: 'Nosotros ___ el diccionario.（私たちは辞書を探します）', a: 'buscamos' },
+          { q: 'Vosotros ___ el diccionario.（君たちは辞書を探します）', a: 'buscáis' },
+          { q: 'Ustedes ___ el diccionario.（あなた方は辞書を探します）', a: 'buscan' }
+        ]
+      },
+      {
+        label: 'aprender',
+        forms: [
+          { q: 'Yo ___ japonés.（私は日本語を学びます）', a: 'aprendo' },
+          { q: 'Tú ___ japonés.（君は日本語を学びます）', a: 'aprendes' },
+          { q: 'Usted ___ japonés.（あなたは日本語を学びます）', a: 'aprende' },
+          { q: 'Nosotros ___ japonés.（私たちは日本語を学びます）', a: 'aprendemos' },
+          { q: 'Vosotros ___ japonés.（君たちは日本語を学びます）', a: 'aprendéis' },
+          { q: 'Ellos ___ japonés.（彼らは日本語を学びます）', a: 'aprenden' }
+        ]
+      },
+      {
+        label: 'abrir',
+        forms: [
+          { q: 'Yo ___ la puerta.（私はドアを開けます）', a: 'abro' },
+          { q: 'Tú ___ la puerta.（君はドアを開けます）', a: 'abres' },
+          { q: 'Él ___ la puerta.（彼はドアを開けます）', a: 'abre' },
+          { q: 'Nosotros ___ la puerta.（私たちはドアを開けます）', a: 'abrimos' },
+          { q: 'Vosotros ___ la puerta.（君たちはドアを開けます）', a: 'abrís' },
+          { q: 'Ellas ___ la puerta.（彼女たちはドアを開けます）', a: 'abren' }
+        ]
+      },
+      {
+        label: 'trabajar',
+        forms: [
+          { q: 'Yo ___ en la escuela.（私は学校で働きます）', a: 'trabajo' },
+          { q: 'Tú ___ en la escuela.（君は学校で働きます）', a: 'trabajas' },
+          { q: 'Usted ___ en la escuela.（あなたは学校で働きます）', a: 'trabaja' },
+          { q: 'Nosotros ___ en la escuela.（私たちは学校で働きます）', a: 'trabajamos' },
+          { q: 'Vosotros ___ en la escuela.（君たちは学校で働きます）', a: 'trabajáis' },
+          { q: 'Ustedes ___ en la escuela.（あなた方は学校で働きます）', a: 'trabajan' }
+        ]
+      }
+    ];
+
+    function addQuestion(form, text, index, answer)(form, text, index, answer) {
+      currentAnswers.push(answer);
+      form.innerHTML += `
+        <div class="question">
+          (${index + 1}) ${text}
+          <span class="translation">（${answer}）</span>
+          <input id="q${index}" autocomplete="off" />
+        </div>
+      `;
+    }
+
+    function generateQuiz() {
+      const form = document.getElementById('quizForm');
+      const result = document.getElementById('result');
+      form.innerHTML = '';
+      result.innerHTML = '';
+      currentAnswers = [];
+
+      form.innerHTML += '<div class="section"><h3>1. 所有詞（後置形）</h3><div class="note">性数を多めに入れ、mío / míos / mía / mías / tuyo / tuyos / tuya / tuyas なども練習できるようにした。</div></div>';
+      shuffle(possessives).slice(0, 12).forEach(x => addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a));
+
+      form.innerHTML += '<div class="section"><h3>2. 指示詞</h3><div class="note">日本語訳を見て、este / ese / aquel のどれかを入れる。</div></div>';
+      demonstratives.forEach(x => addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a));
+
+      form.innerHTML += '<div class="section"><h3>3. 現在形・規則活用</h3><div class="note">各動詞について 6 パターンずつ。</div></div>';
+      shuffle(presentVerbs).forEach(verb => {
+        form.innerHTML += `<div class="note" style="margin-top:10px;"><b>${verb.label}</b></div>`;
+        shuffle(verb.forms).forEach(x => addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a));
+      });
+
+      if (showAnswers) toggleAnswers();
+    }
+
+    function gradeQuiz() {
+      let score = 0;
+      let out = '';
+      currentAnswers.forEach((a, i) => {
+        const v = norm(document.getElementById('q' + i).value);
+        const ok = v === norm(a);
+        if (ok) score++;
+        out += `<p class="${ok ? 'correct' : 'incorrect'}">${i + 1}: ${ok ? '〇' : '× ' + a}</p>`;
+      });
+
+      const total = currentAnswers.length;
+      const percent = total ? Math.round(score / total * 100) : 0;
+      history.push(percent);
+      if (history.length > 10) history.shift();
+      localStorage.setItem('scoreHistory_spanish13', JSON.stringify(history));
+
+      const avg = Math.round(history.reduce((a, b) => a + b, 0) / history.length);
+      out += `<p>${score}/${total} (${percent}%)</p>`;
+      out += `<p>直近${history.length}回の平均: ${avg}%</p>`;
+      document.getElementById('result').innerHTML = out;
+      drawChart();
+    }
+
+    function resetHistory() {
+      history = [];
+      localStorage.removeItem('scoreHistory_spanish13');
+      document.getElementById('result').innerHTML = '履歴をリセットしました。';
+      drawChart();
+    }
+
+    // Chart.js
+    const chartScript = document.createElement('script');
+    chartScript.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    chartScript.onload = drawChart;
+    document.head.appendChild(chartScript);
+
+    generateQuiz();
+  </script>
+</body>
+</html>
