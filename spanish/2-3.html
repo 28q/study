@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>スペイン語 演習2-3（名詞・形容詞・Ser動詞）</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    line-height: 1.8;
+    color: #111;
+  }
+  h1, h2, h3 {
+    text-align: center;
+    margin: 0.4em 0;
+  }
+  .meta {
+    margin: 24px 0 30px;
+    font-size: 18px;
+  }
+  .meta div {
+    margin: 4px 0;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+    padding: 10px 15px;
+    border-radius: 8px;
+  }
+  button {
+    padding: 10px 18px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  select {
+    padding: 8px;
+    font-size: 15px;
+  }
+  #timer-area {
+    font-size: 18px;
+    font-weight: bold;
+    color: #b00020;
+    margin-left: auto;
+  }
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 0 5px;
+    vertical-align: middle;
+  }
+  .audio-btn:hover {
+    opacity: 0.6;
+  }
+  input {
+    margin-left: 10px;
+    padding: 5px 8px;
+    font-size: 16px;
+    width: 280px;
+    max-width: 100%;
+  }
+  .question {
+    margin: 14px 0 18px;
+  }
+  .section {
+    margin-top: 22px;
+    padding-top: 8px;
+  }
+  .correct { color: #0a7a0a; }
+  .incorrect { color: #b00020; }
+  #result {
+    margin-top: 18px;
+    font-weight: bold;
+  }
+  .translation {
+    display: none;
+    color: #666;
+    margin-left: 10px;
+  }
+  .note {
+    color: #444;
+    font-size: 0.95em;
+    margin-top: 2px;
+  }
+  canvas {
+    max-width: 520px;
+    margin-top: 20px;
+  }
+  .footer {
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+  <h1>小テスト 演習2-3 概要</h1>
+  <div class="meta">
+    <div>1. 次のスペイン語を<b>女性形</b>にしなさい。</div>
+    <div>2. 次のスペイン語を<b>複数形</b>にしなさい。</div>
+    <div>3. かっこ内に適切な <b>ser動詞</b> の活用形を入れなさい。</div>
+    <div>4. 日本語をスペイン語にしなさい。（主語は省略しても正解になります）</div>
+  </div>
+
+  <div class="controls">
+    <button type="button" onclick="generateQuiz()">問題生成</button>
+    <button type="button" onclick="toggleAnswers()" id="toggleBtn">答え表示</button>
+    
+    <label for="timeLimit" style="margin-left: 10px;">制限時間:</label>
+    <select id="timeLimit">
+      <option value="0">制限なし</option>
+      <option value="60">1分</option>
+      <option value="120">2分</option>
+      <option value="180">3分</option>
+    </select>
+    
+    <div id="timer-area" style="display: none;">残り時間: <span id="timeDisplay">--:--</span></div>
+  </div>
+
+  <form id="quizForm"></form>
+  <div id="result"></div>
+  <div style="margin-top:14px;">
+    <button type="button" onclick="gradeQuiz()">採点</button>
+    <button type="button" onclick="resetHistory()">履歴リセット</button>
+  </div>
+  <canvas id="chart" height="200"></canvas>
+
+  <p class="footer"><a href="../spanish.html">← 目次に戻る</a></p>
+
+  <script>
+    let showAnswers = false;
+    let currentAnswers = [];
+    let history = JSON.parse(localStorage.getItem('scoreHistory_spanish23') || '[]');
+    let chart = null;
+    let timerInterval = null;
+    let timeLeft = 0;
+
+    function shuffle(array) {
+      const result = [...array];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function norm(s) {
+      return String(s)
+        .toLowerCase()
+        .trim()
+        .replace(/[.,¿?¡!]/g, '') 
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ');
+    }
+
+    function toggleAnswers() {
+      showAnswers = !showAnswers;
+      document.querySelectorAll('.translation').forEach(e => {
+        e.style.display = showAnswers ? 'inline' : 'none';
+      });
+      document.getElementById('toggleBtn').textContent = showAnswers ? '答え非表示' : '答え表示';
+    }
+
+    function speak(text) {
+      window.speechSynthesis.cancel();
+      const esText = text.replace(/（.*?）/g, '').trim();
+      const utterance = new SpeechSynthesisUtterance(esText);
+      utterance.lang = 'es-ES';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      const timeLimitSec = parseInt(document.getElementById('timeLimit').value, 10);
+      const timerArea = document.getElementById('timer-area');
+      
+      if (timeLimitSec === 0) {
+        timerArea.style.display = 'none';
+        return;
+      }
+      
+      timeLeft = timeLimitSec;
+      timerArea.style.display = 'block';
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          alert("時間切れです！自動的に採点します。");
+          gradeQuiz();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(timeLeft / 60);
+      const s = timeLeft % 60;
+      document.getElementById('timeDisplay').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function drawChart() {
+      const ctx = document.getElementById('chart');
+      if (!ctx || typeof Chart === 'undefined') return;
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: history.map((_, i) => `回${i + 1}`),
+          datasets: [{
+            label: '得点(%)',
+            data: history,
+            fill: false,
+            tension: 0.25
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { min: 0, max: 100, ticks: { stepSize: 20 } }
+          }
+        }
+      });
+    }
+
+    // --- PDFから予測・追加した拡充問題データ ---
+
+    // 1. 女性形への変換 (ストック: 11問)
+    const feminines = [
+      { q: 'el estudiante simpático', a: 'la estudiante simpática' },
+      { q: 'el novio inteligente', a: 'la novia inteligente' },
+      { q: 'unos actores altos', a: 'unas actrices altas' },
+      { q: 'unos policías trabajadores', a: 'unas policías trabajadoras' },
+      { q: 'un chico amable', a: 'una chica amable' },
+      { q: 'un abogado simpático', a: 'una abogada simpática' },
+      { q: 'el profesor español', a: 'la profesora española' },
+      { q: 'un médico argentino', a: 'una médica argentina' },
+      { q: 'el compañero rubio', a: 'la compañera rubia' },
+      { q: 'el niño japonés', a: 'la niña japonesa' },
+      { q: 'un amigo peruano', a: 'una amiga peruana' }
+    ];
+
+    // 2. 複数形への変換 (ストック: 13問)
+    // ※ -zで終わる単語、アクセントが落ちる/付く単語をPDFから追加
+    const plurals = [
+      { q: 'el médico amable', a: 'los médicos amables' },
+      { q: 'la joven difícil', a: 'las jóvenes difíciles' },
+      { q: 'un inglés inteligente', a: 'unos ingleses inteligentes' },
+      { q: 'una profesora generosa', a: 'unas profesoras generosas' },
+      { q: 'el actor alto', a: 'los actores altos' },
+      { q: 'la joven trabajadora', a: 'las jóvenes trabajadoras' },
+      { q: 'un enfermero generoso', a: 'unos enfermeros generosos' },
+      { q: 'una policía seria', a: 'unas policías serias' },
+      { q: 'el lápiz', a: 'los lápices' },
+      { q: 'la lección', a: 'las lecciones' },
+      { q: 'un ordenador', a: 'unos ordenadores' },
+      { q: 'el examen', a: 'los exámenes' },
+      { q: 'el grupo grande', a: 'los grupos grandes' }
+    ];
+
+    // 3. Ser動詞の活用 (ストック: 11問)
+    const serVerbs = [
+      { q: 'Yo ___', a: 'soy' },
+      { q: 'Tú ___', a: 'eres' },
+      { q: 'Él / Ella / Usted ___', a: 'es' },
+      { q: 'Nosotros / Nosotras ___', a: 'somos' },
+      { q: 'Vosotros / Vosotras ___', a: 'sois' },
+      { q: 'Ellos / Ellas / Ustedes ___', a: 'son' },
+      { q: 'Carlos ___ de España.', a: 'es' },
+      { q: 'María y yo ___ de Tokio.', a: 'somos' },
+      { q: '¿De dónde ___ tú?', a: 'eres' },
+      { q: 'Mis padres ___ japoneses.', a: 'son' },
+      { q: 'El señor Gómez ___ profesor.', a: 'es' }
+    ];
+
+    // 4. 日本語からスペイン語 (ストック: 8問)
+    const translations = [
+      { q: '私（女性）はスペイン人です。', a: ['Soy española', 'Yo soy española'] },
+      { q: '彼女たちは日本人です。', a: ['Son japonesas', 'Ellas son japonesas'] },
+      { q: '彼らは東京出身です。', a: ['Son de Tokio', 'Ellos son de Tokio'] },
+      { q: '私たちは日本人です。', a: ['Somos japoneses', 'Nosotros somos japoneses'] },
+      { q: '君（男性）はメキシコ人です。', a: ['Eres mexicano', 'Tú eres mexicano'] },
+      { q: '彼は先生です。', a: ['Es profesor', 'Él es profesor'] },
+      { q: '私たち（女性のみ）は日本人です。', a: ['Somos japonesas', 'Nosotras somos japonesas'] },
+      { q: 'あなた（男性）はアメリカ人です。', a: ['Es estadounidense', 'Usted es estadounidense'] }
+    ];
+
+    function addQuestion(form, text, index, answer) {
+      currentAnswers.push(answer);
+      
+      const displayAnswer = Array.isArray(answer) ? answer[0] : answer;
+      const fullText = text.replace('(　)', displayAnswer).replace('___', displayAnswer);
+
+      form.innerHTML += `
+        <div class="question">
+          (${index + 1}) ${text} 
+          <button type="button" class="audio-btn" data-text="${fullText}" onclick="speak(this.dataset.text)" title="正解を含めた文を発音">🔊</button>
+          <span class="translation">（${displayAnswer}）</span>
+          <br>
+          <input id="q${index}" autocomplete="off" />
+        </div>
+      `;
+    }
+
+    function generateQuiz() {
+      const form = document.getElementById('quizForm');
+      const result = document.getElementById('result');
+      form.innerHTML = '';
+      result.innerHTML = '';
+      currentAnswers = [];
+
+      form.innerHTML += '<div class="section"><h3>1. 女性形への変換</h3></div>';
+      shuffle(feminines).slice(0, 4).forEach(x => {
+        addQuestion(form, x.q, currentAnswers.length, x.a);
+      });
+
+      form.innerHTML += '<div class="section"><h3>2. 複数形への変換</h3></div>';
+      shuffle(plurals).slice(0, 4).forEach(x => {
+        addQuestion(form, x.q, currentAnswers.length, x.a);
+      });
+
+      form.innerHTML += '<div class="section"><h3>3. Ser動詞の活用</h3></div>';
+      shuffle(serVerbs).slice(0, 4).forEach(x => {
+        addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
+      });
+
+      form.innerHTML += '<div class="section"><h3>4. 西訳（作文）</h3></div>';
+      shuffle(translations).slice(0, 3).forEach(x => {
+        addQuestion(form, x.q, currentAnswers.length, x.a);
+      });
+
+      if (showAnswers) {
+        document.querySelectorAll('.translation').forEach(e => {
+          e.style.display = 'inline';
+        });
+      }
+      
+      startTimer();
+    }
+
+    function gradeQuiz() {
+      clearInterval(timerInterval);
+
+      let score = 0;
+      let out = '';
+      currentAnswers.forEach((a, i) => {
+        const input = document.getElementById('q' + i);
+        const v = input ? norm(input.value) : '';
+        
+        const isArr = Array.isArray(a);
+        const ok = isArr ? a.some(ans => v === norm(ans)) : v === norm(a);
+        
+        if (ok) score++;
+        const displayAnswer = isArr ? a[0] : a;
+        out += `<p class="${ok ? 'correct' : 'incorrect'}">${i + 1}: ${ok ? '〇' : '× (正解例: ' + displayAnswer + ')'}</p>`;
+      });
+
+      const total = currentAnswers.length;
+      const percent = total ? Math.round((score / total) * 100) : 0;
+      history.push(percent);
+      if (history.length > 10) history.shift();
+      localStorage.setItem('scoreHistory_spanish23', JSON.stringify(history));
+
+      const avg = Math.round(history.reduce((a, b) => a + b, 0) / history.length);
+      out += `<p>${score}/${total} (${percent}%)</p>`;
+      out += `<p>直近${history.length}回の平均: ${avg}%</p>`;
+      document.getElementById('result').innerHTML = out;
+      drawChart();
+    }
+
+    function resetHistory() {
+      history = [];
+      localStorage.removeItem('scoreHistory_spanish23');
+      document.getElementById('result').innerHTML = '履歴をリセットしました。';
+      drawChart();
+    }
+
+    const chartScript = document.createElement('script');
+    chartScript.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    chartScript.onload = drawChart;
+    document.head.appendChild(chartScript);
+
+    generateQuiz();
+  </script>
+</body>
+</html>
