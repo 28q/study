@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>スペイン語 1-3 演習</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    line-height: 1.8;
+    color: #111;
+  }
+  h1, h2, h3 {
+    text-align: center;
+    margin: 0.4em 0;
+  }
+  .meta {
+    margin: 24px 0 30px;
+    font-size: 18px;
+  }
+  .meta div {
+    margin: 4px 0;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+    padding: 10px 15px;
+    border-radius: 8px;
+  }
+  button {
+    padding: 10px 18px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  select {
+    padding: 8px;
+    font-size: 15px;
+  }
+  #timer-area {
+    font-size: 18px;
+    font-weight: bold;
+    color: #b00020;
+    margin-left: auto;
+  }
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 0 5px;
+    vertical-align: middle;
+  }
+  .audio-btn:hover {
+    opacity: 0.6;
+  }
+  input {
+    margin-left: 10px;
+    padding: 5px 8px;
+    font-size: 16px;
+    width: 240px;
+    max-width: 100%;
+  }
+  .question {
+    margin: 14px 0 18px;
+  }
+  .section {
+    margin-top: 22px;
+    padding-top: 8px;
+  }
+  .correct { color: #0a7a0a; }
+  .incorrect { color: #b00020; }
+  #result {
+    margin-top: 18px;
+    font-weight: bold;
+  }
+  .translation {
+    display: none;
+    color: #666;
+    margin-left: 10px;
+  }
+  .note {
+    color: #444;
+    font-size: 0.95em;
+    margin-top: 2px;
+  }
+  canvas {
+    max-width: 520px;
+    margin-top: 20px;
+  }
+  .footer {
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+  <h1>小テスト 3　概要</h1>
+  <div class="meta">
+    <div>1.　日本語に合うように、かっこ内に適切な所有詞（後置形）または定冠詞と所有代名詞を半角スペース区切りで入れてください。 1×3</div>
+    <div>2.　日本語に合うように、かっこ内に適切な指示詞を入れてください。 1×3</div>
+    <div>3.　日本語に合うように、かっこ内に適切な動詞の活用形を入れてください。 1×4</div>
+    <div style="margin-left: 2.2em;">⇒　動詞の範囲は「第３課　１　現在　規則活用」に出ているもののみ</div>
+  </div>
+
+  <div class="controls">
+    <button type="button" onclick="generateQuiz()">問題生成</button>
+    <button type="button" onclick="toggleAnswers()" id="toggleBtn">答え表示</button>
+    
+    <label for="timeLimit" style="margin-left: 10px;">制限時間:</label>
+    <select id="timeLimit">
+      <option value="0">制限なし</option>
+      <option value="60">1分</option>
+      <option value="120">2分</option>
+      <option value="180">3分</option>
+    </select>
+    
+    <div id="timer-area" style="display: none;">残り時間: <span id="timeDisplay">--:--</span></div>
+  </div>
+
+  <form id="quizForm"></form>
+  <div id="result"></div>
+  <div style="margin-top:14px;">
+    <button type="button" onclick="gradeQuiz()">採点</button>
+    <button type="button" onclick="resetHistory()">履歴リセット</button>
+  </div>
+  <canvas id="chart" height="200"></canvas>
+
+  <p class="footer"><a href="../spanish.html">← 目次に戻る</a></p>
+
+  <script>
+    let showAnswers = false;
+    let currentAnswers = [];
+    let history = JSON.parse(localStorage.getItem('scoreHistory_spanish13') || '[]');
+    let chart = null;
+    
+    // タイマー用変数
+    let timerInterval = null;
+    let timeLeft = 0;
+
+    function shuffle(array) {
+      const result = [...array];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function norm(s) {
+      return String(s)
+        .toLowerCase()
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ');
+    }
+
+    function toggleAnswers() {
+      showAnswers = !showAnswers;
+      document.querySelectorAll('.translation').forEach(e => {
+        e.style.display = showAnswers ? 'inline' : 'none';
+      });
+      document.getElementById('toggleBtn').textContent = showAnswers ? '答え非表示' : '答え表示';
+    }
+
+    // --- 音声読み上げ機能 ---
+    function speak(text) {
+      // 連続で押したときに前の音声をキャンセルする
+      window.speechSynthesis.cancel();
+      
+      // 日本語の解説（全角カッコに囲まれた部分）を削除し、スペイン語のみにする
+      const esText = text.replace(/（.*?）/g, '').trim();
+      
+      const utterance = new SpeechSynthesisUtterance(esText);
+      utterance.lang = 'es-ES'; // スペイン語に設定
+      utterance.rate = 0.9;     // 少しゆっくりめに設定（学習用）
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // --- タイマー機能 ---
+    function startTimer() {
+      clearInterval(timerInterval);
+      const timeLimitSec = parseInt(document.getElementById('timeLimit').value, 10);
+      const timerArea = document.getElementById('timer-area');
+      
+      if (timeLimitSec === 0) {
+        timerArea.style.display = 'none';
+        return;
+      }
+      
+      timeLeft = timeLimitSec;
+      timerArea.style.display = 'block';
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          alert("時間切れです！自動的に採点します。");
+          gradeQuiz();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(timeLeft / 60);
+      const s = timeLeft % 60;
+      document.getElementById('timeDisplay').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function drawChart() {
+      const ctx = document.getElementById('chart');
+      if (!ctx || typeof Chart === 'undefined') return;
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: history.map((_, i) => `回${i + 1}`),
+          datasets: [{
+            label: '得点(%)',
+            data: history,
+            fill: false,
+            tension: 0.25
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              min: 0,
+              max: 100,
+              ticks: { stepSize: 20 }
+            }
+          }
+        }
+      });
+    }
+
+    // 問題データ (省略せず維持)
+    const possessives = [
+      { kind: 'noun', q: 'Tengo un libro ___.（私は自分の本を1冊持っています）', a: 'mío' },
+      { kind: 'noun', q: 'Tengo unos libros ___.（私は自分の本を何冊か持っています）', a: 'míos' },
+      { kind: 'noun', q: 'Vi una amiga ___.（私は私の友達の女性に会いました）', a: 'mía' },
+      { kind: 'noun', q: 'Vi unas amigas ___.（私は私の女友達に会いました）', a: 'mías' },
+      { kind: 'noun', q: 'Buscamos un cuaderno ___.（私たちは私たちのノートを探しています）', a: 'nuestro' },
+      { kind: 'noun', q: 'Buscamos unos cuadernos ___.（私たちは私たちのノートを探しています）', a: 'nuestros' },
+      { kind: 'noun', q: 'Compró una casa ___.（彼らは自分たちの家を買いました）', a: 'suya' },
+      { kind: 'noun', q: 'Compró unas casas ___.（彼らは自分たちの家を買いました）', a: 'suyas' },
+      { kind: 'noun', q: '¿Dónde está un cuaderno ___.?（君のノートはどこですか）', a: 'tuyo' },
+      { kind: 'noun', q: '¿Dónde están unos cuadernos ___.?（君のノートはどこですか）', a: 'tuyos' },
+      { kind: 'noun', q: 'Es una decisión ___.（それはあなた方の判断です）', a: 'vuestra' },
+      { kind: 'noun', q: 'Son unas decisiones ___.（それらはあなた方の判断です）', a: 'vuestras' },
+      { kind: 'noun', q: 'Usted tiene un libro ___.（あなたは本を1冊お持ちです）', a: 'suyo' },
+      { kind: 'noun', q: 'Usted tiene unos libros ___.（あなたは本を何冊かお持ちです）', a: 'suyos' },
+      { kind: 'noun', q: 'Ustedes compraron una mochila ___.（あなた方はかばんを1つ買いました）', a: 'suya' },
+      { kind: 'noun', q: 'Ustedes compraron unas mochilas ___.（あなた方はかばんをいくつか買いました）', a: 'suyas' },
+
+      { kind: 'ser', q: 'Este libro es ___.（これは私の本です）', a: 'mío' },
+      { kind: 'ser', q: 'Estos libros son ___.（これらは私の本です）', a: 'míos' },
+      { kind: 'ser', q: 'Esa casa es ___.（それは君の家です）', a: 'tuya' },
+      { kind: 'ser', q: 'Esas casas son ___.（それらは君の家です）', a: 'tuyas' },
+      { kind: 'ser', q: 'Aquel coche es ___.（あれは彼の車です）', a: 'suyo' },
+      { kind: 'ser', q: 'Aquellos coches son ___.（あれらは彼の車です）', a: 'suyos' },
+      { kind: 'ser', q: 'Estas mochilas son ___.（これらは私たちのかばんです）', a: 'nuestras' },
+      { kind: 'ser', q: 'Esos libros son ___.（それらは君たちの本です）', a: 'vuestros' },
+      { kind: 'ser', q: 'Aquellas flores son ___.（あれらは彼女たちの花です）', a: 'suyas' },
+      { kind: 'ser', q: 'Este problema es ___.（これはあなたの問題です）', a: 'suyo' },
+      { kind: 'ser', q: 'Usted está seguro: esta idea es ___.（これはあなたの考えです）', a: 'suya' },
+
+      { kind: 'article', q: 'Tu pastel es muy grande, pero (　) es pequeño.（君のケーキはとても大きいが、私のは小さい）', a: 'el mío' },
+      { kind: 'article', q: 'Tu casa es muy bonita, pero (　) es pequeña.（君の家はとてもきれいだが、私のは小さい）', a: 'la mía' },
+      { kind: 'article', q: 'Tus libros son interesantes, pero (　) son aburridos.（君の本は面白いが、私の本はつまらない）', a: 'los míos' },
+      { kind: 'article', q: 'Tus casas son grandes, pero (　) son pequeñas.（君の家々は大きいが、私の家々は小さい）', a: 'las mías' },
+      { kind: 'article', q: 'Usted tiene un pastel muy grande, pero (　) es pequeño.（あなたのケーキはとても大きいが、私のは小さい）', a: 'el mío' },
+      { kind: 'article', q: 'Usted tiene una casa muy bonita, pero (　) es pequeña.（あなたの家はとてもきれいだが、私のは小さい）', a: 'la mía' },
+      { kind: 'article', q: 'Ustedes tienen unos libros interesantes, pero (　) son aburridos.（あなた方の本は面白いが、私の本はつまらない）', a: 'los míos' },
+      { kind: 'article', q: 'Ustedes tienen unas casas grandes, pero (　) son pequeñas.（あなた方の家々は大きいが、私の家々は小さい）', a: 'las mías' },
+      { kind: 'article', q: 'Mi coche es nuevo, pero (　) es viejo.（私の車は新しいが、君のは古い）', a: 'el tuyo' },
+      { kind: 'article', q: 'Mi camisa es blanca, pero (　) es roja.（私のシャツは白いが、君のは赤い）', a: 'la tuya' },
+      { kind: 'article', q: 'Mis coches son nuevos, pero (　) son viejos.（私の車は新しいが、君のは古い）', a: 'los tuyos' },
+      { kind: 'article', q: 'Mis camisas son blancas, pero (　) son rojas.（私のシャツは白いが、君のは赤い）', a: 'las tuyas' },
+      { kind: 'article', q: 'Su libro es interesante, pero (　) es aburrido.（あなたの本は面白いが、あなたのものはつまらない）', a: 'el suyo' },
+      { kind: 'article', q: 'Sus casas son nuevas, pero (　) son antiguas.（あなた方の家々は新しいが、あなた方のものは古い）', a: 'las suyas' },
+      { kind: 'article', q: 'Nuestro coche es pequeño, pero (　) es grande.（私たちの車は小さいが、私たちのものは大きい）', a: 'el nuestro' },
+      { kind: 'article', q: 'Vuestros libros son largos, pero (　) son cortos.（君たちの本は長いが、君たちのものは短い）', a: 'los vuestros' }
+    ];
+
+    const demonstratives = [
+      { q: '___ libro（この本）', a: 'este' },
+      { q: '___ cuaderno（このノート）', a: 'este' },
+      { q: '___ casa（この家）', a: 'esta' },
+      { q: '___ mesa（この机）', a: 'esta' },
+      { q: '___ libros（これらの本）', a: 'estos' },
+      { q: '___ coches（これらの車）', a: 'estos' },
+      { q: '___ casas（これらの家）', a: 'estas' },
+      { q: '___ flores（これらの花）', a: 'estas' },
+      { q: '___ libro（その本）', a: 'ese' },
+      { q: '___ perro（その犬）', a: 'ese' },
+      { q: '___ casa（その家）', a: 'esa' },
+      { q: '___ ciudad（その町）', a: 'esa' },
+      { q: '___ libros（それらの本）', a: 'esos' },
+      { q: '___ estudiantes（それらの学生）', a: 'esos' },
+      { q: '___ casas（それらの家）', a: 'esas' },
+      { q: '___ ideas（それらの考え）', a: 'esas' },
+      { q: '___ libro（あの本）', a: 'aquel' },
+      { q: '___ cuaderno（あのノート）', a: 'aquel' },
+      { q: '___ casa（あの家）', a: 'aquella' },
+      { q: '___ estación（あの駅）', a: 'aquella' },
+      { q: '___ libros（あれらの本）', a: 'aquellos' },
+      { q: '___ coches（あれらの車）', a: 'aquellos' },
+      { q: '___ casas（あれらの家）', a: 'aquellas' },
+      { q: '___ flores（あれらの花）', a: 'aquellas' },
+      { q: '¿Qué es ___?（これは何？）', a: 'esto' },
+      { q: 'No entiendo ___ que dices（君の言うそれが分からない）', a: 'eso' },
+      { q: 'Recuerdo ___ de nuestra infancia（子供時代のあのことを覚えている）', a: 'aquello' },
+      { q: '___ es interesante（これは面白い）', a: 'este' },
+      { q: '___ es mío（それは私のもの）', a: 'ese' },
+      { q: '___ son bonitas（それらは美しい）', a: 'esas' },
+      { q: '___ están lejos（あれらは遠くにある）', a: 'aquellos' }
+    ];
+
+    const presentVerbs = [
+      { q: 'Yo ___ español.（私はスペイン語を話します）', a: 'hablo' },
+      { q: 'Tú ___ español.（君はスペイン語を話します）', a: 'hablas' },
+      { q: 'Él ___ español.（彼はスペイン語を話します）', a: 'habla' },
+      { q: 'Nosotros ___ español.（私たちはスペイン語を話します）', a: 'hablamos' },
+      { q: 'Vosotros ___ español.（君たちはスペイン語を話します）', a: 'habláis' },
+      { q: 'Ellos ___ español.（彼らはスペイン語を話します）', a: 'hablan' },
+      { q: 'Yo ___ arroz.（私はご飯を食べます）', a: 'como' },
+      { q: 'Tú ___ arroz.（君はご飯を食べます）', a: 'comes' },
+      { q: 'Usted ___ arroz.（あなたはご飯を食べます）', a: 'come' },
+      { q: 'Nosotros ___ arroz.（私たちはご飯を食べます）', a: 'comemos' },
+      { q: 'Vosotros ___ arroz.（君たちはご飯を食べます）', a: 'coméis' },
+      { q: 'Ustedes ___ arroz.（あなた方はご飯を食べます）', a: 'comen' },
+      { q: 'Yo ___ en Tokio.（私は東京に住んでいます）', a: 'vivo' },
+      { q: 'Tú ___ en Tokio.（君は東京に住んでいます）', a: 'vives' },
+      { q: 'Él ___ en Tokio.（彼は東京に住んでいます）', a: 'vive' },
+      { q: 'Nosotros ___ en Tokio.（私たちは東京に住んでいます）', a: 'vivimos' },
+      { q: 'Vosotros ___ en Tokio.（君たちは東京に住んでいます）', a: 'vivís' },
+      { q: 'Ellas ___ en Tokio.（彼女たちは東京に住んでいます）', a: 'viven' },
+      { q: 'Yo ___ el diccionario.（私は辞書を探します）', a: 'busco' },
+      { q: 'Tú ___ el diccionario.（君は辞書を探します）', a: 'buscas' },
+      { q: 'Él ___ el diccionario.（彼は辞書を探します）', a: 'busca' },
+      { q: 'Nosotros ___ el diccionario.（私たちは辞書を探します）', a: 'buscamos' },
+      { q: 'Vosotros ___ el diccionario.（君たちは辞書を探します）', a: 'buscáis' },
+      { q: 'Ustedes ___ el diccionario.（あなた方は辞書を探します）', a: 'buscan' },
+      { q: 'Yo ___ japonés.（私は日本語を学びます）', a: 'aprendo' },
+      { q: 'Tú ___ japonés.（君は日本語を学びます）', a: 'aprendes' },
+      { q: 'Usted ___ japonés.（あなたは日本語を学びます）', a: 'aprende' },
+      { q: 'Nosotros ___ japonés.（私たちは日本語を学びます）', a: 'aprendemos' },
+      { q: 'Vosotros ___ japonés.（君たちは日本語を学びます）', a: 'aprendéis' },
+      { q: 'Ellos ___ japonés.（彼らは日本語を学びます）', a: 'aprenden' },
+      { q: 'Yo ___ la puerta.（私はドアを開けます）', a: 'abro' },
+      { q: 'Tú ___ la puerta.（君はドアを開けます）', a: 'abres' },
+      { q: 'Él ___ la puerta.（彼はドアを開けます）', a: 'abre' },
+      { q: 'Nosotros ___ la puerta.（私たちはドアを開けます）', a: 'abrimos' },
+      { q: 'Vosotros ___ la puerta.（君たちはドアを開けます）', a: 'abrís' },
+      { q: 'Ellas ___ la puerta.（彼女たちはドアを開けます）', a: 'abren' },
+      { q: 'Yo ___ en la escuela.（私は学校で働きます）', a: 'trabajo' },
+      { q: 'Tú ___ en la escuela.（君は学校で働きます）', a: 'trabajas' },
+      { q: 'Usted ___ en la escuela.（あなたは学校で働きます）', a: 'trabaja' },
+      { q: 'Nosotros ___ en la escuela.（私たちは学校で働きます）', a: 'trabajamos' },
+      { q: 'Vosotros ___ en la escuela.（君たちは学校で働きます）', a: 'trabajáis' },
+      { q: 'Ustedes ___ en la escuela.（あなた方は学校で働きます）', a: 'trabajan' }
+    ];
+
+    function addQuestion(form, text, index, answer) {
+      currentAnswers.push(answer);
+      
+      // 発音用に___や(　)を正解で埋めた完全な文を作る
+      const fullText = text.replace('(　)', answer).replace('___', answer);
+
+      form.innerHTML += `
+        <div class="question">
+          (${index + 1}) ${text} 
+          <button type="button" class="audio-btn" data-text="${fullText}" onclick="speak(this.dataset.text)" title="正解を含めた文を発音">🔊</button>
+          <span class="translation">（${answer}）</span>
+          <br>
+          <input id="q${index}" autocomplete="off" />
+        </div>
+      `;
+    }
+
+    function generateQuiz() {
+      const form = document.getElementById('quizForm');
+      const result = document.getElementById('result');
+      form.innerHTML = '';
+      result.innerHTML = '';
+      currentAnswers = [];
+
+      const nounItems = shuffle(possessives.filter(x => x.kind === 'noun')).slice(0, 1);
+      const serItems = shuffle(possessives.filter(x => x.kind === 'ser')).slice(0, 1);
+      const articleItems = shuffle(possessives.filter(x => x.kind === 'article')).slice(0, 1);
+      const q1Items = shuffle([...nounItems, ...serItems, ...articleItems]);
+
+      form.innerHTML += '<div class="section"><h3>1. 所有詞（後置形）</h3><div class="note">日本語に合うように、かっこ内に適切な所有詞（後置形）または定冠詞と所有代名詞を半角スペース区切りで入れてください。</div></div>';
+      q1Items.forEach(x => {
+        addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
+      });
+
+      form.innerHTML += '<div class="section"><h3>2. 指示詞</h3><div class="note">日本語に合うように、かっこ内に適切な指示詞を入れてください。</div></div>';
+      shuffle(demonstratives).slice(0, 3).forEach(x => {
+        addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
+      });
+
+      form.innerHTML += '<div class="section"><h3>3. 現在形・規則活用</h3><div class="note">日本語に合うように、かっこ内に適切な動詞の活用形を入れてください。</div><div class="note">⇒　動詞の範囲は「第３課　１　現在　規則活用」に出ているもののみ</div></div>';
+      shuffle(presentVerbs).slice(0, 4).forEach(x => {
+        addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
+      });
+
+      if (showAnswers) {
+        document.querySelectorAll('.translation').forEach(e => {
+          e.style.display = 'inline';
+        });
+      }
+      
+      // クイズ生成時にタイマー開始
+      startTimer();
+    }
+
+    function gradeQuiz() {
+      // 採点ボタンを押したらタイマーを止める
+      clearInterval(timerInterval);
+
+      let score = 0;
+      let out = '';
+      currentAnswers.forEach((a, i) => {
+        const input = document.getElementById('q' + i);
+        const v = input ? norm(input.value) : '';
+        const ok = v === norm(a);
+        if (ok) score++;
+        out += `<p class="${ok ? 'correct' : 'incorrect'}">${i + 1}: ${ok ? '〇' : '× ' + a}</p>`;
+      });
+
+      const total = currentAnswers.length;
+      const percent = total ? Math.round((score / total) * 100) : 0;
+      history.push(percent);
+      if (history.length > 10) history.shift();
+      localStorage.setItem('scoreHistory_spanish13', JSON.stringify(history));
+
+      const avg = Math.round(history.reduce((a, b) => a + b, 0) / history.length);
+      out += `<p>${score}/${total} (${percent}%)</p>`;
+      out += `<p>直近${history.length}回の平均: ${avg}%</p>`;
+      document.getElementById('result').innerHTML = out;
+      drawChart();
+    }
+
+    function resetHistory() {
+      history = [];
+      localStorage.removeItem('scoreHistory_spanish13');
+      document.getElementById('result').innerHTML = '履歴をリセットしました。';
+      drawChart();
+    }
+
+    const chartScript = document.createElement('script');
+    chartScript.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    chartScript.onload = drawChart;
+    document.head.appendChild(chartScript);
+
+    generateQuiz();
+  </script>
+</body>
+</html>
