@@ -62,7 +62,7 @@
     margin-left: 10px;
     padding: 5px 8px;
     font-size: 16px;
-    width: 280px;
+    width: 380px; /* フレーズが長くなるため入力欄を少し広げました */
     max-width: 100%;
   }
   .question {
@@ -71,6 +71,7 @@
   .section {
     margin-top: 22px;
     padding-top: 8px;
+    border-top: 2px dashed #ccc;
   }
   .correct { color: #0a7a0a; }
   .incorrect { color: #b00020; }
@@ -84,9 +85,10 @@
     margin-left: 10px;
   }
   .note {
-    color: #444;
-    font-size: 0.95em;
-    margin-top: 2px;
+    color: #b00020;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-top: 10px;
   }
   canvas {
     max-width: 520px;
@@ -98,12 +100,14 @@
 </style>
 </head>
 <body>
-  <h1>小テスト 演習2-3 概要</h1>
+  <h1>小テスト 演習2-3（名詞・形容詞・Ser動詞）</h1>
   <div class="meta">
-    <div>1. 次のスペイン語を<b>女性形</b>にしなさい。</div>
-    <div>2. 次のスペイン語を<b>複数形</b>にしなさい。</div>
-    <div>3. かっこ内に適切な <b>ser動詞</b> の活用形を入れなさい。</div>
-    <div>4. 日本語をスペイン語にしなさい。（主語は省略しても正解になります）</div>
+    <div>1. 次の名詞に適切な<b>単数定冠詞（el または la）</b>をつけなさい。</div>
+    <div>2. 次のスペイン語のフレーズの<b>性を反転</b>させなさい。（男性形⇔女性形）<br>　※「冠詞＋名詞＋形容詞」すべてを変化させること。</div>
+    <div>3. 次のスペイン語のフレーズの<b>数を反転</b>させなさい。（単数形⇔複数形）<br>　※「冠詞＋名詞＋形容詞」すべてを変化させること。</div>
+    <div>4. かっこ内に適切な <b>ser動詞</b> の活用形を入れなさい。</div>
+    <div>5. 日本語をスペイン語にしなさい。（主語は省略しても正解になります）</div>
+    <div class="note">※注意: アクセント記号（á, í, é, ó, ú）や特殊文字（ñ）の有無を厳密に判定します。</div>
   </div>
 
   <div class="controls">
@@ -116,6 +120,7 @@
       <option value="60">1分</option>
       <option value="120">2分</option>
       <option value="180">3分</option>
+      <option value="300">5分</option>
     </select>
     
     <div id="timer-area" style="display: none;">残り時間: <span id="timeDisplay">--:--</span></div>
@@ -153,8 +158,6 @@
         .toLowerCase()
         .trim()
         .replace(/[.,¿?¡!]/g, '') 
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
         .replace(/\s+/g, ' ');
     }
 
@@ -230,42 +233,76 @@
       });
     }
 
-    // --- PDFから予測・追加した拡充問題データ ---
+    // --- データ群 ---
 
-    // 1. 女性形への変換 (ストック: 11問)
-    const feminines = [
-      { q: 'el estudiante simpático', a: 'la estudiante simpática' },
-      { q: 'el novio inteligente', a: 'la novia inteligente' },
-      { q: 'unos actores altos', a: 'unas actrices altas' },
-      { q: 'unos policías trabajadores', a: 'unas policías trabajadoras' },
-      { q: 'un chico amable', a: 'una chica amable' },
-      { q: 'un abogado simpático', a: 'una abogada simpática' },
-      { q: 'el profesor español', a: 'la profesora española' },
-      { q: 'un médico argentino', a: 'una médica argentina' },
-      { q: 'el compañero rubio', a: 'la compañera rubia' },
-      { q: 'el niño japonés', a: 'la niña japonesa' },
-      { q: 'un amigo peruano', a: 'una amiga peruana' }
+    // 1. 名詞の性：定冠詞をつける
+    const genders = [
+      { q: 'día', a: 'el día' },
+      { q: 'sofá', a: 'el sofá' },
+      { q: 'mano', a: 'la mano' },
+      { q: 'foto', a: 'la foto' },
+      { q: 'moto', a: 'la moto' },
+      { q: 'idioma', a: 'el idioma' },
+      { q: 'programa', a: 'el programa' },
+      { q: 'problema', a: 'el problema' },
+      { q: 'clima', a: 'el clima' },
+      { q: 'tema', a: 'el tema' },
+      { q: 'canción', a: 'la canción' },
+      { q: 'ciudad', a: 'la ciudad' },
+      { q: 'nacionalidad', a: 'la nacionalidad' },
+      { q: 'televisión', a: 'la televisión' },
+      { q: 'universidad', a: 'la universidad' },
+      { q: 'libertad', a: 'la libertad' },
+      { q: 'estación', a: 'la estación' },
+      { q: 'lección', a: 'la lección' },
+      { q: 'bolígrafo', a: 'el bolígrafo' },
+      { q: 'impresora', a: 'la impresora' },
+      { q: 'diccionario', a: 'el diccionario' },
+      { q: 'papel', a: 'el papel' },
+      { q: 'cerveza', a: 'la cerveza' }
     ];
 
-    // 2. 複数形への変換 (ストック: 13問)
-    // ※ -zで終わる単語、アクセントが落ちる/付く単語をPDFから追加
-    const plurals = [
-      { q: 'el médico amable', a: 'los médicos amables' },
-      { q: 'la joven difícil', a: 'las jóvenes difíciles' },
-      { q: 'un inglés inteligente', a: 'unos ingleses inteligentes' },
-      { q: 'una profesora generosa', a: 'unas profesoras generosas' },
-      { q: 'el actor alto', a: 'los actores altos' },
-      { q: 'la joven trabajadora', a: 'las jóvenes trabajadoras' },
-      { q: 'un enfermero generoso', a: 'unos enfermeros generosos' },
-      { q: 'una policía seria', a: 'unas policías serias' },
-      { q: 'el lápiz', a: 'los lápices' },
-      { q: 'la lección', a: 'las lecciones' },
-      { q: 'un ordenador', a: 'unos ordenadores' },
-      { q: 'el examen', a: 'los exámenes' },
-      { q: 'el grupo grande', a: 'los grupos grandes' }
+    // 2. 性を反転させる問題（冠詞＋名詞＋形容詞）
+    const genderConversions = [
+      { m: 'el estudiante inteligente', f: 'la estudiante inteligente' },
+      { m: 'el novio guapo', f: 'la novia guapa' },
+      { m: 'un chico amable', f: 'una chica amable' },
+      { m: 'un abogado simpático', f: 'una abogada simpática' },
+      { m: 'el profesor español', f: 'la profesora española' },
+      { m: 'un compañero trabajador', f: 'una compañera trabajadora' },
+      { m: 'el juez serio', f: 'la jueza seria' },
+      { m: 'un médico generoso', f: 'una médica generosa' },
+      { m: 'el actor alto', f: 'la actriz alta' },
+      { m: 'un padre simpático', f: 'una madre simpática' },
+      { m: 'el hombre trabajador', f: 'la mujer trabajadora' },
+      { m: 'un pianista japonés', f: 'una pianista japonesa' },
+      { m: 'el amigo estadounidense', f: 'la amiga estadounidense' },
+      { m: 'un doctor inteligente', f: 'una doctora inteligente' },
+      { m: 'el enfermero amable', f: 'la enfermera amable' }
     ];
 
-    // 3. Ser動詞の活用 (ストック: 11問)
+    // 3. 数を反転させる問題（冠詞＋名詞＋形容詞。不規則変化や例外を含む）
+    const numberConversions = [
+      { s: 'el actor alto', p: 'los actores altos' },
+      { s: 'la joven trabajadora', p: 'las jóvenes trabajadoras' },
+      { s: 'un enfermero generoso', p: 'unos enfermeros generosos' },
+      { s: 'una policía seria', p: 'unas policías serias' },
+      { s: 'el lápiz español', p: 'los lápices españoles' }, // z -> c
+      { s: 'la lección difícil', p: 'las lecciones difíciles' }, // アクセント消失
+      { s: 'un examen difícil', p: 'unos exámenes difíciles' }, // アクセント追加
+      { s: 'el programa español', p: 'los programas españoles' }, // -ma 終わり
+      { s: 'la mano trabajadora', p: 'las manos trabajadoras' }, // -o 終わりの女性名詞
+      { s: 'el lunes difícil', p: 'los lunes difíciles' }, // 単複同形
+      { s: 'el paraguas español', p: 'los paraguas españoles' }, // 単複同形
+      { s: 'una vez difícil', p: 'unas veces difíciles' }, // z -> c
+      { s: 'un japonés inteligente', p: 'unos japoneses inteligentes' }, // アクセント消失
+      { s: 'la flor española', p: 'las flores españolas' }, 
+      { s: 'un ordenador inteligente', p: 'unos ordenadores inteligentes' },
+      { s: 'el sofá español', p: 'los sofás españoles' }, // アクセント維持
+      { s: 'una canción española', p: 'unas canciones españolas' } // アクセント消失
+    ];
+
+    // 4. Ser動詞の活用
     const serVerbs = [
       { q: 'Yo ___', a: 'soy' },
       { q: 'Tú ___', a: 'eres' },
@@ -273,23 +310,26 @@
       { q: 'Nosotros / Nosotras ___', a: 'somos' },
       { q: 'Vosotros / Vosotras ___', a: 'sois' },
       { q: 'Ellos / Ellas / Ustedes ___', a: 'son' },
-      { q: 'Carlos ___ de España.', a: 'es' },
-      { q: 'María y yo ___ de Tokio.', a: 'somos' },
-      { q: '¿De dónde ___ tú?', a: 'eres' },
-      { q: 'Mis padres ___ japoneses.', a: 'son' },
-      { q: 'El señor Gómez ___ profesor.', a: 'es' }
+      { q: 'Nosotras ___ japonesas.', a: 'somos' },
+      { q: 'Vosotros ___ japoneses.', a: 'sois' },
+      { q: 'Ustedes ___ japoneses.', a: 'son' },
+      { q: 'Ellos ___ de Tokio.', a: 'son' }
     ];
 
-    // 4. 日本語からスペイン語 (ストック: 8問)
+    // 5. 日本語からスペイン語
     const translations = [
-      { q: '私（女性）はスペイン人です。', a: ['Soy española', 'Yo soy española'] },
-      { q: '彼女たちは日本人です。', a: ['Son japonesas', 'Ellas son japonesas'] },
+      { q: '私はスペイン人です。（男性）', a: ['Soy español', 'Yo soy español'] },
+      { q: '私はスペイン人です。（女性）', a: ['Soy española', 'Yo soy española'] },
+      { q: '君はスペイン人です。（男性）', a: ['Eres español', 'Tú eres español'] },
+      { q: '彼はスペイン人です。', a: ['Es español', 'Él es español'] },
+      { q: '彼女はスペイン人です。', a: ['Es española', 'Ella es española'] },
+      { q: '私達はスペイン人です。（男性・男女）', a: ['Somos españoles', 'Nosotros somos españoles'] },
+      { q: '私達はスペイン人です。（女性のみ）', a: ['Somos españolas', 'Nosotras somos españolas'] },
+      { q: '君達はスペイン人です。（男性・男女）', a: ['Sois españoles', 'Vosotros sois españoles'] },
+      { q: '彼女達はスペイン人です。', a: ['Son españolas', 'Ellas son españolas'] },
+      { q: 'あなた方はスペイン人です。（男性・男女）', a: ['Son españoles', 'Ustedes son españoles'] },
       { q: '彼らは東京出身です。', a: ['Son de Tokio', 'Ellos son de Tokio'] },
-      { q: '私たちは日本人です。', a: ['Somos japoneses', 'Nosotros somos japoneses'] },
-      { q: '君（男性）はメキシコ人です。', a: ['Eres mexicano', 'Tú eres mexicano'] },
-      { q: '彼は先生です。', a: ['Es profesor', 'Él es profesor'] },
-      { q: '私たち（女性のみ）は日本人です。', a: ['Somos japonesas', 'Nosotras somos japonesas'] },
-      { q: 'あなた（男性）はアメリカ人です。', a: ['Es estadounidense', 'Usted es estadounidense'] }
+      { q: '私はアメリカ人です。', a: ['Soy estadounidense', 'Yo soy estadounidense'] },
     ];
 
     function addQuestion(form, text, index, answer) {
@@ -316,23 +356,38 @@
       result.innerHTML = '';
       currentAnswers = [];
 
-      form.innerHTML += '<div class="section"><h3>1. 女性形への変換</h3></div>';
-      shuffle(feminines).slice(0, 4).forEach(x => {
+      form.innerHTML += '<div class="section"><h3>1. 名詞の性（定冠詞 el / la）</h3></div>';
+      shuffle(genders).slice(0, 4).forEach(x => {
         addQuestion(form, x.q, currentAnswers.length, x.a);
       });
 
-      form.innerHTML += '<div class="section"><h3>2. 複数形への変換</h3></div>';
-      shuffle(plurals).slice(0, 4).forEach(x => {
-        addQuestion(form, x.q, currentAnswers.length, x.a);
+      form.innerHTML += '<div class="section"><h3>2. 性を反転させなさい（男性形⇔女性形）</h3></div>';
+      shuffle(genderConversions).slice(0, 4).forEach(x => {
+        // ランダムで「男性→女性」か「女性→男性」かを出題
+        if (Math.random() < 0.5) {
+          addQuestion(form, x.m, currentAnswers.length, x.f);
+        } else {
+          addQuestion(form, x.f, currentAnswers.length, x.m);
+        }
       });
 
-      form.innerHTML += '<div class="section"><h3>3. Ser動詞の活用</h3></div>';
+      form.innerHTML += '<div class="section"><h3>3. 数を反転させなさい（単数形⇔複数形）</h3></div>';
+      shuffle(numberConversions).slice(0, 4).forEach(x => {
+        // ランダムで「単数→複数」か「複数→単数」かを出題
+        if (Math.random() < 0.5) {
+          addQuestion(form, x.s, currentAnswers.length, x.p);
+        } else {
+          addQuestion(form, x.p, currentAnswers.length, x.s);
+        }
+      });
+
+      form.innerHTML += '<div class="section"><h3>4. Ser動詞の活用</h3></div>';
       shuffle(serVerbs).slice(0, 4).forEach(x => {
         addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
       });
 
-      form.innerHTML += '<div class="section"><h3>4. 西訳（作文）</h3></div>';
-      shuffle(translations).slice(0, 3).forEach(x => {
+      form.innerHTML += '<div class="section"><h3>5. 西訳（作文）</h3></div>';
+      shuffle(translations).slice(0, 4).forEach(x => {
         addQuestion(form, x.q, currentAnswers.length, x.a);
       });
 
