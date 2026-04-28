@@ -62,7 +62,7 @@
     margin-left: 10px;
     padding: 5px 8px;
     font-size: 16px;
-    width: 380px; /* フレーズが長くなるため入力欄を少し広げました */
+    width: 380px; 
     max-width: 100%;
   }
   .question {
@@ -102,11 +102,10 @@
 <body>
   <h1>小テスト 演習2-3（名詞・形容詞・Ser動詞）</h1>
   <div class="meta">
-    <div>1. 次の名詞に適切な<b>単数定冠詞（el または la）</b>をつけなさい。</div>
-    <div>2. 次のスペイン語のフレーズの<b>性を反転</b>させなさい。（男性形⇔女性形）<br>　※「冠詞＋名詞＋形容詞」すべてを変化させること。</div>
-    <div>3. 次のスペイン語のフレーズの<b>数を反転</b>させなさい。（単数形⇔複数形）<br>　※「冠詞＋名詞＋形容詞」すべてを変化させること。</div>
-    <div>4. かっこ内に適切な <b>ser動詞</b> の活用形を入れなさい。</div>
-    <div>5. 日本語をスペイン語にしなさい。（主語は省略しても正解になります）</div>
+    <div>1. 次のスペイン語のフレーズの<b>性を反転</b>させなさい。（男性形⇔女性形）<br>　※「冠詞＋名詞＋形容詞」すべてを変化させること。</div>
+    <div>2. 次のスペイン語のフレーズの<b>数を反転</b>させなさい。（単数形⇔複数形）<br>　※「冠詞＋名詞＋形容詞」すべてを変化させること。</div>
+    <div>3. かっこ内に適切な <b>ser動詞</b> の活用形を入れなさい。</div>
+    <div>4. 日本語をスペイン語にしなさい。（主語は省略しても正解になります）</div>
     <div class="note">※注意: アクセント記号（á, í, é, ó, ú）や特殊文字（ñ）の有無を厳密に判定します。</div>
   </div>
 
@@ -235,34 +234,7 @@
 
     // --- データ群 ---
 
-    // 1. 名詞の性：定冠詞をつける
-    const genders = [
-      { q: 'día', a: 'el día' },
-      { q: 'sofá', a: 'el sofá' },
-      { q: 'mano', a: 'la mano' },
-      { q: 'foto', a: 'la foto' },
-      { q: 'moto', a: 'la moto' },
-      { q: 'idioma', a: 'el idioma' },
-      { q: 'programa', a: 'el programa' },
-      { q: 'problema', a: 'el problema' },
-      { q: 'clima', a: 'el clima' },
-      { q: 'tema', a: 'el tema' },
-      { q: 'canción', a: 'la canción' },
-      { q: 'ciudad', a: 'la ciudad' },
-      { q: 'nacionalidad', a: 'la nacionalidad' },
-      { q: 'televisión', a: 'la televisión' },
-      { q: 'universidad', a: 'la universidad' },
-      { q: 'libertad', a: 'la libertad' },
-      { q: 'estación', a: 'la estación' },
-      { q: 'lección', a: 'la lección' },
-      { q: 'bolígrafo', a: 'el bolígrafo' },
-      { q: 'impresora', a: 'la impresora' },
-      { q: 'diccionario', a: 'el diccionario' },
-      { q: 'papel', a: 'el papel' },
-      { q: 'cerveza', a: 'la cerveza' }
-    ];
-
-    // 2. 性を反転させる問題（冠詞＋名詞＋形容詞）
+    // 1. 性を反転させる問題（冠詞＋名詞＋形容詞）
     const genderConversions = [
       { m: 'el estudiante inteligente', f: 'la estudiante inteligente' },
       { m: 'el novio guapo', f: 'la novia guapa' },
@@ -281,7 +253,7 @@
       { m: 'el enfermero amable', f: 'la enfermera amable' }
     ];
 
-    // 3. 数を反転させる問題（冠詞＋名詞＋形容詞。不規則変化や例外を含む）
+    // 2. 数を反転させる問題（冠詞＋名詞＋形容詞。不規則変化や例外を含む）
     const numberConversions = [
       { s: 'el actor alto', p: 'los actores altos' },
       { s: 'la joven trabajadora', p: 'las jóvenes trabajadoras' },
@@ -302,7 +274,7 @@
       { s: 'una canción española', p: 'unas canciones españolas' } // アクセント消失
     ];
 
-    // 4. Ser動詞の活用
+    // 3. Ser動詞の活用
     const serVerbs = [
       { q: 'Yo ___', a: 'soy' },
       { q: 'Tú ___', a: 'eres' },
@@ -316,31 +288,8 @@
       { q: 'Ellos ___ de Tokio.', a: 'son' }
     ];
 
-    // 5. 日本語からスペイン語
-    const translations = [
-      { q: '私はスペイン人です。（男性）', a: ['Soy español', 'Yo soy español'] },
-      { q: '私はスペイン人です。（女性）', a: ['Soy española', 'Yo soy española'] },
-      { q: '君はスペイン人です。（男性）', a: ['Eres español', 'Tú eres español'] },
-      { q: '彼はスペイン人です。', a: ['Es español', 'Él es español'] },
-      { q: '彼女はスペイン人です。', a: ['Es española', 'Ella es española'] },
-      { q: '私達はスペイン人です。（男性・男女）', a: ['Somos españoles', 'Nosotros somos españoles'] },
-      { q: '私達はスペイン人です。（女性のみ）', a: ['Somos españolas', 'Nosotras somos españolas'] },
-      { q: '君達はスペイン人です。（男性・男女）', a: ['Sois españoles', 'Vosotros sois españoles'] },
-      { q: '彼女達はスペイン人です。', a: ['Son españolas', 'Ellas son españolas'] },
-      { q: 'あなた方はスペイン人です。（男性・男女）', a: ['Son españoles', 'Ustedes son españoles'] },
-      { q: '彼らは東京出身です。', a: ['Son de Tokio', 'Ellos son de Tokio'] },
-      { q: '私はアメリカ人です。', a: ['Soy estadounidense', 'Yo soy estadounidense'] },
-      { q: '私は日本人です。（男性）', a: ['Soy japonés', 'Yo soy japonés'] },
-{ q: '私は日本人です。（女性）', a: ['Soy japonesa', 'Yo soy japonesa'] },
-{ q: '君は日本人です。（男性）', a: ['Eres japonés', 'Tú eres japonés'] },
-{ q: '彼は日本人です。', a: ['Es japonés', 'Él es japonés'] },
-{ q: '彼女は日本人です。', a: ['Es japonesa', 'Ella es japonesa'] },
-{ q: '私達は日本人です。（男性・男女）', a: ['Somos japoneses', 'Nosotros somos japoneses'] },
-{ q: '私達は日本人です。（女性のみ）', a: ['Somos japonesas', 'Nosotras somos japonesas'] },
-{ q: '君達は日本人です。（男性・男女）', a: ['Sois japoneses', 'Vosotros sois japoneses'] },
-{ q: '彼女達は日本人です。', a: ['Son japonesas', 'Ellas son japonesas'] },
-{ q: 'あなた方は日本人です。（男性・男女）', a: ['Son japoneses', 'Ustedes son japoneses'] },
-    ];
+    // 4. 日本語からスペイン語
+    const translations = [ { q: '私はスペイン人です。（男性）', a: ['Soy español', 'Yo soy español'] }, { q: '私はスペイン人です。（女性）', a: ['Soy española', 'Yo soy española'] }, { q: '君はスペイン人です。（男性）', a: ['Eres español', 'Tú eres español'] }, { q: '彼はスペイン人です。', a: ['Es español', 'Él es español'] }, { q: '彼女はスペイン人です。', a: ['Es española', 'Ella es española'] }, { q: '私達はスペイン人です。（男性・男女）', a: ['Somos españoles', 'Nosotros somos españoles'] }, { q: '私達はスペイン人です。（女性のみ）', a: ['Somos españolas', 'Nosotras somos españolas'] }, { q: '君達はスペイン人です。（男性・男女）', a: ['Sois españoles', 'Vosotros sois españoles'] }, { q: '彼女達はスペイン人です。', a: ['Son españolas', 'Ellas son españolas'] }, { q: 'あなた方はスペイン人です。（男性・男女）', a: ['Son españoles', 'Ustedes son españoles'] }, { q: '彼らは東京出身です。', a: ['Son de Tokio', 'Ellos son de Tokio'] }, { q: '私はアメリカ人です。', a: ['Soy estadounidense', 'Yo soy estadounidense'] }, { q: '私は日本人です。（男性）', a: ['Soy japonés', 'Yo soy japonés'] }, { q: '私は日本人です。（女性）', a: ['Soy japonesa', 'Yo soy japonesa'] }, { q: '君は日本人です。（男性）', a: ['Eres japonés', 'Tú eres japonés'] }, { q: '彼は日本人です。', a: ['Es japonés', 'Él es japonés'] }, { q: '彼女は日本人です。', a: ['Es japonesa', 'Ella es japonesa'] }, { q: '私達は日本人です。（男性・男女）', a: ['Somos japoneses', 'Nosotros somos japoneses'] }, { q: '私達は日本人です。（女性のみ）', a: ['Somos japonesas', 'Nosotras somos japonesas'] }, { q: '君達は日本人です。（男性・男女）', a: ['Sois japoneses', 'Vosotros sois japoneses'] }, { q: '彼女達は日本人です。', a: ['Son japonesas', 'Ellas son japonesas'] }, { q: 'あなた方は日本人です。（男性・男女）', a: ['Son japoneses', 'Ustedes son japoneses'] }, ];
 
     function addQuestion(form, text, index, answer) {
       currentAnswers.push(answer);
@@ -366,12 +315,7 @@
       result.innerHTML = '';
       currentAnswers = [];
 
-      form.innerHTML += '<div class="section"><h3>1. 名詞の性（定冠詞 el / la）</h3></div>';
-      shuffle(genders).slice(0, 4).forEach(x => {
-        addQuestion(form, x.q, currentAnswers.length, x.a);
-      });
-
-      form.innerHTML += '<div class="section"><h3>2. 性を反転させなさい（男性形⇔女性形）</h3></div>';
+      form.innerHTML += '<div class="section"><h3>1. 性を反転させなさい（男性形⇔女性形）</h3></div>';
       shuffle(genderConversions).slice(0, 4).forEach(x => {
         // ランダムで「男性→女性」か「女性→男性」かを出題
         if (Math.random() < 0.5) {
@@ -381,7 +325,7 @@
         }
       });
 
-      form.innerHTML += '<div class="section"><h3>3. 数を反転させなさい（単数形⇔複数形）</h3></div>';
+      form.innerHTML += '<div class="section"><h3>2. 数を反転させなさい（単数形⇔複数形）</h3></div>';
       shuffle(numberConversions).slice(0, 4).forEach(x => {
         // ランダムで「単数→複数」か「複数→単数」かを出題
         if (Math.random() < 0.5) {
@@ -391,12 +335,12 @@
         }
       });
 
-      form.innerHTML += '<div class="section"><h3>4. Ser動詞の活用</h3></div>';
+      form.innerHTML += '<div class="section"><h3>3. Ser動詞の活用</h3></div>';
       shuffle(serVerbs).slice(0, 4).forEach(x => {
         addQuestion(form, x.q.replace('___', '(　)'), currentAnswers.length, x.a);
       });
 
-      form.innerHTML += '<div class="section"><h3>5. 西訳（作文）</h3></div>';
+      form.innerHTML += '<div class="section"><h3>4. 西訳（作文）</h3></div>';
       shuffle(translations).slice(0, 4).forEach(x => {
         addQuestion(form, x.q, currentAnswers.length, x.a);
       });
