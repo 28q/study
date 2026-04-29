@@ -2,12 +2,18 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <!-- スマホでの表示を最適化 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Speed Test</title>
+    
+    <!-- 細字・標準・太字を確実に区別するためのフォント読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
     <style>
         body {
-            font-family: Arial, sans-serif;
+            /* 読み込んだ Roboto フォントを適用 */
+            font-family: 'Roboto', Arial, sans-serif;
             text-align: center;
             margin: 0;
             padding: 20px;
@@ -23,13 +29,21 @@
             margin-bottom: 20px;
         }
 
+        /* 独立して選択できるようにグループ化 */
+        .button-group {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
         h3 {
             font-size: 16px;
-            margin-bottom: 10px;
+            margin: 0 0 10px 0;
         }
 
         button {
-            padding: 12px 15px; /* スマホでタップしやすいサイズに */
+            padding: 12px 15px;
             margin: 5px;
             font-size: 14px;
             cursor: pointer;
@@ -65,7 +79,6 @@
             padding: 20px;
             border-radius: 10px;
             border: 1px solid #ccc;
-            /* 統制変数：文字サイズを固定 */
             font-size: 18px; 
         }
 
@@ -91,18 +104,24 @@
 
     <h1>Reading Speed Test</h1>
 
-    <!-- 独立変数の設定パネル -->
+    <!-- 設定パネル -->
     <div class="controls" id="settings-panel">
-        <h3>文字の太さ (Font Weight)</h3>
-        <!-- 細字(300), 標準(400), 太字(700) に設定 -->
-        <button onclick="setFontWeight('300', this)">細字</button>
-        <button onclick="setFontWeight('400', this)">標準</button>
-        <button onclick="setFontWeight('700', this)">太字</button>
+        
+        <!-- 太さのグループ -->
+        <div class="button-group">
+            <h3>文字の太さ (Font Weight)</h3>
+            <button onclick="setFontWeight('300', this)">細字</button>
+            <button onclick="setFontWeight('400', this)">標準</button>
+            <button onclick="setFontWeight('700', this)">太字</button>
+        </div>
 
-        <h3>配色 (Contrast)</h3>
-        <!-- 白背景×黒文字、黒背景×白文字 に設定 -->
-        <button onclick="setColorTheme('light', this)">白背景 × 黒文字</button>
-        <button onclick="setColorTheme('dark', this)">黒背景 × 白文字</button>
+        <!-- 配色のグループ -->
+        <div class="button-group">
+            <h3>配色 (Contrast)</h3>
+            <button onclick="setColorTheme('light', this)">白背景 × 黒文字</button>
+            <button onclick="setColorTheme('dark', this)">黒背景 × 白文字</button>
+        </div>
+
     </div>
 
     <!-- アクションボタン -->
@@ -111,7 +130,7 @@
         <button class="action-btn" id="end-btn" onclick="endReading()" style="display:none;">終了</button>
     </div>
 
-    <!-- 読む文章（統制変数） -->
+    <!-- 読む文章 -->
     <div id="text-container">
         <p id="reading-text">
             The North Wind and the Sun were disputing which was the stronger, when a traveler came along wrapped in a warm cloak. 
@@ -141,20 +160,21 @@
         let timeSeconds = 0;
         let wpm = 0;
 
-        // ボタンのアクティブ状態を切り替える
+        // ボタンの緑色（アクティブ）を切り替える
         function setActive(button) {
+            // 同じボタングループ（div.button-group）内のボタンのみリセットする
             const siblings = button.parentElement.querySelectorAll("button");
             siblings.forEach(btn => btn.classList.remove("active"));
             button.classList.add("active");
         }
 
-        // フォントの太さを変更 (独立変数1)
+        // フォントの太さを変更
         function setFontWeight(weight, button) {
             document.getElementById("reading-text").style.fontWeight = weight;
             setActive(button);
         }
 
-        // 配色を変更 (独立変数2)
+        // 配色を変更
         function setColorTheme(theme, button) {
             const body = document.body;
             const container = document.getElementById("text-container");
@@ -174,17 +194,14 @@
         // 読書開始
         function startReading() {
             const textElement = document.getElementById("reading-text");
-            // 単語数を自動カウント（スペース区切り）
             wordCount = textElement.innerText.trim().split(/\s+/).length;
 
-            // UIの切り替え
             document.getElementById("settings-panel").style.display = "none";
             document.getElementById("text-container").style.display = "block";
             document.getElementById("start-btn").style.display = "none";
             document.getElementById("end-btn").style.display = "inline-block";
             document.getElementById("result").innerHTML = "";
 
-            // 計測開始
             startTime = new Date();
         }
 
@@ -194,19 +211,16 @@
 
             const endTime = new Date();
             timeSeconds = ((endTime - startTime) / 1000).toFixed(2);
-            
-            // 従属変数：WPM（Words Per Minute）の計算
             wpm = Math.round((wordCount / timeSeconds) * 60);
 
-            // UIの切り替え（テキストを隠し、テストを表示）
             document.getElementById("text-container").style.display = "none";
             document.getElementById("end-btn").style.display = "none";
             document.getElementById("quiz-container").style.display = "block";
             
-            startTime = null; // リセット
+            startTime = null;
         }
 
-        // 理解度テストの答え合わせと結果表示
+        // 答え合わせ
         function checkAnswer(answer) {
             document.getElementById("quiz-container").style.display = "none";
             document.getElementById("settings-panel").style.display = "block";
@@ -225,16 +239,16 @@
 
             document.getElementById("result").innerHTML = resultHTML;
 
-            // 終了後に元のテーマ色に戻す（必要に応じて）
+            // テーマを初期状態の白背景に戻す（結果を見やすくするため）
             document.body.style.backgroundColor = "#ffffff";
             document.body.style.color = "#000000";
         }
 
         // 初期設定：ページ読み込み時にデフォルトを選択
         window.onload = function () {
-            // "標準" と "白背景" を初期選択
-            document.querySelectorAll(".controls")[0].querySelectorAll("button")[1].click();
-            document.querySelectorAll(".controls")[1].querySelectorAll("button")[0].click();
+            const groups = document.querySelectorAll(".button-group");
+            groups[0].querySelectorAll("button")[1].click(); // 文字の太さ：標準(400)
+            groups[1].querySelectorAll("button")[0].click(); // 配色：白背景×黒文字
         };
     </script>
 
