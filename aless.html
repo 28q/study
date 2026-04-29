@@ -2,16 +2,20 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <!-- スマホでの表示を最適化 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Speed Test</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 40px;
+            margin: 0;
+            padding: 20px;
             transition: background-color 0.3s, color 0.3s;
         }
 
         h1 {
+            font-size: 24px;
             margin-bottom: 20px;
         }
 
@@ -19,14 +23,20 @@
             margin-bottom: 20px;
         }
 
+        h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
         button {
-            padding: 10px 15px;
+            padding: 12px 15px; /* スマホでタップしやすいサイズに */
             margin: 5px;
             font-size: 14px;
             cursor: pointer;
             border-radius: 5px;
             border: 1px solid #ccc;
             background-color: #f0f0f0;
+            touch-action: manipulation;
         }
 
         button:hover {
@@ -39,20 +49,40 @@
             border: none;
         }
 
+        .action-btn {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 15px 30px;
+            margin-top: 10px;
+        }
+
         #text-container {
             display: none;
             max-width: 800px;
-            margin: 30px auto;
+            margin: 20px auto;
             line-height: 1.8;
             text-align: left;
             padding: 20px;
             border-radius: 10px;
             border: 1px solid #ccc;
+            /* 統制変数：文字サイズを固定 */
+            font-size: 18px; 
+        }
+
+        #quiz-container {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            color: #333;
         }
 
         #result {
             font-size: 18px;
             margin-top: 20px;
+            line-height: 1.6;
             font-weight: bold;
         }
     </style>
@@ -61,28 +91,27 @@
 
     <h1>Reading Speed Test</h1>
 
-    <div class="controls">
-        <h3>文字サイズ</h3>
-        <button onclick="setFontSize('small', this)">小</button>
-        <button onclick="setFontSize('medium', this)">中</button>
-        <button onclick="setFontSize('large', this)">大</button>
+    <!-- 独立変数の設定パネル -->
+    <div class="controls" id="settings-panel">
+        <h3>文字の太さ (Font Weight)</h3>
+        <!-- 細字(300), 標準(400), 太字(700) に設定 -->
+        <button onclick="setFontWeight('300', this)">細字</button>
+        <button onclick="setFontWeight('400', this)">標準</button>
+        <button onclick="setFontWeight('700', this)">太字</button>
 
-        <h3>文字の太さ</h3>
-        <button onclick="setFontWeight('normal', this)">標準</button>
-        <button onclick="setFontWeight('bold', this)">太字</button>
-        <button onclick="setFontWeight('bolder', this)">極太</button>
-
-        <h3>配色</h3>
-        <button onclick="setColorTheme('theme1', this)">白背景</button>
-        <button onclick="setColorTheme('theme2', this)">黒背景</button>
-        <button onclick="setColorTheme('theme3', this)">淡色背景</button>
+        <h3>配色 (Contrast)</h3>
+        <!-- 白背景×黒文字、黒背景×白文字 に設定 -->
+        <button onclick="setColorTheme('light', this)">白背景 × 黒文字</button>
+        <button onclick="setColorTheme('dark', this)">黒背景 × 白文字</button>
     </div>
 
-    <div>
-        <button onclick="startReading()">開始</button>
-        <button onclick="endReading()">終了</button>
+    <!-- アクションボタン -->
+    <div id="action-buttons">
+        <button class="action-btn" id="start-btn" onclick="startReading()">開始</button>
+        <button class="action-btn" id="end-btn" onclick="endReading()" style="display:none;">終了</button>
     </div>
 
+    <!-- 読む文章（統制変数） -->
     <div id="text-container">
         <p id="reading-text">
             The North Wind and the Sun were disputing which was the stronger, when a traveler came along wrapped in a warm cloak. 
@@ -94,72 +123,118 @@
         </p>
     </div>
 
+    <!-- 理解度テスト -->
+    <div id="quiz-container">
+        <h3>Comprehension Test</h3>
+        <p>Who was considered stronger at the end of the story?</p>
+        <button onclick="checkAnswer('The North Wind')">The North Wind</button>
+        <button onclick="checkAnswer('The Sun')">The Sun</button>
+        <button onclick="checkAnswer('The Traveler')">The Traveler</button>
+    </div>
+
+    <!-- 計測結果表示 -->
     <div id="result"></div>
 
     <script>
         let startTime = null;
+        let wordCount = 0;
+        let timeSeconds = 0;
+        let wpm = 0;
 
+        // ボタンのアクティブ状態を切り替える
         function setActive(button) {
             const siblings = button.parentElement.querySelectorAll("button");
             siblings.forEach(btn => btn.classList.remove("active"));
             button.classList.add("active");
         }
 
-        function setFontSize(size, button) {
-            const text = document.getElementById("reading-text");
-            if (size === "small") text.style.fontSize = "16px";
-            if (size === "medium") text.style.fontSize = "20px";
-            if (size === "large") text.style.fontSize = "24px";
-            setActive(button);
-        }
-
+        // フォントの太さを変更 (独立変数1)
         function setFontWeight(weight, button) {
             document.getElementById("reading-text").style.fontWeight = weight;
             setActive(button);
         }
 
+        // 配色を変更 (独立変数2)
         function setColorTheme(theme, button) {
             const body = document.body;
             const container = document.getElementById("text-container");
 
-            if (theme === "theme1") {
+            if (theme === "light") {
                 body.style.backgroundColor = "#ffffff";
                 body.style.color = "#000000";
                 container.style.backgroundColor = "#ffffff";
-            } else if (theme === "theme2") {
-                body.style.backgroundColor = "#000000";
+            } else if (theme === "dark") {
+                body.style.backgroundColor = "#121212";
                 body.style.color = "#ffffff";
                 container.style.backgroundColor = "#222222";
-            } else if (theme === "theme3") {
-                body.style.backgroundColor = "#f4ecd8";
-                body.style.color = "#333333";
-                container.style.backgroundColor = "#fffaf0";
             }
             setActive(button);
         }
 
+        // 読書開始
         function startReading() {
+            const textElement = document.getElementById("reading-text");
+            // 単語数を自動カウント（スペース区切り）
+            wordCount = textElement.innerText.trim().split(/\s+/).length;
+
+            // UIの切り替え
+            document.getElementById("settings-panel").style.display = "none";
             document.getElementById("text-container").style.display = "block";
-            document.getElementById("result").textContent = "";
+            document.getElementById("start-btn").style.display = "none";
+            document.getElementById("end-btn").style.display = "inline-block";
+            document.getElementById("result").innerHTML = "";
+
+            // 計測開始
             startTime = new Date();
         }
 
+        // 読書終了
         function endReading() {
-            if (!startTime) {
-                alert("先に開始ボタンを押してください。");
-                return;
-            }
+            if (!startTime) return;
+
             const endTime = new Date();
-            const seconds = ((endTime - startTime) / 1000).toFixed(2);
-            document.getElementById("result").textContent =
-                "読むのにかかった時間：" + seconds + " 秒";
+            timeSeconds = ((endTime - startTime) / 1000).toFixed(2);
+            
+            // 従属変数：WPM（Words Per Minute）の計算
+            wpm = Math.round((wordCount / timeSeconds) * 60);
+
+            // UIの切り替え（テキストを隠し、テストを表示）
+            document.getElementById("text-container").style.display = "none";
+            document.getElementById("end-btn").style.display = "none";
+            document.getElementById("quiz-container").style.display = "block";
+            
+            startTime = null; // リセット
         }
 
-        // 初期設定
+        // 理解度テストの答え合わせと結果表示
+        function checkAnswer(answer) {
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("settings-panel").style.display = "block";
+            document.getElementById("start-btn").style.display = "inline-block";
+            document.getElementById("start-btn").textContent = "もう一度テストする";
+
+            let resultHTML = `読んだ単語数：${wordCount} words<br>`;
+            resultHTML += `かかった時間：${timeSeconds} 秒<br>`;
+            resultHTML += `<span style="font-size:24px; color:#4CAF50;">読書速度：${wpm} WPM</span><br><br>`;
+
+            if(answer === 'The Sun') {
+                resultHTML += `理解度テスト：<span style="color:blue;">正解 (The Sun)</span>`;
+            } else {
+                resultHTML += `理解度テスト：<span style="color:red;">不正解 (正解は The Sun)</span>`;
+            }
+
+            document.getElementById("result").innerHTML = resultHTML;
+
+            // 終了後に元のテーマ色に戻す（必要に応じて）
+            document.body.style.backgroundColor = "#ffffff";
+            document.body.style.color = "#000000";
+        }
+
+        // 初期設定：ページ読み込み時にデフォルトを選択
         window.onload = function () {
+            // "標準" と "白背景" を初期選択
             document.querySelectorAll(".controls")[0].querySelectorAll("button")[1].click();
             document.querySelectorAll(".controls")[1].querySelectorAll("button")[0].click();
-            document.querySelectorAll(".controls")[2].querySelectorAll("button")[0].click();
         };
     </script>
 
