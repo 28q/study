@@ -131,38 +131,61 @@
         // -------------------- 問題ストック --------------------
         // 第1部：下線部を代名詞に変える（直接目的語・間接目的語・前置詞の後 など）
         const rewriteStock = [
-            // 直接目的語のみ
-            { html: 'Tú lees <u>el libro</u>.', expected: 'Tú lo lees.' },
-            { html: 'Ella compra <u>los cuadernos</u>.', expected: 'Ella los compra.' },
-            { html: 'Nosotros vemos <u>la televisión</u>.', expected: 'Nosotros la vemos.' },
-            { html: 'Yo escribo <u>las cartas</u>.', expected: 'Yo las escribo.' },
-            // 女性名詞なのに-oで終わる例外 (la mano)
-            { html: 'La enfermera lava <u>la mano</u>.', expected: 'La enfermera la lava.' },
-            // 男性名詞なのに-aで終わる例外 (el problema, el día, el mapa)
-            { html: 'El profesor explica <u>el problema</u>.', expected: 'El profesor lo explica.' },
-            { html: 'Recordamos <u>aquel día</u>.', expected: 'Lo recordamos.' },
-            { html: 'Ellos tienen <u>un mapa</u>.', expected: 'Ellos lo tienen.' },
-            // 間接目的語のみ（カッコ内を代名詞化）
-            { html: 'Doy un regalo <u>a mi madre</u>.', expected: 'Le doy un regalo.' },
-            { html: 'Ellos mandan una carta <u>a sus padres</u>.', expected: 'Ellos les mandan una carta.' },
-            { html: '¿Explicas la regla <u>a los estudiantes</u>?', expected: '¿Les explicas la regla?' },
-            // 間接目的語 + 直接目的語 の代名詞化（両方）
-            { html: 'Él <u>me</u> da <u>el libro</u>.', expected: 'Él me lo da.' },
-            { html: 'Nosotros <u>te</u> compramos <u>la casa</u>.', expected: 'Nosotros te la compramos.' },
-            { html: '¿Vosotros <u>nos</u> recomendáis <u>este restaurante</u>?', expected: '¿Vosotros nos lo recomendáis?' },
-            { html: 'Ella <u>os</u> prepara <u>la cena</u>.', expected: 'Ella os la prepara.' },
-            // le/les + 直接目的語 → se
-            { html: 'Le explico <u>el problema</u>.', expected: 'Se lo explico.' },
-            { html: 'Les vendo <u>la moto</u>.', expected: 'Se la vendo.' },
-            { html: '¿Le prestas <u>estas revistas</u> a Pedro?', expected: '¿Se las prestas?' },
-            { html: 'Ellos <u>le</u> regalan <u>los discos</u>.', expected: 'Ellos se los regalan.' },
-            // 前置詞の後の代名詞（a, con, para など）
-            { html: 'Voy <u>con mi hermano</u>.', expected: 'Voy con él.' },
-            { html: 'Estas flores son <u>para ti y para mí</u>.', expected: 'Estas flores son para nosotros.' },
-            { html: '¿Estudias <u>sin tus compañeras</u>?', expected: '¿Estudias sin ellas?' },
-            { html: 'Quiero bailar <u>con Eva</u>.', expected: 'Quiero bailar con ella.' },
-            { html: 'El café es <u>para nosotros</u>.', expected: 'El café es para nosotros.' }
-        ];
+    // 直接目的語のみ
+    { html: 'Tú lees <u>el libro</u>.', expected: 'Tú lo lees.' },
+    { html: 'Ella compra <u>los cuadernos</u>.', expected: 'Ella los compra.' },
+    { html: 'Nosotros vemos <u>la televisión</u>.', expected: 'Nosotros la vemos.' },
+    { html: 'Yo escribo <u>las cartas</u>.', expected: 'Yo las escribo.' },
+
+    // 直接目的語（me / te / nos / os）
+    { html: 'El médico ayuda <u>a mí</u>.', expected: 'El médico me ayuda.' },
+    { html: 'La profesora llama <u>a ti</u>.', expected: 'La profesora te llama.' },
+    { html: 'El policía ve <u>a nosotros</u>.', expected: 'El policía nos ve.' },
+    { html: 'La vecina saluda <u>a vosotros</u>.', expected: 'La vecina os saluda.' },
+
+    // 女性名詞なのに -o で終わる例外
+    { html: 'La enfermera lava <u>la mano</u>.', expected: 'La enfermera la lava.' },
+
+    // 男性名詞なのに -a で終わる例外
+    { html: 'El profesor explica <u>el problema</u>.', expected: 'El profesor lo explica.' },
+    { html: 'Recordamos <u>aquel día</u>.', expected: 'Lo recordamos.' },
+    { html: 'Ellos tienen <u>un mapa</u>.', expected: 'Ellos lo tienen.' },
+
+    // 間接目的語のみ
+    { html: 'Doy un regalo <u>a mi madre</u>.', expected: 'Le doy un regalo.' },
+    { html: 'Ellos mandan una carta <u>a sus padres</u>.', expected: 'Ellos les mandan una carta.' },
+    { html: '¿Explicas la regla <u>a los estudiantes</u>?', expected: '¿Les explicas la regla?' },
+
+    // 間接目的語（me / te / nos / os）
+    { html: 'El camarero trae agua <u>a mí</u>.', expected: 'Me trae agua.' },
+    { html: 'La profesora entrega las hojas <u>a ti</u>.', expected: 'Te entrega las hojas.' },
+    { html: 'Mis amigos envían postales <u>a nosotros</u>.', expected: 'Nos envían postales.' },
+    { html: 'La dependienta vende dulces <u>a vosotros</u>.', expected: 'Os vende dulces.' },
+
+    // 間接目的語 + 直接目的語
+    { html: 'Él <u>me</u> da <u>el libro</u>.', expected: 'Él me lo da.' },
+    { html: 'Nosotros <u>te</u> compramos <u>la casa</u>.', expected: 'Nosotros te la compramos.' },
+    { html: '¿Vosotros <u>nos</u> recomendáis <u>este restaurante</u>?', expected: '¿Vosotros nos lo recomendáis?' },
+    { html: 'Ella <u>os</u> prepara <u>la cena</u>.', expected: 'Ella os la prepara.' },
+
+    // le / les + 直接目的語 → se
+    { html: 'Le explico <u>el problema</u>.', expected: 'Se lo explico.' },
+    { html: 'Les vendo <u>la moto</u>.', expected: 'Se la vendo.' },
+    { html: '¿Le prestas <u>estas revistas</u> a Pedro?', expected: '¿Se las prestas?' },
+    { html: 'Ellos <u>le</u> regalan <u>los discos</u>.', expected: 'Ellos se los regalan.' },
+
+    // 前置詞の後の代名詞
+    { html: 'Voy <u>con mi hermano</u>.', expected: 'Voy con él.' },
+    { html: 'Quiero bailar <u>con Eva</u>.', expected: 'Quiero bailar con ella.' },
+    { html: '¿Estudias <u>sin tus compañeras</u>?', expected: '¿Estudias sin ellas?' },
+    { html: 'Estas flores son <u>para ti y para mí</u>.', expected: 'Estas flores son para nosotros.' },
+    { html: 'Hablo <u>con ustedes</u>.', expected: 'Hablo con vosotros.' },
+
+    // conmigo / contigo / consigo
+    { html: 'Ella quiere venir <u>con mí</u>.', expected: 'Ella quiere venir conmigo.' },
+    { html: 'Voy <u>con ti</u>.', expected: 'Voy contigo.' },
+    { html: 'Pedro lleva el dinero <u>con él mismo</u>.', expected: 'Pedro lleva el dinero consigo.' }
+];
 
         // 第2部：動詞活用ストック（1人称単数不規則のみ、範囲: 1-2(1) zco/go/igo型, 1-2(2) saber, ver, dar, caber）
         const verbStock = [];
