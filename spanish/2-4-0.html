@@ -1,0 +1,124 @@
+これらを日本語からスペイン語をテストするhtmlを作って（選択式じゃなくて記述でいい） 参考
+
+    button.main-btn {
+        padding: 12px 24px;
+        font-size: 16px;
+        margin: 5px;
+        border: none;
+        border-radius: 8px;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button.main-btn:hover {
+        background-color: #45a049;
+    }
+
+    button.grade-btn {
+        background-color: #1976D2;
+    }
+
+    button.grade-btn:hover {
+        background-color: #1565C0;
+    }
+
+    .show-opt-btn {
+        background-color: #00897B;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 5px;
+        transition: background-color 0.2s;
+    }
+
+    .show-opt-btn:hover {
+        background-color: #00695C;
+    }
+
+    .quiz-container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .question {
+        background: white;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        border-left: 5px solid #2196F3;
+    }
+
+    .question-word {
+        font-size: 20px;
+        font-weight: bold;
+        color: #1976D2;
+        margin-bottom: 5px;
+    }
+
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .radio-label {
+        display: block;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .radio-label:hover {
+        background-color: #e3f2fd;
+        border-color: #2196F3;
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+        transform: scale(1.2);
+        cursor: pointer;
+    }
+
+    .result-msg {
+        font-weight: bold;
+        margin-top: 10px;
+        display: inline-block;
+    }
+
+    .correct {
+        color: #2e7d32;
+    }
+
+    .incorrect {
+        color: #c62828;
+    }
+
+    .note {
+        text-align: center;
+        font-size: 0.95em;
+        color: #555;
+        margin-bottom: 25px;
+        background: #fff3e0;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    #score-display {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #1976D2;
+        margin-top: 20px;
+        display: none;
+    }
+</style>
