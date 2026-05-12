@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スペイン語 1-4 演習 | Yo活用特化版</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.8; color: #111; }
+        h1, h2, h3 { text-align: center; margin: 0.4em 0; }
+        .meta { margin: 24px 0 30px; font-size: 18px; }
+        .meta div { margin: 4px 0; }
+        .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 20px; background: #f9f9f9; padding: 10px 15px; border-radius: 8px; }
+        button { padding: 10px 18px; font-size: 15px; cursor: pointer; }
+        select { padding: 8px; font-size: 15px; }
+        #timer-area { font-size: 18px; font-weight: bold; color: #b00020; margin-left: auto; }
+        .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 0 5px; vertical-align: middle; }
+        .audio-btn:hover { opacity: 0.6; }
+        input { margin-top: 6px; padding: 8px 10px; font-size: 16px; width: 100%; max-width: 600px; box-sizing: border-box; }
+        .question { margin: 18px 0 22px; }
+        .section { margin-top: 28px; padding-top: 8px; }
+        .correct { color: #0a7a0a; }
+        .incorrect { color: #b00020; }
+        #result { margin-top: 18px; font-weight: bold; }
+        .translation { display: none; color: #666; margin-left: 10px; }
+        .note { color: #444; font-size: 0.95em; margin-top: 2px; background: #f4f4f4; padding: 5px 10px; border-radius: 12px; display: inline-block; }
+        canvas { max-width: 520px; margin-top: 20px; }
+        .footer { margin-top: 24px; }
+        u { text-decoration: underline; text-underline-offset: 3px; font-weight: bold; }
+        .special-badge { background-color: #e6f7ff; border-left: 4px solid #1890ff; padding: 8px 15px; margin: 12px 0; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>小テスト 4　概要</h1>
+    <div class="meta">
+        <div>1.　以下の各文の下線部を代名詞に変えて、全文を書き換えてください。 2×4</div>
+        <div>2.　以下の動詞をかっこ内の主語に合わせて現在形に活用させてください。 1×2</div>
+        <div style="margin-left: 2.2em;">⇒ 動詞の範囲は「1人称単数不規則動詞（-zco/-go/-igo型とその他）」のみです。<strong style="background:#fff0b3; padding:2px 6px;">※ 第2問はすべて「yo」での活用を出題します</strong></div>
+    </div>
+
+    <div class="controls">
+        <button type="button" onclick="generateQuiz()">問題生成</button>
+        <button type="button" onclick="toggleAnswers()" id="toggleBtn">答え表示</button>
+        <label for="timeLimit" style="margin-left:10px;">制限時間:</label>
+        <select id="timeLimit">
+            <option value="0">制限なし</option>
+            <option value="120">2分</option>
+            <option value="180">3分</option>
+            <option value="300">5分</option>
+        </select>
+        <div id="timer-area" style="display:none;">残り時間: <span id="timeDisplay">--:--</span></div>
+    </div>
+
+    <form id="quizForm"></form>
+    <div id="result"></div>
+    <div style="margin-top:14px;">
+        <button type="button" onclick="gradeQuiz()">採点</button>
+        <button type="button" onclick="resetHistory()">履歴リセット</button>
+    </div>
+    <canvas id="chart" height="200"></canvas>
+    <p class="footer"><a href="../spanish.html">← 目次に戻る</a></p>
+
+    <script>
+        let showAnswers = false;
+        let currentAnswers = [];
+        let history = JSON.parse(localStorage.getItem('scoreHistory_spanish14') || '[]');
+        let chart = null;
+        let timerInterval = null;
+        let timeLeft = 0;
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function norm(s) {
+            return String(s).toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+        }
+
+        function toggleAnswers() {
+            showAnswers = !showAnswers;
+            document.querySelectorAll('.translation').forEach(e => e.style.display = showAnswers ? 'inline' : 'none');
+            document.getElementById('toggleBtn').textContent = showAnswers ? '答え非表示' : '答え表示';
+        }
+
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const esText = text.replace(/（.*?）/g, '').trim();
+            const u = new SpeechSynthesisUtterance(esText);
+            u.lang = 'es-ES';
+            u.rate = 0.9;
+            window.speechSynthesis.speak(u);
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            const limit = parseInt(document.getElementById('timeLimit').value, 10);
+            const area = document.getElementById('timer-area');
+            if (limit === 0) { area.style.display = 'none'; return; }
+            timeLeft = limit;
+            area.style.display = 'block';
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) { clearInterval(timerInterval); alert("時間切れです！自動採点します。"); gradeQuiz(); }
+            }, 1000);
+        }
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('timeDisplay').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function drawChart() {
+            const ctx = document.getElementById('chart');
+            if (!ctx || typeof Chart === 'undefined') return;
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: history.map((_, i) => `回${i + 1}`),
+                    datasets: [{ label: '得点(%)', data: history, fill: false, tension: 0.25 }]
+                },
+                options: { responsive: true, scales: { y: { min: 0, max: 100, ticks: { stepSize: 20 } } } }
+            });
+        }
+
+        // -------------------- 問題ストック --------------------
+        // 第1部：下線部を代名詞に変える（直接目的語・間接目的語・前置詞の後 など）　全問そのまま保持
+        const rewriteStock = [
+            // 直接目的語のみ
+            { html: 'Tú lees <u>el libro</u>.', expected: 'Tú lo lees.' },
+            { html: 'Ella compra <u>los cuadernos</u>.', expected: 'Ella los compra.' },
+            { html: 'Nosotros vemos <u>la televisión</u>.', expected: 'Nosotros la vemos.' },
+            { html: 'Yo escribo <u>las cartas</u>.', expected: 'Yo las escribo.' },
+            // 直接目的語（me / te / nos / os）
+            { html: 'El médico ayuda <u>a mí</u>.', expected: 'El médico me ayuda.' },
+            { html: 'La profesora llama <u>a ti</u>.', expected: 'La profesora te llama.' },
+            { html: 'El policía ve <u>a nosotros</u>.', expected: 'El policía nos ve.' },
+            { html: 'La vecina saluda <u>a vosotros</u>.', expected: 'La vecina os saluda.' },
+            // 女性名詞なのに -o で終わる例外
+            { html: 'La enfermera lava <u>la mano</u>.', expected: 'La enfermera la lava.' },
+            // 男性名詞なのに -a で終わる例外
+            { html: 'El profesor explica <u>el problema</u>.', expected: 'El profesor lo explica.' },
+            { html: 'Recordamos <u>aquel día</u>.', expected: 'Lo recordamos.' },
+            { html: 'Ellos tienen <u>un mapa</u>.', expected: 'Ellos lo tienen.' },
+            // 間接目的語のみ
+            { html: 'Doy un regalo <u>a mi madre</u>.', expected: 'Le doy un regalo.' },
+            { html: 'Ellos mandan una carta <u>a sus padres</u>.', expected: 'Ellos les mandan una carta.' },
+            { html: '¿Explicas la regla <u>a los estudiantes</u>?', expected: '¿Les explicas la regla?' },
+            // 間接目的語（me / te / nos / os）
+            { html: 'El camarero trae agua <u>a mí</u>.', expected: 'Me trae agua.' },
+            { html: 'La profesora entrega las hojas <u>a ti</u>.', expected: 'Te entrega las hojas.' },
+            { html: 'Mis amigos envían postales <u>a nosotros</u>.', expected: 'Nos envían postales.' },
+            { html: 'La dependienta vende dulces <u>a vosotros</u>.', expected: 'Os vende dulces.' },
+            // 間接目的語 + 直接目的語
+            { html: 'Él <u>me</u> da <u>el libro</u>.', expected: 'Él me lo da.' },
+            { html: 'Nosotros <u>te</u> compramos <u>la casa</u>.', expected: 'Nosotros te la compramos.' },
+            { html: '¿Vosotros <u>nos</u> recomendáis <u>este restaurante</u>?', expected: '¿Vosotros nos lo recomendáis?' },
+            { html: 'Ella <u>os</u> prepara <u>la cena</u>.', expected: 'Ella os la prepara.' },
+            // le / les + 直接目的語 → se
+            { html: 'Le explico <u>el problema</u>.', expected: 'Se lo explico.' },
+            { html: 'Les vendo <u>la moto</u>.', expected: 'Se la vendo.' },
+            { html: '¿Le prestas <u>estas revistas</u> a Pedro?', expected: '¿Se las prestas?' },
+            { html: 'Ellos <u>le</u> regalan <u>los discos</u>.', expected: 'Ellos se los regalan.' },
+            // 前置詞の後の代名詞
+            { html: 'Voy <u>con mi hermano</u>.', expected: 'Voy con él.' },
+            { html: 'Quiero bailar <u>con Eva</u>.', expected: 'Quiero bailar con ella.' },
+            { html: '¿Estudias <u>sin tus compañeras</u>?', expected: '¿Estudias sin ellas?' },
+            { html: 'Estas flores son <u>para ti y para mí</u>.', expected: 'Estas flores son para nosotros.' },
+            { html: 'Hablo <u>con ustedes</u>.', expected: 'Hablo con vosotros.' },
+            // conmigo / contigo / consigo
+            { html: 'Ella quiere venir <u>con mí</u>.', expected: 'Ella quiere venir conmigo.' },
+            { html: 'Voy <u>con ti</u>.', expected: 'Voy contigo.' },
+        ];
+
+        // -------------------- 第2部：動詞活用ストック (yo専用！すべて「yo」の形のみ)--------------------
+        // 範囲: 1人称単数不規則動詞 (-zco, -go, -igo 型 + saber, ver, dar, caber)
+        const verbYoForms = [
+            { verb: "conocer", subject: "yo", expected: "conozco" },
+            { verb: "salir", subject: "yo", expected: "salgo" },
+            { verb: "caer", subject: "yo", expected: "caigo" },
+            { verb: "producir", subject: "yo", expected: "produzco" },
+            { verb: "parecer", subject: "yo", expected: "parezco" },
+            { verb: "poner", subject: "yo", expected: "pongo" },
+            { verb: "hacer", subject: "yo", expected: "hago" },
+            { verb: "traer", subject: "yo", expected: "traigo" },
+            { verb: "saber", subject: "yo", expected: "sé" },
+            { verb: "ver", subject: "yo", expected: "veo" },
+            { verb: "dar", subject: "yo", expected: "doy" },
+            { verb: "caber", subject: "yo", expected: "quepo" },
+        ];
+        
+        // さらに使いやすく: シャッフルするための専用ストックとして保持 (重複防止はしないがランダムで選ぶ場合はOK)
+        
+        // 問題生成関数
+        function addRewriteQuestion(form, html, expected, index) {
+            currentAnswers.push(expected);
+            form.innerHTML += `
+                <div class="question">
+                    (${index + 1}) ${html}
+                    <button type="button" class="audio-btn" data-text="${expected}" onclick="speak(this.dataset.text)" title="模範解答を発音">🔊</button>
+                    <span class="translation">（${expected}）</span>
+                    <br>
+                    <input id="q${index}" autocomplete="off" placeholder="書き換えた全文を入力">
+                </div>`;
+        }
+
+        function addVerbQuestion(form, verb, subject, expected, index) {
+            currentAnswers.push(expected);
+            // 見やすくするため (yo) を強調表示
+            const subjectDisplay = subject === "yo" ? "yo (私)" : subject;
+            form.innerHTML += `
+                <div class="question">
+                    (${index + 1}) ${verb} (${subjectDisplay})　
+                    <button type="button" class="audio-btn" data-text="${expected}" onclick="speak(this.dataset.text)" title="活用形を発音">🔊</button>
+                    <span class="translation">（${expected}）</span>
+                    <br>
+                    <input id="q${index}" autocomplete="off" placeholder="活用形を入力">
+                </div>`;
+        }
+
+        function generateQuiz() {
+            const form = document.getElementById('quizForm');
+            const result = document.getElementById('result');
+            form.innerHTML = '';
+            result.innerHTML = '';
+            currentAnswers = [];
+            
+            // 第1部：下線部代名詞化 4問ランダム
+            form.innerHTML += `<div class="section"><h3>📘 1. 下線部を代名詞に変え、全文を書き換えなさい</h3>
+                <div class="note">例：Yo tomo <u>este café</u>. → Yo lo tomo.</div></div>`;
+            const selectedRewrites = shuffle(rewriteStock).slice(0, 4);
+            selectedRewrites.forEach((q, i) => addRewriteQuestion(form, q.html, q.expected, i));
+            
+            // 第2部：動詞活用 2問ランダム (Yoのみ限定ストックから選出)
+            form.innerHTML += `<div class="section"><h3>⭐ 2. 動詞を現在形に活用させなさい【すべて yo の形】</h3>
+                <div class="special-badge">🎯 このセクションの主語はすべて「yo (私)」です。不規則１人称単数形を答えてください。</div>
+                <div class="note">例： hacer (yo) → hago &nbsp;&nbsp;|&nbsp;&nbsp; conocer (yo) → conozco</div></div>`;
+            
+            // verbYoForms から重複なくランダム2問を選択
+            const shuffledYoVerbs = shuffle([...verbYoForms]);
+            const selectedVerbs = shuffledYoVerbs.slice(0, 2);
+            selectedVerbs.forEach((q, idx) => {
+                // インデックスは 4 + idx (第1部4問のあと)
+                addVerbQuestion(form, q.verb, q.subject, q.expected, 4 + idx);
+            });
+            
+            if (showAnswers) {
+                document.querySelectorAll('.translation').forEach(e => e.style.display = 'inline');
+            }
+            startTimer();
+        }
+
+        function gradeQuiz() {
+            clearInterval(timerInterval);
+            let score = 0;
+            let out = '';
+            currentAnswers.forEach((expected, i) => {
+                const input = document.getElementById('q' + i);
+                const userAns = input ? norm(input.value) : '';
+                const ok = userAns === norm(expected);
+                if (ok) score++;
+                // 表示用に期待値を強調
+                out += `<p class="${ok ? 'correct' : 'incorrect'}">${i + 1}: ${ok ? '✓ 正解' : '✗ 誤り → 正解: ' + expected}</p>`;
+            });
+            const total = currentAnswers.length;
+            const percent = total ? Math.round((score / total) * 100) : 0;
+            history.push(percent);
+            if (history.length > 10) history.shift();
+            localStorage.setItem('scoreHistory_spanish14', JSON.stringify(history));
+            const avg = history.length ? Math.round(history.reduce((a, b) => a + b, 0) / history.length) : 0;
+            out += `<p style="font-size:1.2rem; margin-top:12px;"><strong>${score}/${total}</strong> (${percent}%)</p>`;
+            out += `<p>直近${history.length}回の平均: ${avg}%</p>`;
+            document.getElementById('result').innerHTML = out;
+            drawChart();
+        }
+
+        function resetHistory() {
+            history = [];
+            localStorage.removeItem('scoreHistory_spanish14');
+            document.getElementById('result').innerHTML = '履歴をリセットしました。';
+            drawChart();
+        }
+
+        // ------------------------------------------------------------------
+        // 初期描画 & チャート読み込み
+        const chartScript = document.createElement('script');
+        chartScript.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        chartScript.onload = () => {
+            drawChart();
+        };
+        document.head.appendChild(chartScript);
+        
+        // 初期生成
+        generateQuiz();
+    </script>
+</body>
+</html>
