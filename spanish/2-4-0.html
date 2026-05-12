@@ -1,124 +1,266 @@
-これらを日本語からスペイン語をテストするhtmlを作って（選択式じゃなくて記述でいい） 参考
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>語彙テスト：名詞・場所の表現 (日本語 → スペイン語)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f7fa;
+            line-height: 1.8;
+        }
+        h1 { text-align: center; color: #333; }
+        .controls { text-align: center; margin-bottom: 20px; }
 
-    button.main-btn {
-        padding: 12px 24px;
-        font-size: 16px;
-        margin: 5px;
-        border: none;
-        border-radius: 8px;
-        background-color: #4CAF50;
-        color: white;
-        cursor: pointer;
-        font-weight: bold;
-    }
+        button.main-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-    button.main-btn:hover {
-        background-color: #45a049;
-    }
+        button.main-btn:hover {
+            background-color: #45a049;
+        }
 
-    button.grade-btn {
-        background-color: #1976D2;
-    }
+        button.grade-btn {
+            background-color: #1976D2;
+        }
 
-    button.grade-btn:hover {
-        background-color: #1565C0;
-    }
+        button.grade-btn:hover {
+            background-color: #1565C0;
+        }
 
-    .show-opt-btn {
-        background-color: #00897B;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        margin-top: 5px;
-        transition: background-color 0.2s;
-    }
+        .quiz-container {
+            max-width: 800px;
+            margin: auto;
+        }
 
-    .show-opt-btn:hover {
-        background-color: #00695C;
-    }
+        .question {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #2196F3;
+            transition: 0.3s;
+        }
 
-    .quiz-container {
-        max-width: 800px;
-        margin: auto;
-    }
+        .question-word {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
 
-    .question {
-        background: white;
-        padding: 20px;
-        margin-bottom: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        border-left: 5px solid #2196F3;
-    }
+        /* 記述式用のテキストボックススタイル */
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
 
-    .question-word {
-        font-size: 20px;
-        font-weight: bold;
-        color: #1976D2;
-        margin-bottom: 5px;
-    }
+        input[type="text"]:focus {
+            border-color: #2196F3;
+            outline: none;
+            box-shadow: 0 0 5px rgba(33, 150, 243, 0.4);
+        }
 
-    .options-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 15px;
-    }
+        .result-msg {
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
 
-    .radio-label {
-        display: block;
-        padding: 10px;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
+        .correct {
+            color: #2e7d32;
+        }
 
-    .radio-label:hover {
-        background-color: #e3f2fd;
-        border-color: #2196F3;
-    }
+        .incorrect {
+            color: #c62828;
+        }
 
-    input[type="radio"] {
-        margin-right: 10px;
-        transform: scale(1.2);
-        cursor: pointer;
-    }
+        .note {
+            text-align: center;
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 25px;
+            background: #fff3e0;
+            padding: 10px;
+            border-radius: 8px;
+        }
 
-    .result-msg {
-        font-weight: bold;
-        margin-top: 10px;
-        display: inline-block;
-    }
+        #score-display {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1976D2;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
 
-    .correct {
-        color: #2e7d32;
-    }
+<h1>
+    語彙テスト：名詞・場所の表現<br>
+    <span style="font-size:0.7em;">(日本語 → スペイン語 記述式)</span>
+</h1>
 
-    .incorrect {
-        color: #c62828;
-    }
+<div class="note">
+    ※ 提示された日本語に合うスペイン語を入力してください。<br>
+    ※ 冠詞（el, laなど）は入力不要です。<br>
+    ※ 大文字・小文字、アクセント記号（á, óなど）の有無は自動で判定・許容されます。
+</div>
 
-    .note {
-        text-align: center;
-        font-size: 0.95em;
-        color: #555;
-        margin-bottom: 25px;
-        background: #fff3e0;
-        padding: 10px;
-        border-radius: 8px;
-    }
+<div class="controls">
+    <button class="main-btn" onclick="generateQuiz()">シャッフルして再出題</button>
+    <button class="main-btn grade-btn" onclick="checkAnswers()">採点する</button>
+</div>
 
-    #score-display {
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        color: #1976D2;
-        margin-top: 20px;
-        display: none;
+<div id="score-display"></div>
+<div class="quiz-container" id="quiz"></div>
+
+<div class="controls" style="margin-top:30px;">
+    <button class="main-btn grade-btn" onclick="checkAnswers()">採点する</button>
+</div>
+
+<script>
+/* 語彙データ */
+const vocabList = [
+    // 名詞
+    { jp: "大学", sp: ["universidad"] },
+    { jp: "町、都市", sp: ["ciudad"] },
+    { jp: "家", sp: ["casa"] },
+    { jp: "駅", sp: ["estación", "estacion"] },
+    { jp: "ビル、建物", sp: ["edificio"] },
+    { jp: "喫茶店、カフェテリア", sp: ["cafetería", "cafeteria"] },
+    { jp: "授業、教室", sp: ["clase"] },
+    { jp: "祖父母", sp: ["abuelos"] },
+    { jp: "中心、中部", sp: ["centro"] },
+    { jp: "側、横", sp: ["lado"] },
+    { jp: "北", sp: ["norte"] },
+    { jp: "南", sp: ["sur"] },
+    { jp: "東", sp: ["este"] },
+    { jp: "西", sp: ["oeste"] },
+    
+    // 場所を表す前置詞・副詞句
+    { jp: "～に、〜の中で", sp: ["en"] },
+    { jp: "～の近くに", sp: ["cerca de"] },
+    { jp: "～の遠くに", sp: ["lejos de"] },
+    { jp: "～の側に、隣に", sp: ["al lado de"] },
+    { jp: "～の中心部に、中部に", sp: ["en el centro de"] },
+    { jp: "～の北部に", sp: ["en el norte de"] },
+
+    // その他の副詞・疑問詞
+    { jp: "近くに", sp: ["cerca"] },
+    { jp: "遠くに", sp: ["lejos"] },
+    { jp: "どこ", sp: ["dónde", "donde"] }
+];
+
+let currentQuizSet = [];
+
+// 配列をシャッフルする関数
+function shuffle(array) {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
     }
-</style>
+    return result;
+}
+
+// 判定用に文字列を正規化する関数（小文字化、前後空白削除、アクセント記号の除去）
+function normalizeString(str) {
+    return str.toLowerCase()
+              .trim()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '');
+}
+
+// クイズを描画する関数
+function generateQuiz() {
+    const quizContainer = document.getElementById("quiz");
+    quizContainer.innerHTML = "";
+    document.getElementById("score-display").style.display = "none";
+
+    currentQuizSet = shuffle(vocabList);
+
+    currentQuizSet.forEach((item, index) => {
+        quizContainer.innerHTML += `
+            <div class="question" id="questionBox-${index}">
+                <div class="question-word">
+                    問 ${index + 1}. &nbsp;&nbsp; ${item.jp}
+                </div>
+
+                <input type="text" id="ans-${index}" placeholder="スペイン語を入力..." autocomplete="off">
+                
+                <div class="result-msg" id="result-${index}"></div>
+            </div>
+        `;
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 答え合わせをする関数
+function checkAnswers() {
+    let score = 0;
+
+    currentQuizSet.forEach((item, index) => {
+        const inputEl = document.getElementById(`ans-${index}`);
+        const userAns = inputEl.value;
+        const resultMsg = document.getElementById(`result-${index}`);
+        const questionBox = document.getElementById(`questionBox-${index}`);
+
+        // 未入力の場合
+        if (userAns.trim() === "") {
+            resultMsg.innerHTML = `❌ 未解答（正答: ${item.sp[0]}）`;
+            resultMsg.className = "result-msg incorrect";
+            questionBox.style.borderLeftColor = "#c62828";
+            questionBox.style.backgroundColor = "#ffebee";
+            return;
+        }
+
+        // 入力値と正答リストを比較
+        const normalizedUserAns = normalizeString(userAns);
+        const isCorrect = item.sp.some(correctSp => normalizeString(correctSp) === normalizedUserAns);
+
+        if (isCorrect) {
+            score++;
+            resultMsg.innerHTML = "⭕ 正解";
+            resultMsg.className = "result-msg correct";
+            questionBox.style.borderLeftColor = "#2e7d32";
+            questionBox.style.backgroundColor = "#e8f5e9";
+        } else {
+            // 不正解の場合、正解の綴り（配列の先頭のもの）を表示
+            resultMsg.innerHTML = `❌ 不正解（正答: ${item.sp[0]}）`;
+            resultMsg.className = "result-msg incorrect";
+            questionBox.style.borderLeftColor = "#c62828";
+            questionBox.style.backgroundColor = "#ffebee";
+        }
+    });
+
+    const scoreDisplay = document.getElementById("score-display");
+    scoreDisplay.innerHTML = `採点結果: ${score} / ${currentQuizSet.length} 点`;
+    scoreDisplay.style.display = "block";
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 初回読み込み時にクイズを生成
+generateQuiz();
+</script>
+
+</body>
+</html>
