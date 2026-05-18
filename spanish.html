@@ -2,53 +2,642 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>スペイン語</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>演習1-5：gustar型動詞5種＋不規則活用6問（日本語ヒント付き・強調部分も空欄）</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            line-height: 1.8;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fefaf2;
+            color: #1e2a32;
+            line-height: 1.5;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            margin: 0.3em 0;
         }
         h1 {
+            font-size: 1.9rem;
+            border-bottom: 3px solid #b22234;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+        .title-block {
             text-align: center;
+            margin-bottom: 20px;
         }
-        h2 {
-            margin-top: 30px;
+        .meta-box {
+            background: #e8f0e5;
+            border-left: 8px solid #2b5e2b;
+            padding: 12px 18px;
+            margin: 20px 0;
+            border-radius: 20px;
+            font-size: 0.95rem;
         }
-        a {
-            text-decoration: none;
-            color: #1a73e8;
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            background: #fff3e0;
+            padding: 12px 20px;
+            border-radius: 50px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
-        a:hover {
-            text-decoration: underline;
+        button {
+            background: #2c5f2d;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        button:hover {
+            background: #1f4520;
+            transform: scale(0.97);
+        }
+        .secondary {
+            background: #6c757d;
+        }
+        .danger {
+            background: #b23c1c;
+        }
+        select {
+            padding: 7px 12px;
+            border-radius: 30px;
+            border: 1px solid #ccc;
+            background: white;
+        }
+        #timer-area {
+            font-weight: bold;
+            background: #ffe0b5;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: #b22b00;
+        }
+        .section {
+            background: white;
+            border-radius: 28px;
+            padding: 18px 22px;
+            margin-bottom: 32px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e9d6b0;
+        }
+        .section h3 {
+            text-align: left;
+            border-left: 6px solid #b22234;
+            padding-left: 15px;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        .question {
+            margin-bottom: 28px;
+            padding: 8px 6px 12px 12px;
+            background: #fefaf5;
+            border-radius: 20px;
+            border-bottom: 1px solid #eee3cf;
+        }
+        .question-text {
+            font-size: 1rem;
+            font-weight: 500;
+            background: #f7f2e7;
+            padding: 8px 15px;
+            border-radius: 28px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .jp-hint {
+            background: #e3f0f5;
+            padding: 4px 12px;
+            border-radius: 28px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-left: 12px;
+            color: #005f6b;
+        }
+        .blank {
+            background: #fff0c0;
+            padding: 2px 8px;
+            border-radius: 30px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #a52a1a;
+            border: 1px dashed #c0a16b;
+        }
+        input {
+            width: 100%;
+            max-width: 650px;
+            padding: 10px 14px;
+            font-size: 1rem;
+            border: 1px solid #cfb87c;
+            border-radius: 36px;
+            margin-top: 10px;
+            background: #fffdf9;
+        }
+        input:focus {
+            outline: none;
+            border-color: #2c5f2d;
+            box-shadow: 0 0 0 2px rgba(44,95,45,0.2);
+        }
+        .audio-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-left: 8px;
+            vertical-align: middle;
+            padding: 0 6px;
+            color: #2c5f2d;
+        }
+        .translation {
+            font-size: 0.85rem;
+            color: #4d6a4d;
+            margin-left: 12px;
+            background: #eef4ea;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: none;
+        }
+        .correct { color: #1f6d1f; font-weight: bold; }
+        .incorrect { color: #bd3c1a; font-weight: bold; }
+        #result {
+            background: #f4f1e1;
+            border-radius: 24px;
+            padding: 16px 22px;
+            margin-top: 24px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 0.8rem;
+            color: #5a5a4e;
+        }
+        .note {
+            font-size: 0.85rem;
+            background: #fff7e5;
+            padding: 6px 15px;
+            border-radius: 60px;
+            margin-top: -8px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        canvas {
+            max-width: 100%;
+            margin-top: 20px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 8px;
         }
     </style>
 </head>
 <body>
-    <h1>スペイン語</h1>
+<div class="title-block">
+    <h1>📘 演習 1-5</h1>
+    <p style="margin-top: 6px;">gustar型動詞 (gustar / interesar / importar / apetecer / doler) + 不規則活用動詞</p>
+</div>
+<div class="meta-box">
+    🔹 <strong>第一問 (1〜4)</strong> : 日本語の意味に合わせて、間接目的語代名詞 + gustar型動詞（単数/複数）+ 強調の「a + 人/名詞」も空欄(_____)です。<br>
+    🔹 <strong>第二問 (5〜10)</strong> : 不規則動詞の現在形活用（各人称6形からランダムに6問）。<br>
+    空欄はまとめて1文を入力。
+</div>
+<div class="controls">
+    <button onclick="generateQuiz()">✨ 問題生成 (ランダム)</button>
+    <button onclick="gradeQuiz()" class="secondary">📝 採点</button>
+    <button onclick="toggleAnswers()" id="toggleBtn">🔎 答え表示</button>
+    <button onclick="resetHistory()" class="danger">🗑 履歴リセット</button>
+    <label for="timeLimit">⏱️ 制限時間:</label>
+    <select id="timeLimit">
+        <option value="0">制限なし</option>
+        <option value="180">3分</option>
+        <option value="300">5分</option>
+        <option value="480">8分</option>
+    </select>
+    <div id="timer-area" style="display:none;">⏳ 残り <span id="timeDisplay">--:--</span></div>
+</div>
+<form id="quizForm"></form>
+<div id="result"></div>
+<canvas id="scoreChart" width="600" height="180" style="max-width:100%;"></canvas>
+<div class="footer">🎧 各問題の🔊ボタンで模範解答をリスニングできます (スペイン語)</div>
 
-    <h2>1列</h2>
-    <ul>
-        <li><a href="spanish/1-1.html">1-1</a></li>
-        <li><a href="spanish/1-1-words.html">1-1-words</a></li>
-        <li><a href="spanish/1-2.html">1-2</a></li>
-        <li><a href="spanish/1-3.html">1-3</a></li>
-        <li><a href="spanish/1-4.html">1-4</a></li>
-        <li><a href="spanish/1-5.html">1-5</a></li>
-    </ul>
-
-    <h2>2列</h2>
-    <ul>
-        <li><a href="spanish/2-1.html">2-1</a></li>
-        <li><a href="spanish/2-1-alphabeto.html">2-1-alphabeto</a></li>
-        <li><a href="spanish/2-2.html">2-2</a></li>
-        <li><a href="spanish/2-2-words.html">2-2-words</a></li>
-        <li><a href="spanish/2-3.html">2-3</a></li>
-        <li><a href="spanish/2-3-words.html">2-3-words</a></li>
-        <li><a href="spanish/2-4.html">2-4</a></li>
-        <li><a href="spanish/2-4-words.html">2-4-words</a></li>
-    </ul>
-
-    <p><a href="index.html">← トップページ</a></p>
+<script>
+    // --------------------------------------------------------------
+    // gustar型動詞 (5種類)
+    const gustarLikeVerbs = {
+        gustar:   { sing: "gusta", plural: "gustan" },
+        interesar:{ sing: "interesa", plural: "interesan" },
+        importar: { sing: "importa", plural: "importan" },
+        apetecer: { sing: "apetece", plural: "apetecen" },
+        doler:    { sing: "duele", plural: "duelen" }
+    };
+    
+    // 間接目的語代名詞 (人称)
+    const indirectPronouns = {
+        yo: "me", tu: "te", el: "le", ella: "le", usted: "le",
+        nosotros: "nos", vosotros: "os", ellos: "les", ellas: "les", ustedes: "les"
+    };
+    
+    // 強調用 a + 人称代名詞
+    const emphasisPronoun = {
+        yo: "a mí", tu: "a ti", el: "a él", ella: "a ella", usted: "a usted",
+        nosotros: "a nosotros", vosotros: "a vosotros", ellos: "a ellos", ellas: "a ellas", ustedes: "a ustedes"
+    };
+    
+    // 強調用 a + 名詞 (様々)
+    const emphasisNouns = [
+        "a mi abuelo", "a mis padres", "a la profesora", "a Juan", "a Ana y Luis", "a Eva", "a los estudiantes", "a María"
+    ];
+    
+    // 主語（単数・複数）ヒント兼文中に登場
+    const singularSubjects = [
+        "el cine", "la música clásica", "el español", "viajar", "el chocolate", "la playa",
+        "el libro", "la política", "el arte moderno", "leer novelas", "el fútbol", "la gramática"
+    ];
+    const pluralSubjects = [
+        "los perros", "las flores", "los viajes", "las películas de terror", "los deportes",
+        "las verduras", "los exámenes", "las redes sociales", "los problemas"
+    ];
+    
+    // 日本語訳テンプレート (動詞・主語のニュアンスに合わせて生成)
+    function getJapaneseHint(verbKey, subjectPhrase, isPlural, personKey, hasEmph, emphText) {
+        const verbJp = {
+            gustar: "好きだ", interesar: "興味がある", importar: "重要だ／気になる",
+            apetecer: "したい気分だ／食べたい", doler: "痛い"
+        };
+        let subjSimple = subjectPhrase;
+        let base = (isPlural ? "〜が好きだ（複数）" : "〜が好きだ");
+        if (verbKey === "interesar") base = isPlural ? "興味がある（複数）" : "興味がある";
+        if (verbKey === "importar") base = isPlural ? "重要だ（複数）" : "重要だ／気になる";
+        if (verbKey === "apetecer") base = isPlural ? "したい気分だ（複数）" : "したい気分だ";
+        if (verbKey === "doler") base = isPlural ? "痛い（複数部位）" : "痛い";
+        
+        let personJp = "";
+        const personMap = { yo:"私", tu:"君", el:"彼", ella:"彼女", usted:"あなた",
+                            nosotros:"私たち", vosotros:"君たち", ellos:"彼ら", ellas:"彼女ら", ustedes:"あなたたち" };
+        personJp = personMap[personKey] || "その人";
+        
+        let emphJp = "";
+        if (hasEmph && emphText) emphJp = ` (${emphText}に関して)`;
+        return `${personJp}は ${subjSimple} ${base}${emphJp}。`;
+    }
+    
+    // 第一問用の問題プールを生成 (全てのパターンからランダムに4問)
+    function generateGustarQuestionPool() {
+        const pool = [];
+        const verbs = Object.keys(gustarLikeVerbs);
+        const persons = ["yo","tu","el","nosotros","vosotros","ellos"];
+        
+        for (let verb of verbs) {
+            const forms = gustarLikeVerbs[verb];
+            for (let person of persons) {
+                const pron = indirectPronouns[person];
+                // ----- 単数主語パターン (強調なし) -----
+                for (let subj of singularSubjects) {
+                    const answer = `${pron} ${forms.sing} ${subj}`;
+                    const jpText = getJapaneseHint(verb, subj, false, person, false, "");
+                    const displayText = `_____ _____ ${subj}.`;
+                    pool.push({ type:"gustar", displayText, answer, jpHint: jpText, extra:"" });
+                    
+                    // 強調 + a人称
+                    const emphPhrase = emphasisPronoun[person];
+                    const answerEmph = `${emphPhrase} ${pron} ${forms.sing} ${subj}`;
+                    const displayEmph = `${emphPhrase} _____ _____ ${subj}.`;
+                    const jpEmph = getJapaneseHint(verb, subj, false, person, true, emphPhrase);
+                    pool.push({ type:"gustar", displayText: displayEmph, answer: answerEmph, jpHint: jpEmph, extra:"" });
+                }
+                // ----- 複数主語パターン (強調なし)-----
+                for (let subj of pluralSubjects) {
+                    const answer = `${pron} ${forms.plural} ${subj}`;
+                    const jpText = getJapaneseHint(verb, subj, true, person, false, "");
+                    const displayText = `_____ _____ ${subj}.`;
+                    pool.push({ type:"gustar", displayText, answer, jpHint: jpText, extra:"" });
+                    
+                    const emphPhrase = emphasisPronoun[person];
+                    const answerEmph = `${emphPhrase} ${pron} ${forms.plural} ${subj}`;
+                    const displayEmph = `${emphPhrase} _____ _____ ${subj}.`;
+                    const jpEmph = getJapaneseHint(verb, subj, true, person, true, emphPhrase);
+                    pool.push({ type:"gustar", displayText: displayEmph, answer: answerEmph, jpHint: jpEmph, extra:"" });
+                }
+                // ----- 名詞強調パターン (a + 名詞), 単数主語 -----
+                for (let nounEmph of emphasisNouns) {
+                    for (let subj of singularSubjects) {
+                        const answerNoun = `${nounEmph} ${pron} ${forms.sing} ${subj}`;
+                        const displayNoun = `${nounEmph} _____ _____ ${subj}.`;
+                        const jpNoun = getJapaneseHint(verb, subj, false, person, true, nounEmph);
+                        pool.push({ type:"gustar", displayText: displayNoun, answer: answerNoun, jpHint: jpNoun, extra:"" });
+                    }
+                    for (let subj of pluralSubjects) {
+                        const answerNounPl = `${nounEmph} ${pron} ${forms.plural} ${subj}`;
+                        const displayNounPl = `${nounEmph} _____ _____ ${subj}.`;
+                        const jpNounPl = getJapaneseHint(verb, subj, true, person, true, nounEmph);
+                        pool.push({ type:"gustar", displayText: displayNounPl, answer: answerNounPl, jpHint: jpNounPl, extra:"" });
+                    }
+                }
+            }
+        }
+        // doler 身体部位特別パターン追加 (より自然に)
+        const bodyParts = ["la cabeza", "los pies", "el estómago", "las rodillas", "la espalda", "los dientes"];
+        for (let part of bodyParts) {
+            const isSingularPart = !part.startsWith("los") && !part.startsWith("las");
+            const formDoler = isSingularPart ? "duele" : "duelen";
+            for (let person of persons) {
+                const pron = indirectPronouns[person];
+                const answer = `${pron} ${formDoler} ${part}`;
+                const jpText = `${person === "yo" ? "私" : person==="tu"?"君":person==="el"?"彼":person==="nosotros"?"私たち":person==="vosotros"?"君たち":"彼ら"}は ${part} が痛い。`;
+                const displayText = `_____ _____ ${part}.`;
+                pool.push({ type:"gustar", displayText, answer, jpHint: jpText, extra:"" });
+                // 強調版
+                const emphPhrase = emphasisPronoun[person];
+                const answerEmph = `${emphPhrase} ${pron} ${formDoler} ${part}`;
+                const displayEmph = `${emphPhrase} _____ _____ ${part}.`;
+                const jpEmph = `${emphPhrase}に関して、${part}が痛い。`;
+                pool.push({ type:"gustar", displayText: displayEmph, answer: answerEmph, jpHint: jpEmph, extra:"" });
+            }
+        }
+        return pool;
+    }
+    
+    // 第二問: 不規則動詞(全人称6形)
+    const irregularVerbs = {
+        tener:   ["tengo", "tienes", "tiene", "tenemos", "tenéis", "tienen"],
+        decir:   ["digo", "dices", "dice", "decimos", "decís", "dicen"],
+        venir:   ["vengo", "vienes", "viene", "venimos", "venís", "vienen"],
+        construir:["construyo", "construyes", "construye", "construimos", "construís", "construyen"],
+        oír:     ["oigo", "oyes", "oye", "oímos", "oís", "oyen"],
+        ir:      ["voy", "vas", "va", "vamos", "vais", "van"],
+        concluir:["concluyo", "concluyes", "concluye", "concluimos", "concluís", "concluyen"],
+        salir:   ["salgo", "sales", "sale", "salimos", "salís", "salen"],
+        poner:   ["pongo", "pones", "pone", "ponemos", "ponéis", "ponen"],
+        hacer:   ["hago", "haces", "hace", "hacemos", "hacéis", "hacen"]
+    };
+    const subjectList = ["yo", "tú", "él/ella/usted", "nosotros", "vosotros", "ellos/ellas/ustedes"];
+    
+    function getVerbPool() {
+        const pool = [];
+        for (let [verb, forms] of Object.entries(irregularVerbs)) {
+            for (let idx = 0; idx < forms.length; idx++) {
+                pool.push({
+                    verb: verb,
+                    subject: subjectList[idx],
+                    answer: forms[idx]
+                });
+            }
+        }
+        return pool;
+    }
+    
+    // グローバル状態
+    let currentQuestions = [];      // { inputId, answer, displayText, jpHint }
+    let currentAnswers = [];
+    let showAnswersFlag = false;
+    let timerInterval = null;
+    let timeLeft = 0;
+    let scoreHistory = JSON.parse(localStorage.getItem('spanish_exam_history_16') || '[]');
+    
+    function normalize(str) {
+        if (!str) return '';
+        return str.toLowerCase().trim()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s+/g, ' ')
+            .replace(/[¿?¡!]/g, '');
+    }
+    
+    function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+    
+    function speakText(text) {
+        if (!text) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+    }
+    
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        const limitSec = parseInt(document.getElementById('timeLimit').value, 10);
+        const timerDiv = document.getElementById('timer-area');
+        if (limitSec === 0) {
+            timerDiv.style.display = 'none';
+            return;
+        }
+        timeLeft = limitSec;
+        timerDiv.style.display = 'block';
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            if (timeLeft <= 1) {
+                clearInterval(timerInterval);
+                timerDiv.style.display = 'none';
+                alert("⏰ 制限時間終了！自動採点します。");
+                gradeQuiz();
+            } else {
+                timeLeft--;
+                updateTimerDisplay();
+            }
+        }, 1000);
+    }
+    
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timeDisplay').innerText = `${minutes}:${seconds.toString().padStart(2,'0')}`;
+    }
+    
+    function toggleAnswers() {
+        showAnswersFlag = !showAnswersFlag;
+        document.querySelectorAll('.answer-hint').forEach(el => {
+            el.style.display = showAnswersFlag ? 'inline' : 'none';
+        });
+        document.getElementById('toggleBtn').innerText = showAnswersFlag ? '🔒 答え非表示' : '🔓 答え表示';
+    }
+    
+    function resetHistory() {
+        scoreHistory = [];
+        localStorage.setItem('spanish_exam_history_16', JSON.stringify(scoreHistory));
+        drawChart();
+        document.getElementById('result').innerHTML = '<p>📊 スコア履歴をリセットしました。</p>';
+    }
+    
+    function drawChart() {
+        const canvas = document.getElementById('scoreChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!scoreHistory.length) {
+            ctx.font = '14px sans-serif';
+            ctx.fillStyle = '#777';
+            ctx.fillText('履歴がありません (採点後に表示)', 20, 60);
+            return;
+        }
+        const w = canvas.width, h = canvas.height;
+        const margin = 40;
+        const graphW = w - margin * 2;
+        const step = graphW / (scoreHistory.length - 1 || 1);
+        ctx.beginPath();
+        ctx.moveTo(margin, h - margin - (scoreHistory[0] / 100) * (h - margin * 2));
+        for (let i = 1; i < scoreHistory.length; i++) {
+            let x = margin + i * step;
+            let y = h - margin - (scoreHistory[i] / 100) * (h - margin * 2);
+            ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = '#2c5f2d';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.fillStyle = '#b22234';
+        for (let i = 0; i < scoreHistory.length; i++) {
+            let x = margin + i * step;
+            let y = h - margin - (scoreHistory[i] / 100) * (h - margin * 2);
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#1e2a32';
+            ctx.fillText(scoreHistory[i] + '%', x - 12, y - 6);
+            ctx.fillStyle = '#b22234';
+        }
+        ctx.fillStyle = '#3a5e3a';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('過去の得点推移', margin, 25);
+    }
+    
+    // メイン生成
+    function generateQuiz() {
+        if (timerInterval) clearInterval(timerInterval);
+        const form = document.getElementById('quizForm');
+        form.innerHTML = '';
+        currentQuestions = [];
+        currentAnswers = [];
+        
+        // 第一問: 4問ランダム
+        const gustarPool = generateGustarQuestionPool();
+        const shuffledGustar = shuffleArray(gustarPool);
+        const selectedGustar = shuffledGustar.slice(0, 4);
+        
+        const firstSection = document.createElement('div');
+        firstSection.className = 'section';
+        firstSection.innerHTML = `<h3>📌 第一問 (1〜4) : gustar / interesar / importar / apetecer / doler を補充（日本語意味に合わせて）</h3>
+        <div class="note">💡 空欄(_____) に間接目的語代名詞＋動詞(単数/複数) または強調の「a+人」も含めた全文を入力してください。</div>`;
+        form.appendChild(firstSection);
+        
+        selectedGustar.forEach((q, idx) => {
+            const qNum = idx + 1;
+            const answerStr = q.answer;
+            currentAnswers.push(answerStr);
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                <div class="question-text">
+                    ${qNum}. ${q.displayText}
+                    <span class="jp-hint">📖 ${q.jpHint}</span>
+                    <button type="button" class="audio-btn" data-answer="${answerStr.replace(/[“”]/g, '')}" onclick="speakText(this.dataset.answer)">🔊</button>
+                    <span class="answer-hint translation" style="display:none;"> → ${answerStr}</span>
+                </div>
+                <input type="text" id="q_${currentQuestions.length}" placeholder="スペイン語で全文を入力" autocomplete="off">
+            `;
+            firstSection.appendChild(questionDiv);
+            currentQuestions.push({
+                id: currentQuestions.length,
+                answer: answerStr,
+                inputId: `q_${currentQuestions.length-1}`,
+                displayText: q.displayText,
+                jpHint: q.jpHint
+            });
+        });
+        
+        // 第二問: 不規則動詞から6問ランダム
+        const verbPool = getVerbPool();
+        const shuffledVerbs = shuffleArray(verbPool);
+        const selectedVerbs = shuffledVerbs.slice(0, 6);
+        
+        const secondSection = document.createElement('div');
+        secondSection.className = 'section';
+        secondSection.innerHTML = `<h3>⚡ 第二問 (5〜10) : 不規則動詞の現在形活用 (各人称6パターン)</h3>
+        <div class="note">🔁 tener, decir, venir, construir, oír, ir, concluir, salir, poner, hacer など</div>`;
+        form.appendChild(secondSection);
+        
+        selectedVerbs.forEach((item, idx) => {
+            const qNum = idx + 5;
+            const answerForm = item.answer;
+            currentAnswers.push(answerForm);
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                <div class="question-text">
+                    ${qNum}. ${item.verb} (${item.subject}) 
+                    <button type="button" class="audio-btn" data-answer="${answerForm}" onclick="speakText(this.dataset.answer)">🔊</button>
+                    <span class="answer-hint translation" style="display:none;"> → ${answerForm}</span>
+                </div>
+                <input type="text" id="q_${currentQuestions.length}" placeholder="活用形を入力" autocomplete="off">
+            `;
+            secondSection.appendChild(questionDiv);
+            currentQuestions.push({
+                id: currentQuestions.length,
+                answer: answerForm,
+                inputId: `q_${currentQuestions.length-1}`,
+                displayText: `${item.verb} (${item.subject})`,
+                jpHint: ""
+            });
+        });
+        
+        if (showAnswersFlag) {
+            document.querySelectorAll('.answer-hint').forEach(el => el.style.display = 'inline');
+        }
+        startTimer();
+        document.getElementById('result').innerHTML = '';
+    }
+    
+    function gradeQuiz() {
+        if (timerInterval) clearInterval(timerInterval);
+        let correctCount = 0;
+        let resultHtml = '<h3>📋 採点結果</h3><ul style="list-style:none; padding-left:0;">';
+        for (let i = 0; i < currentQuestions.length; i++) {
+            const q = currentQuestions[i];
+            const inputField = document.getElementById(q.inputId);
+            const userRaw = inputField ? inputField.value : '';
+            const userNorm = normalize(userRaw);
+            const correctNorm = normalize(q.answer);
+            const isOk = (userNorm === correctNorm);
+            if (isOk) correctCount++;
+            const statusIcon = isOk ? '✅' : '❌';
+            resultHtml += `<li>${statusIcon} <strong>問${i+1}</strong> (${q.displayText} ${q.jpHint ? "／"+q.jpHint : ""})<br>
+            <span style="font-size:0.9rem;">📝 入力: ${userRaw || '(空白)'} &nbsp; → ✔️ 正解: ${q.answer}</span><br></li>`;
+        }
+        const total = currentQuestions.length;
+        const percent = total ? Math.round((correctCount / total) * 100) : 0;
+        resultHtml += `</ul><p style="font-size:1.3rem;">🎯 ${correctCount} / ${total} 正解 (${percent}%)</p>`;
+        scoreHistory.push(percent);
+        if (scoreHistory.length > 8) scoreHistory.shift();
+        localStorage.setItem('spanish_exam_history_16', JSON.stringify(scoreHistory));
+        const avg = scoreHistory.length ? Math.round(scoreHistory.reduce((a,b)=>a+b,0)/scoreHistory.length) : 0;
+        resultHtml += `<p>📈 直近${scoreHistory.length}回の平均点: ${avg}%</p>`;
+        document.getElementById('result').innerHTML = resultHtml;
+        drawChart();
+    }
+    
+    window.onload = () => {
+        generateQuiz();
+        drawChart();
+    };
+    
+    window.generateQuiz = generateQuiz;
+    window.gradeQuiz = gradeQuiz;
+    window.toggleAnswers = toggleAnswers;
+    window.resetHistory = resetHistory;
+    window.speakText = speakText;
+</script>
 </body>
 </html>
