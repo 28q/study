@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>演習1-5：gustar型動詞（強調部も空欄）＋不規則活用6問</title>
+    <title>演習1-5：gustar型動詞（強調部も空欄＋名詞ヒント）＋不規則活用6問</title>
     <style>
         * {
             box-sizing: border-box;
@@ -125,6 +125,14 @@
             margin-left: 12px;
             color: #005f6b;
         }
+        .noun-hint {
+            background: #fff0d6;
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 10px;
+            color: #b45f1b;
+        }
         .blank {
             background: #fff0c0;
             padding: 2px 8px;
@@ -206,7 +214,7 @@
     <p>gustar型動詞 (gustar / interesar / importar / apetecer / doler) + 不規則活用動詞</p>
 </div>
 <div class="meta-box">
-    🔹 <strong>第一問 (1〜4)</strong> : 日本語の意味に合わせて、空欄「_____」に適切な語句（<u>強調の a+人称/名詞</u>、<u>間接目的語代名詞</u>、<u>動詞</u>）を入れて全文を完成させてください。<br>
+    🔹 <strong>第一問 (1〜4)</strong> : 日本語の意味と「対象の名詞ヒント」を参考に、空欄「_____」に適切な語句（<u>強調の a+人称/名詞</u>、<u>間接目的語代名詞</u>、<u>動詞</u>）を入れて全文を完成させてください。<br>
     🔹 <strong>第二問 (5〜10)</strong> : 不規則動詞の現在形活用（各人称6形からランダムに6問）。<br>
     📍 アクセント記号なしでも正答扱い（正規化して比較）。入力は<strong>スペイン語の全文</strong>（空欄を全て埋めた状態）でお願いします。
 </div>
@@ -232,50 +240,50 @@
 <script>
     // --------------------------------------------------------------
     // 第一問: 自然な文のストック (強調部・代名詞・動詞すべてを空欄 _____ で表現)
-    // 各オブジェクト: fullAnswer (完全な正解文), displayText (_____ を含む問題文), jp (日本語訳)
-    // gustar, interesar, importar, apetecer, doler を網羅
+    // 各オブジェクト: fullAnswer, displayText, jp, targetHint (対象名詞のヒント)
+    // gustar, interesar, importar, apetecer, doler を網羅し、「老人のような名詞」をヒントで明示
     // --------------------------------------------------------------
     const gustarQuestionStock = [
-        { fullAnswer: "Me gustan los perros.", displayText: "_____ _____ los perros.", jp: "私は犬が好きです。" },
-        { fullAnswer: "No me gusta el café.", displayText: "_____ _____ el café.", jp: "私はコーヒーが好きではない。" },
-        { fullAnswer: "¿Te gusta viajar?", displayText: "¿_____ _____ viajar?", jp: "君は旅行するのが好きですか。" },
-        { fullAnswer: "A Antonio le interesa la cultura japonesa.", displayText: "_____ _____ _____ la cultura japonesa.", jp: "アントニオは日本文化に興味がある。" },
-        { fullAnswer: "A Luisa y a Luis no les interesa la literatura española.", displayText: "_____ _____ _____ la literatura española.", jp: "ルイサとルイスはスペイン文学に興味がない。" },
-        { fullAnswer: "A mis padres les encanta cantar en el karaoke.", displayText: "_____ _____ _____ cantar en el karaoke.", jp: "私の両親はカラオケで歌うのが大好きだ。" },
-        { fullAnswer: "Nos encantan las joyas.", displayText: "_____ _____ las joyas.", jp: "私たちは宝石が大好きです。" },
-        { fullAnswer: "Me duelen los ojos.", displayText: "_____ _____ los ojos.", jp: "私は目が痛いです。" },
-        { fullAnswer: "¿Te duele?", displayText: "¿_____ _____?", jp: "君はどこが痛いの？" },
-        { fullAnswer: "Nos hace falta el dinero.", displayText: "_____ _____ el dinero.", jp: "私たちはお金が欲しい。" },
-        { fullAnswer: "A Pedro no le gustan las obras de Picasso.", displayText: "_____ _____ _____ las obras de Picasso.", jp: "ペドロはピカソの作品が好きではない。" },
-        { fullAnswer: "A Eva y a mí nos apetece viajar a Japón.", displayText: "_____ _____ _____ viajar a Japón.", jp: "エバと私は日本に旅行したい気分だ。" },
-        { fullAnswer: "Me gusta el chocolate.", displayText: "_____ _____ el chocolate.", jp: "私はチョコレートが好きです。" },
-        { fullAnswer: "A Juan le interesan los deportes extremos.", displayText: "_____ _____ _____ los deportes extremos.", jp: "フアンは極限スポーツに興味がある。" },
-        { fullAnswer: "A vosotros os divierte la fiesta.", displayText: "_____ _____ _____ la fiesta.", jp: "君たちはパーティーを楽しいと思う。" },
-        { fullAnswer: "A ella le apasiona su trabajo.", displayText: "_____ _____ _____ su trabajo.", jp: "彼女は自分の仕事に夢中だ。" },
-        { fullAnswer: "¿A ustedes les interesan los museos?", displayText: "¿_____ _____ _____ los museos?", jp: "あなたたちは美術館に興味がありますか。" },
-        { fullAnswer: "A mí me aburren las matemáticas.", displayText: "_____ _____ _____ las matemáticas.", jp: "私は数学に退屈する。" },
-        { fullAnswer: "Me relaja la música clásica.", displayText: "_____ _____ la música clásica.", jp: "私はクラシック音楽でリラックスする。" },
-        { fullAnswer: "A los niños les gustan los dibujos animados.", displayText: "_____ _____ _____ los dibujos animados.", jp: "子供たちはアニメが好きだ。" },
-        { fullAnswer: "A mi hermano le encantan los videojuegos.", displayText: "_____ _____ _____ los videojuegos.", jp: "私の兄はビデオゲームが大好きだ。" },
-        { fullAnswer: "¿Te gusta el helado de vainilla?", displayText: "¿_____ _____ el helado de vainilla?", jp: "君はバニラアイスクリームが好き？" },
-        { fullAnswer: "A nosotros nos encanta viajar.", displayText: "_____ _____ _____ viajar.", jp: "私たちは旅行が大好きです。" },
-        { fullAnswer: "A la profesora le importa que los alumnos estudien.", displayText: "_____ _____ _____ que los alumnos estudien.", jp: "先生は生徒が勉強することを気にかけている。" },
-        { fullAnswer: "Me gustan las rosas.", displayText: "_____ _____ las rosas.", jp: "私はバラが好きです。" },
-        { fullAnswer: "A mis amigos les apasiona el fútbol.", displayText: "_____ _____ _____ el fútbol.", jp: "私の友達はサッカーに夢中だ。" },
-        { fullAnswer: "¿A ti te gusta el cine de terror?", displayText: "¿_____ _____ _____ el cine de terror?", jp: "君はホラー映画が好き？" },
-        { fullAnswer: "A los estudiantes les encantan las vacaciones.", displayText: "_____ _____ _____ las vacaciones.", jp: "学生たちは休暇が大好きだ。" },
-        { fullAnswer: "A los profesores les importa la puntualidad.", displayText: "_____ _____ _____ la puntualidad.", jp: "先生たちは時間厳守を重視する。" },
-        { fullAnswer: "Me apetece la playa en verano.", displayText: "_____ _____ la playa en verano.", jp: "私は夏にビーチに行きたい気分だ。" },
-        { fullAnswer: "A Claudia le gustan los gatos.", displayText: "_____ _____ _____ los gatos.", jp: "クラウディアは猫が好きだ。" },
-        { fullAnswer: "A Pedro y a mí nos interesa la misma serie.", displayText: "_____ _____ _____ la misma serie.", jp: "ペドロと私は同じドラマに興味がある。" },
-        { fullAnswer: "Me duele la cabeza.", displayText: "_____ _____ la cabeza.", jp: "私は頭が痛い。" },
-        { fullAnswer: "A los ancianos les gustan las plantas.", displayText: "_____ _____ _____ las plantas.", jp: "お年寄りは植物が好きだ。" },
-        { fullAnswer: "¿A vosotros os preocupa el examen?", displayText: "¿_____ _____ _____ el examen?", jp: "君たちは試験が心配ですか。" },
-        { fullAnswer: "Le interesa el arte contemporáneo.", displayText: "_____ _____ el arte contemporáneo.", jp: "彼／彼女は現代アートに興味がある。" },
-        { fullAnswer: "A mi madre le encanta cocinar postres.", displayText: "_____ _____ _____ cocinar postres.", jp: "私の母はデザートを作るのが大好きだ。" },
-        { fullAnswer: "A nosotros nos hace falta dormir.", displayText: "_____ _____ _____ dormir.", jp: "私たちは睡眠が必要だ。" },
-        { fullAnswer: "Me importa tu opinión.", displayText: "_____ _____ tu opinión.", jp: "私はあなたの意見が気になる。" },
-        { fullAnswer: "A ella le duelen los pies.", displayText: "_____ _____ _____ los pies.", jp: "彼女は足が痛い。" }
+        { fullAnswer: "Me gustan los perros.", displayText: "_____ _____ los perros.", jp: "私は犬が好きです。", targetHint: "" },
+        { fullAnswer: "No me gusta el café.", displayText: "_____ _____ el café.", jp: "私はコーヒーが好きではない。", targetHint: "" },
+        { fullAnswer: "¿Te gusta viajar?", displayText: "¿_____ _____ viajar?", jp: "君は旅行するのが好きですか。", targetHint: "" },
+        { fullAnswer: "A Antonio le interesa la cultura japonesa.", displayText: "_____ _____ _____ la cultura japonesa.", jp: "アントニオは日本文化に興味がある。", targetHint: "アントニオ" },
+        { fullAnswer: "A Luisa y a Luis no les interesa la literatura española.", displayText: "_____ _____ _____ la literatura española.", jp: "ルイサとルイスはスペイン文学に興味がない。", targetHint: "ルイサとルイス" },
+        { fullAnswer: "A mis padres les encanta cantar en el karaoke.", displayText: "_____ _____ _____ cantar en el karaoke.", jp: "私の両親はカラオケで歌うのが大好きだ。", targetHint: "私の両親" },
+        { fullAnswer: "Nos encantan las joyas.", displayText: "_____ _____ las joyas.", jp: "私たちは宝石が大好きです。", targetHint: "" },
+        { fullAnswer: "Me duelen los ojos.", displayText: "_____ _____ los ojos.", jp: "私は目が痛いです。", targetHint: "" },
+        { fullAnswer: "¿Te duele?", displayText: "¿_____ _____?", jp: "君はどこが痛いの？", targetHint: "" },
+        { fullAnswer: "Nos hace falta el dinero.", displayText: "_____ _____ el dinero.", jp: "私たちはお金が欲しい。", targetHint: "" },
+        { fullAnswer: "A Pedro no le gustan las obras de Picasso.", displayText: "_____ _____ _____ las obras de Picasso.", jp: "ペドロはピカソの作品が好きではない。", targetHint: "ペドロ" },
+        { fullAnswer: "A Eva y a mí nos apetece viajar a Japón.", displayText: "_____ _____ _____ viajar a Japón.", jp: "エバと私は日本に旅行したい気分だ。", targetHint: "エバと私" },
+        { fullAnswer: "Me gusta el chocolate.", displayText: "_____ _____ el chocolate.", jp: "私はチョコレートが好きです。", targetHint: "" },
+        { fullAnswer: "A Juan le interesan los deportes extremos.", displayText: "_____ _____ _____ los deportes extremos.", jp: "フアンは極限スポーツに興味がある。", targetHint: "フアン" },
+        { fullAnswer: "A vosotros os divierte la fiesta.", displayText: "_____ _____ _____ la fiesta.", jp: "君たちはパーティーを楽しいと思う。", targetHint: "君たち" },
+        { fullAnswer: "A ella le apasiona su trabajo.", displayText: "_____ _____ _____ su trabajo.", jp: "彼女は自分の仕事に夢中だ。", targetHint: "彼女" },
+        { fullAnswer: "¿A ustedes les interesan los museos?", displayText: "¿_____ _____ _____ los museos?", jp: "あなたたちは美術館に興味がありますか。", targetHint: "あなたたち" },
+        { fullAnswer: "A mí me aburren las matemáticas.", displayText: "_____ _____ _____ las matemáticas.", jp: "私は数学に退屈する。", targetHint: "私" },
+        { fullAnswer: "Me relaja la música clásica.", displayText: "_____ _____ la música clásica.", jp: "私はクラシック音楽でリラックスする。", targetHint: "" },
+        { fullAnswer: "A los niños les gustan los dibujos animados.", displayText: "_____ _____ _____ los dibujos animados.", jp: "子供たちはアニメが好きだ。", targetHint: "子供たち" },
+        { fullAnswer: "A mi hermano le encantan los videojuegos.", displayText: "_____ _____ _____ los videojuegos.", jp: "私の兄はビデオゲームが大好きだ。", targetHint: "私の兄" },
+        { fullAnswer: "¿Te gusta el helado de vainilla?", displayText: "¿_____ _____ el helado de vainilla?", jp: "君はバニラアイスクリームが好き？", targetHint: "" },
+        { fullAnswer: "A nosotros nos encanta viajar.", displayText: "_____ _____ _____ viajar.", jp: "私たちは旅行が大好きです。", targetHint: "私たち" },
+        { fullAnswer: "A la profesora le importa que los alumnos estudien.", displayText: "_____ _____ _____ que los alumnos estudien.", jp: "先生は生徒が勉強することを気にかけている。", targetHint: "先生" },
+        { fullAnswer: "Me gustan las rosas.", displayText: "_____ _____ las rosas.", jp: "私はバラが好きです。", targetHint: "" },
+        { fullAnswer: "A mis amigos les apasiona el fútbol.", displayText: "_____ _____ _____ el fútbol.", jp: "私の友達はサッカーに夢中だ。", targetHint: "私の友達" },
+        { fullAnswer: "¿A ti te gusta el cine de terror?", displayText: "¿_____ _____ _____ el cine de terror?", jp: "君はホラー映画が好き？", targetHint: "君" },
+        { fullAnswer: "A los estudiantes les encantan las vacaciones.", displayText: "_____ _____ _____ las vacaciones.", jp: "学生たちは休暇が大好きだ。", targetHint: "学生たち" },
+        { fullAnswer: "A los profesores les importa la puntualidad.", displayText: "_____ _____ _____ la puntualidad.", jp: "先生たちは時間厳守を重視する。", targetHint: "先生たち" },
+        { fullAnswer: "Me apetece la playa en verano.", displayText: "_____ _____ la playa en verano.", jp: "私は夏にビーチに行きたい気分だ。", targetHint: "" },
+        { fullAnswer: "A Claudia le gustan los gatos.", displayText: "_____ _____ _____ los gatos.", jp: "クラウディアは猫が好きだ。", targetHint: "クラウディア" },
+        { fullAnswer: "A Pedro y a mí nos interesa la misma serie.", displayText: "_____ _____ _____ la misma serie.", jp: "ペドロと私は同じドラマに興味がある。", targetHint: "ペドロと私" },
+        { fullAnswer: "Me duele la cabeza.", displayText: "_____ _____ la cabeza.", jp: "私は頭が痛い。", targetHint: "" },
+        { fullAnswer: "A los ancianos les gustan las plantas.", displayText: "_____ _____ _____ las plantas.", jp: "お年寄りは植物が好きだ。", targetHint: "お年寄り (老人)" },
+        { fullAnswer: "¿A vosotros os preocupa el examen?", displayText: "¿_____ _____ _____ el examen?", jp: "君たちは試験が心配ですか。", targetHint: "君たち" },
+        { fullAnswer: "Le interesa el arte contemporáneo.", displayText: "_____ _____ el arte contemporáneo.", jp: "彼／彼女は現代アートに興味がある。", targetHint: "" },
+        { fullAnswer: "A mi madre le encanta cocinar postres.", displayText: "_____ _____ _____ cocinar postres.", jp: "私の母はデザートを作るのが大好きだ。", targetHint: "私の母" },
+        { fullAnswer: "A nosotros nos hace falta dormir.", displayText: "_____ _____ _____ dormir.", jp: "私たちは睡眠が必要だ。", targetHint: "私たち" },
+        { fullAnswer: "Me importa tu opinión.", displayText: "_____ _____ tu opinión.", jp: "私はあなたの意見が気になる。", targetHint: "" },
+        { fullAnswer: "A ella le duelen los pies.", displayText: "_____ _____ _____ los pies.", jp: "彼女は足が痛い。", targetHint: "彼女" }
     ];
 
     // 第二問: 不規則動詞データ (各人称6形)
@@ -310,12 +318,12 @@
     }
     
     // グローバル状態
-    let currentQuestions = [];      // { inputId, answer, displayText, jpHint }
+    let currentQuestions = [];
     let currentAnswers = [];
     let showAnswersFlag = false;
     let timerInterval = null;
     let timeLeft = 0;
-    let scoreHistory = JSON.parse(localStorage.getItem('spanish_exam_history_v2') || '[]');
+    let scoreHistory = JSON.parse(localStorage.getItem('spanish_exam_history_v3') || '[]');
     
     function normalize(str) {
         if (!str) return '';
@@ -383,7 +391,7 @@
     
     function resetHistory() {
         scoreHistory = [];
-        localStorage.setItem('spanish_exam_history_v2', JSON.stringify(scoreHistory));
+        localStorage.setItem('spanish_exam_history_v3', JSON.stringify(scoreHistory));
         drawChart();
         document.getElementById('result').innerHTML = '<p>📊 スコア履歴をリセットしました。</p>';
     }
@@ -437,14 +445,14 @@
         currentQuestions = [];
         currentAnswers = [];
         
-        // 第一問: ストックからランダムに4問 (重複なし)
+        // 第一問: ストックからランダムに4問
         const shuffledStock = shuffleArray([...gustarQuestionStock]);
         const selectedGustar = shuffledStock.slice(0, 4);
         
         const firstSection = document.createElement('div');
         firstSection.className = 'section';
         firstSection.innerHTML = `<h3>📌 第一問 (1〜4) : gustar型動詞（強調部・代名詞・動詞すべて空欄）</h3>
-        <div class="note">💡 日本語訳を見て、空欄「_____」に当てはまる語句を入れて<strong>スペイン語の全文</strong>を入力してください。<br>
+        <div class="note">💡 日本語訳と<strong>対象名ヒント</strong>を見て、空欄「_____」に当てはまる語句を入れて<strong>スペイン語の全文</strong>を入力してください。<br>
         （例: 「_____ _____ los perros.」 → 「Me gustan los perros.」）</div>`;
         form.appendChild(firstSection);
         
@@ -452,12 +460,14 @@
             const qNum = idx + 1;
             const answerStr = q.fullAnswer;
             currentAnswers.push(answerStr);
+            const nounHintHtml = q.targetHint ? `<span class="noun-hint">🎯 対象: ${q.targetHint}</span>` : '';
             const questionDiv = document.createElement('div');
             questionDiv.className = 'question';
             questionDiv.innerHTML = `
                 <div class="question-text">
                     ${qNum}. ${q.displayText}
                     <span class="jp-hint">📖 ${q.jp}</span>
+                    ${nounHintHtml}
                     <button type="button" class="audio-btn" data-answer="${answerStr.replace(/[“”]/g, '')}" onclick="speakText(this.dataset.answer)">🔊</button>
                     <span class="answer-hint translation" style="display:none;"> → ${answerStr}</span>
                 </div>
@@ -469,11 +479,12 @@
                 answer: answerStr,
                 inputId: `q_${currentQuestions.length-1}`,
                 displayText: q.displayText,
-                jpHint: q.jp
+                jpHint: q.jp,
+                targetHint: q.targetHint
             });
         });
         
-        // 第二問: 不規則動詞から6問ランダム (全人称プールから)
+        // 第二問: 不規則動詞から6問ランダム
         const verbPoolAll = getVerbPool();
         const shuffledVerbs = shuffleArray(verbPoolAll);
         const selectedVerbs = shuffledVerbs.slice(0, 6);
@@ -529,7 +540,8 @@
             if (isOk) correctCount++;
             const statusIcon = isOk ? '✅' : '❌';
             const extraInfo = q.jpHint ? `／${q.jpHint}` : '';
-            resultHtml += `<li>${statusIcon} <strong>問${i+1}</strong> (${q.displayText} ${extraInfo})<br>
+            const targetInfo = q.targetHint ? ` (対象: ${q.targetHint})` : '';
+            resultHtml += `<li>${statusIcon} <strong>問${i+1}</strong> (${q.displayText} ${extraInfo}${targetInfo})<br>
             <span style="font-size:0.9rem;">📝 入力: ${userRaw || '(空白)'} &nbsp; → ✔️ 正解: ${q.answer}</span><br></li>`;
         }
         const total = currentQuestions.length;
@@ -537,7 +549,7 @@
         resultHtml += `</ul><p style="font-size:1.3rem;">🎯 ${correctCount} / ${total} 正解 (${percent}%)</p>`;
         scoreHistory.push(percent);
         if (scoreHistory.length > 8) scoreHistory.shift();
-        localStorage.setItem('spanish_exam_history_v2', JSON.stringify(scoreHistory));
+        localStorage.setItem('spanish_exam_history_v3', JSON.stringify(scoreHistory));
         const avg = scoreHistory.length ? Math.round(scoreHistory.reduce((a,b)=>a+b,0)/scoreHistory.length) : 0;
         resultHtml += `<p>📈 直近${scoreHistory.length}回の平均点: ${avg}%</p>`;
         document.getElementById('result').innerHTML = resultHtml;
