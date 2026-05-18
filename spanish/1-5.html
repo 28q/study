@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>演習1-5：gustar型動詞5種＋不規則活用6問</title>
+    <title>演習1-5：gustar型動詞5種＋不規則活用6問（日本語ヒント付き・強調部分も空欄）</title>
     <style>
         * {
             box-sizing: border-box;
@@ -104,27 +104,38 @@
             padding: 8px 6px 12px 12px;
             background: #fefaf5;
             border-radius: 20px;
+            border-bottom: 1px solid #eee3cf;
         }
         .question-text {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
             background: #f7f2e7;
             padding: 8px 15px;
             border-radius: 28px;
             display: inline-block;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
-        .blank-highlight {
+        .jp-hint {
+            background: #e3f0f5;
+            padding: 4px 12px;
+            border-radius: 28px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-left: 12px;
+            color: #005f6b;
+        }
+        .blank {
             background: #fff0c0;
             padding: 2px 8px;
             border-radius: 30px;
             font-family: monospace;
             font-weight: bold;
             color: #a52a1a;
+            border: 1px dashed #c0a16b;
         }
         input {
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             padding: 10px 14px;
             font-size: 1rem;
             border: 1px solid #cfb87c;
@@ -194,9 +205,9 @@
     <p style="margin-top: 6px;">gustar型動詞 (gustar / interesar / importar / apetecer / doler) + 不規則活用動詞</p>
 </div>
 <div class="meta-box">
-    🔹 <strong>第一問 (1〜4)</strong> : 間接目的語代名詞 + gustar型動詞（適切な単数/複数形）+ 必要に応じて「a + 人」の強調。<br>
-    🔹 <strong>第二問 (5〜10)</strong> : 不規則動詞 (tener, decir, venir, construir, oír, ir, concluir など) の現在形活用（各人称6形）。<br>
-    📍 アクセント記号なしでも正答扱い（正規化して比較）。空欄はまとめて1箇所入力。
+    🔹 <strong>第一問 (1〜4)</strong> : 日本語の意味に合わせて、間接目的語代名詞 + gustar型動詞（単数/複数）+ 強調の「a + 人/名詞」も空欄(_____)です。<br>
+    🔹 <strong>第二問 (5〜10)</strong> : 不規則動詞の現在形活用（各人称6形からランダムに6問）。<br>
+    空欄はまとめて1文を入力。
 </div>
 <div class="controls">
     <button onclick="generateQuiz()">✨ 問題生成 (ランダム)</button>
@@ -219,139 +230,142 @@
 
 <script>
     // --------------------------------------------------------------
-    // 1. gustar型動詞データベース (5動詞: gustar, interesar, importar, apetecer, doler)
-    // 各動詞について、単数/複数に対応した3人称形と、間接目的語代名詞のリスト
-    // さらに「強調 a + 人称代名詞 / 名詞」を生成するためのテンプレート
-    // --------------------------------------------------------------
+    // gustar型動詞 (5種類)
     const gustarLikeVerbs = {
         gustar:   { sing: "gusta", plural: "gustan" },
         interesar:{ sing: "interesa", plural: "interesan" },
         importar: { sing: "importa", plural: "importan" },
         apetecer: { sing: "apetece", plural: "apetecen" },
-        doler:    { sing: "duele", plural: "duelen" }   // o→ue だが現在形活用はこれでOK
+        doler:    { sing: "duele", plural: "duelen" }
     };
     
-    // 人称・間接目的語代名詞
+    // 間接目的語代名詞 (人称)
     const indirectPronouns = {
         yo: "me", tu: "te", el: "le", ella: "le", usted: "le",
         nosotros: "nos", vosotros: "os", ellos: "les", ellas: "les", ustedes: "les"
     };
-    // 強調用の前置詞句 (a + 人)
-    const emphasisTemplates = {
+    
+    // 強調用 a + 人称代名詞
+    const emphasisPronoun = {
         yo: "a mí", tu: "a ti", el: "a él", ella: "a ella", usted: "a usted",
         nosotros: "a nosotros", vosotros: "a vosotros", ellos: "a ellos", ellas: "a ellas", ustedes: "a ustedes"
     };
-    // 任意の名詞用 (特定の人物名など)
-    const nounEmphasis = [
-        "a mi abuelo", "a mis padres", "a la profesora", "a Juan", "a Ana y Luis", "a Eva"
+    
+    // 強調用 a + 名詞 (様々)
+    const emphasisNouns = [
+        "a mi abuelo", "a mis padres", "a la profesora", "a Juan", "a Ana y Luis", "a Eva", "a los estudiantes", "a María"
     ];
     
-    // 主語となる名詞句 (単数/複数) ヒントとして表示
+    // 主語（単数・複数）ヒント兼文中に登場
     const singularSubjects = [
         "el cine", "la música clásica", "el español", "viajar", "el chocolate", "la playa",
-        "el libro", "la política", "el arte moderno", "leer novelas", "el fútbol"
+        "el libro", "la política", "el arte moderno", "leer novelas", "el fútbol", "la gramática"
     ];
     const pluralSubjects = [
         "los perros", "las flores", "los viajes", "las películas de terror", "los deportes",
-        "las verduras", "los exámenes", "las redes sociales"
+        "las verduras", "los exámenes", "las redes sociales", "los problemas"
     ];
     
-    // 問題をランダム生成するための部品 (全パターン網羅してそこからランダムに4問選ぶ)
+    // 日本語訳テンプレート (動詞・主語のニュアンスに合わせて生成)
+    function getJapaneseHint(verbKey, subjectPhrase, isPlural, personKey, hasEmph, emphText) {
+        const verbJp = {
+            gustar: "好きだ", interesar: "興味がある", importar: "重要だ／気になる",
+            apetecer: "したい気分だ／食べたい", doler: "痛い"
+        };
+        let subjSimple = subjectPhrase;
+        let base = (isPlural ? "〜が好きだ（複数）" : "〜が好きだ");
+        if (verbKey === "interesar") base = isPlural ? "興味がある（複数）" : "興味がある";
+        if (verbKey === "importar") base = isPlural ? "重要だ（複数）" : "重要だ／気になる";
+        if (verbKey === "apetecer") base = isPlural ? "したい気分だ（複数）" : "したい気分だ";
+        if (verbKey === "doler") base = isPlural ? "痛い（複数部位）" : "痛い";
+        
+        let personJp = "";
+        const personMap = { yo:"私", tu:"君", el:"彼", ella:"彼女", usted:"あなた",
+                            nosotros:"私たち", vosotros:"君たち", ellos:"彼ら", ellas:"彼女ら", ustedes:"あなたたち" };
+        personJp = personMap[personKey] || "その人";
+        
+        let emphJp = "";
+        if (hasEmph && emphText) emphJp = ` (${emphText}に関して)`;
+        return `${personJp}は ${subjSimple} ${base}${emphJp}。`;
+    }
+    
+    // 第一問用の問題プールを生成 (全てのパターンからランダムに4問)
     function generateGustarQuestionPool() {
         const pool = [];
         const verbs = Object.keys(gustarLikeVerbs);
-        const persons = ["yo","tu","el","nosotros","vosotros","ellos"]; // 代表6人称
+        const persons = ["yo","tu","el","nosotros","vosotros","ellos"];
         
         for (let verb of verbs) {
             const forms = gustarLikeVerbs[verb];
             for (let person of persons) {
                 const pron = indirectPronouns[person];
-                // 単数主語パターン
+                // ----- 単数主語パターン (強調なし) -----
                 for (let subj of singularSubjects) {
-                    // パターン1: 強調なし (間接目的語代名詞＋動詞＋主語)
-                    const answerNoEmph = `${pron} ${forms.sing} ${subj}`;
-                    const textNoEmph = `_____ _____ ${subj}.`;
-                    pool.push({
-                        type: "gustar",
-                        text: textNoEmph,
-                        answer: answerNoEmph,
-                        hintJp: `(主語: ${subj}, 動詞: ${verb}, 人称: ${person})`
-                    });
-                    // パターン2: 強調あり (a + 人称代名詞)
-                    const emphPhrase = emphasisTemplates[person];
-                    const answerWithEmph = `${emphPhrase} ${pron} ${forms.sing} ${subj}`;
-                    const textWithEmph = `${emphPhrase} _____ _____ ${subj}.`;
-                    pool.push({
-                        type: "gustar",
-                        text: textWithEmph,
-                        answer: answerWithEmph,
-                        hintJp: `(強調, 主語: ${subj}, 動詞: ${verb})`
-                    });
+                    const answer = `${pron} ${forms.sing} ${subj}`;
+                    const jpText = getJapaneseHint(verb, subj, false, person, false, "");
+                    const displayText = `_____ _____ ${subj}.`;
+                    pool.push({ type:"gustar", displayText, answer, jpHint: jpText, extra:"" });
+                    
+                    // 強調 + a人称
+                    const emphPhrase = emphasisPronoun[person];
+                    const answerEmph = `${emphPhrase} ${pron} ${forms.sing} ${subj}`;
+                    const displayEmph = `${emphPhrase} _____ _____ ${subj}.`;
+                    const jpEmph = getJapaneseHint(verb, subj, false, person, true, emphPhrase);
+                    pool.push({ type:"gustar", displayText: displayEmph, answer: answerEmph, jpHint: jpEmph, extra:"" });
                 }
-                // 複数主語パターン
+                // ----- 複数主語パターン (強調なし)-----
                 for (let subj of pluralSubjects) {
-                    const answerNoEmphPl = `${pron} ${forms.plural} ${subj}`;
-                    pool.push({
-                        text: `_____ _____ ${subj}.`,
-                        answer: answerNoEmphPl,
-                        hintJp: `(主語複数: ${subj}, 動詞: ${verb}, 人称: ${person})`
-                    });
-                    const emphPhrase = emphasisTemplates[person];
-                    const answerWithEmphPl = `${emphPhrase} ${pron} ${forms.plural} ${subj}`;
-                    pool.push({
-                        text: `${emphPhrase} _____ _____ ${subj}.`,
-                        answer: answerWithEmphPl,
-                        hintJp: `(強調+複数, ${subj})`
-                    });
+                    const answer = `${pron} ${forms.plural} ${subj}`;
+                    const jpText = getJapaneseHint(verb, subj, true, person, false, "");
+                    const displayText = `_____ _____ ${subj}.`;
+                    pool.push({ type:"gustar", displayText, answer, jpHint: jpText, extra:"" });
+                    
+                    const emphPhrase = emphasisPronoun[person];
+                    const answerEmph = `${emphPhrase} ${pron} ${forms.plural} ${subj}`;
+                    const displayEmph = `${emphPhrase} _____ _____ ${subj}.`;
+                    const jpEmph = getJapaneseHint(verb, subj, true, person, true, emphPhrase);
+                    pool.push({ type:"gustar", displayText: displayEmph, answer: answerEmph, jpHint: jpEmph, extra:"" });
                 }
-                // さらに名詞強調パターン (a + 特定名詞) 人称をランダムに関連付けなくても可
-                for (let nounEm of nounEmphasis) {
-                    if (singularSubjects.length) {
-                        let subj = singularSubjects[Math.floor(Math.random() * singularSubjects.length)];
-                        const answerNounEmph = `${nounEm} ${pron} ${forms.sing} ${subj}`;
-                        pool.push({
-                            text: `${nounEm} _____ _____ ${subj}.`,
-                            answer: answerNounEmph,
-                            hintJp: `(名詞強調: ${nounEm}, 動詞: ${verb})`
-                        });
+                // ----- 名詞強調パターン (a + 名詞), 単数主語 -----
+                for (let nounEmph of emphasisNouns) {
+                    for (let subj of singularSubjects) {
+                        const answerNoun = `${nounEmph} ${pron} ${forms.sing} ${subj}`;
+                        const displayNoun = `${nounEmph} _____ _____ ${subj}.`;
+                        const jpNoun = getJapaneseHint(verb, subj, false, person, true, nounEmph);
+                        pool.push({ type:"gustar", displayText: displayNoun, answer: answerNoun, jpHint: jpNoun, extra:"" });
                     }
-                    if (pluralSubjects.length) {
-                        let subj = pluralSubjects[Math.floor(Math.random() * pluralSubjects.length)];
-                        const answerNounEmphPl = `${nounEm} ${pron} ${forms.plural} ${subj}`;
-                        pool.push({
-                            text: `${nounEm} _____ _____ ${subj}.`,
-                            answer: answerNounEmphPl,
-                            hintJp: `(名詞強調複数)`
-                        });
+                    for (let subj of pluralSubjects) {
+                        const answerNounPl = `${nounEmph} ${pron} ${forms.plural} ${subj}`;
+                        const displayNounPl = `${nounEmph} _____ _____ ${subj}.`;
+                        const jpNounPl = getJapaneseHint(verb, subj, true, person, true, nounEmph);
+                        pool.push({ type:"gustar", displayText: displayNounPl, answer: answerNounPl, jpHint: jpNounPl, extra:"" });
                     }
                 }
             }
         }
-        // doler 特別パターン（身体部位）典型的な主語を追加
-        const bodyParts = ["la cabeza", "los pies", "el estómago", "las rodillas", "la espalda"];
+        // doler 身体部位特別パターン追加 (より自然に)
+        const bodyParts = ["la cabeza", "los pies", "el estómago", "las rodillas", "la espalda", "los dientes"];
         for (let part of bodyParts) {
-            const isSingular = !part.startsWith("los") && !part.startsWith("las");
-            const formDoler = isSingular ? "duele" : "duelen";
+            const isSingularPart = !part.startsWith("los") && !part.startsWith("las");
+            const formDoler = isSingularPart ? "duele" : "duelen";
             for (let person of persons) {
                 const pron = indirectPronouns[person];
-                const answerDoler = `${pron} ${formDoler} ${part}`;
-                pool.push({
-                    text: `_____ _____ ${part}.`,
-                    answer: answerDoler,
-                    hintJp: `(doler, 部位: ${part}, 人称: ${person})`
-                });
-                const emphPhrase = emphasisTemplates[person];
-                pool.push({
-                    text: `${emphPhrase} _____ _____ ${part}.`,
-                    answer: `${emphPhrase} ${pron} ${formDoler} ${part}`,
-                    hintJp: `doler強調`
-                });
+                const answer = `${pron} ${formDoler} ${part}`;
+                const jpText = `${person === "yo" ? "私" : person==="tu"?"君":person==="el"?"彼":person==="nosotros"?"私たち":person==="vosotros"?"君たち":"彼ら"}は ${part} が痛い。`;
+                const displayText = `_____ _____ ${part}.`;
+                pool.push({ type:"gustar", displayText, answer, jpHint: jpText, extra:"" });
+                // 強調版
+                const emphPhrase = emphasisPronoun[person];
+                const answerEmph = `${emphPhrase} ${pron} ${formDoler} ${part}`;
+                const displayEmph = `${emphPhrase} _____ _____ ${part}.`;
+                const jpEmph = `${emphPhrase}に関して、${part}が痛い。`;
+                pool.push({ type:"gustar", displayText: displayEmph, answer: answerEmph, jpHint: jpEmph, extra:"" });
             }
         }
         return pool;
     }
     
-    // 第二問: 不規則動詞活用 (全6人称ずつ)
+    // 第二問: 不規則動詞(全人称6形)
     const irregularVerbs = {
         tener:   ["tengo", "tienes", "tiene", "tenemos", "tenéis", "tienen"],
         decir:   ["digo", "dices", "dice", "decimos", "decís", "dicen"],
@@ -360,35 +374,34 @@
         oír:     ["oigo", "oyes", "oye", "oímos", "oís", "oyen"],
         ir:      ["voy", "vas", "va", "vamos", "vais", "van"],
         concluir:["concluyo", "concluyes", "concluye", "concluimos", "concluís", "concluyen"],
-        salir:   ["salgo", "sales", "sale", "salimos", "salís", "salen"],   // 補足
+        salir:   ["salgo", "sales", "sale", "salimos", "salís", "salen"],
         poner:   ["pongo", "pones", "pone", "ponemos", "ponéis", "ponen"],
         hacer:   ["hago", "haces", "hace", "hacemos", "hacéis", "hacen"]
     };
     const subjectList = ["yo", "tú", "él/ella/usted", "nosotros", "vosotros", "ellos/ellas/ustedes"];
     
     function getVerbPool() {
-        const verbPool = [];
+        const pool = [];
         for (let [verb, forms] of Object.entries(irregularVerbs)) {
             for (let idx = 0; idx < forms.length; idx++) {
-                verbPool.push({
+                pool.push({
                     verb: verb,
                     subject: subjectList[idx],
                     answer: forms[idx]
                 });
             }
         }
-        return verbPool;
+        return pool;
     }
     
     // グローバル状態
-    let currentQuestions = [];      // { id, answer, inputId, displayText, hintJp }
+    let currentQuestions = [];      // { inputId, answer, displayText, jpHint }
     let currentAnswers = [];
     let showAnswersFlag = false;
     let timerInterval = null;
     let timeLeft = 0;
-    let scoreHistory = JSON.parse(localStorage.getItem('spanish_exam_history_15') || '[]');
+    let scoreHistory = JSON.parse(localStorage.getItem('spanish_exam_history_16') || '[]');
     
-    // 正規化関数 (アクセント除去、小文字、スペース統合)
     function normalize(str) {
         if (!str) return '';
         return str.toLowerCase().trim()
@@ -455,7 +468,7 @@
     
     function resetHistory() {
         scoreHistory = [];
-        localStorage.setItem('spanish_exam_history_15', JSON.stringify(scoreHistory));
+        localStorage.setItem('spanish_exam_history_16', JSON.stringify(scoreHistory));
         drawChart();
         document.getElementById('result').innerHTML = '<p>📊 スコア履歴をリセットしました。</p>';
     }
@@ -501,7 +514,7 @@
         ctx.fillText('過去の得点推移', margin, 25);
     }
     
-    // 問題生成メイン
+    // メイン生成
     function generateQuiz() {
         if (timerInterval) clearInterval(timerInterval);
         const form = document.getElementById('quizForm');
@@ -509,15 +522,15 @@
         currentQuestions = [];
         currentAnswers = [];
         
-        // ----- 第一問：gustar型から4問ランダム抽出 -----
+        // 第一問: 4問ランダム
         const gustarPool = generateGustarQuestionPool();
         const shuffledGustar = shuffleArray(gustarPool);
         const selectedGustar = shuffledGustar.slice(0, 4);
         
         const firstSection = document.createElement('div');
         firstSection.className = 'section';
-        firstSection.innerHTML = `<h3>📌 第一問 (1〜4) : gustar / interesar / importar / apetecer / doler を補充</h3>
-        <div class="note">💡 間接目的語代名詞 + 動詞(単数/複数)  + 必要なら「a+人」も含めて1文で解答してください。</div>`;
+        firstSection.innerHTML = `<h3>📌 第一問 (1〜4) : gustar / interesar / importar / apetecer / doler を補充（日本語意味に合わせて）</h3>
+        <div class="note">💡 空欄(_____) に間接目的語代名詞＋動詞(単数/複数) または強調の「a+人」も含めた全文を入力してください。</div>`;
         form.appendChild(firstSection);
         
         selectedGustar.forEach((q, idx) => {
@@ -528,24 +541,26 @@
             questionDiv.className = 'question';
             questionDiv.innerHTML = `
                 <div class="question-text">
-                    ${qNum}. ${q.text}
+                    ${qNum}. ${q.displayText}
+                    <span class="jp-hint">📖 ${q.jpHint}</span>
                     <button type="button" class="audio-btn" data-answer="${answerStr.replace(/[“”]/g, '')}" onclick="speakText(this.dataset.answer)">🔊</button>
-                    <span class="answer-hint translation" style="display:none;"> → ${answerStr} (${q.hintJp})</span>
+                    <span class="answer-hint translation" style="display:none;"> → ${answerStr}</span>
                 </div>
-                <input type="text" id="q_${currentQuestions.length}" placeholder="スペイン語を入力" autocomplete="off">
+                <input type="text" id="q_${currentQuestions.length}" placeholder="スペイン語で全文を入力" autocomplete="off">
             `;
             firstSection.appendChild(questionDiv);
             currentQuestions.push({
                 id: currentQuestions.length,
                 answer: answerStr,
                 inputId: `q_${currentQuestions.length-1}`,
-                displayText: q.text
+                displayText: q.displayText,
+                jpHint: q.jpHint
             });
         });
         
-        // ----- 第二問：不規則活用から6問ランダム抽出 -----
-        const verbPoolAll = getVerbPool();
-        const shuffledVerbs = shuffleArray(verbPoolAll);
+        // 第二問: 不規則動詞から6問ランダム
+        const verbPool = getVerbPool();
+        const shuffledVerbs = shuffleArray(verbPool);
         const selectedVerbs = shuffledVerbs.slice(0, 6);
         
         const secondSection = document.createElement('div');
@@ -555,7 +570,7 @@
         form.appendChild(secondSection);
         
         selectedVerbs.forEach((item, idx) => {
-            const qNum = idx + 5;  // 5問目〜10問目
+            const qNum = idx + 5;
             const answerForm = item.answer;
             currentAnswers.push(answerForm);
             const questionDiv = document.createElement('div');
@@ -573,7 +588,8 @@
                 id: currentQuestions.length,
                 answer: answerForm,
                 inputId: `q_${currentQuestions.length-1}`,
-                displayText: `${item.verb} (${item.subject})`
+                displayText: `${item.verb} (${item.subject})`,
+                jpHint: ""
             });
         });
         
@@ -584,7 +600,6 @@
         document.getElementById('result').innerHTML = '';
     }
     
-    // 採点
     function gradeQuiz() {
         if (timerInterval) clearInterval(timerInterval);
         let correctCount = 0;
@@ -598,7 +613,7 @@
             const isOk = (userNorm === correctNorm);
             if (isOk) correctCount++;
             const statusIcon = isOk ? '✅' : '❌';
-            resultHtml += `<li>${statusIcon} <strong>問${i+1}</strong> (${q.displayText})<br>
+            resultHtml += `<li>${statusIcon} <strong>問${i+1}</strong> (${q.displayText} ${q.jpHint ? "／"+q.jpHint : ""})<br>
             <span style="font-size:0.9rem;">📝 入力: ${userRaw || '(空白)'} &nbsp; → ✔️ 正解: ${q.answer}</span><br></li>`;
         }
         const total = currentQuestions.length;
@@ -606,7 +621,7 @@
         resultHtml += `</ul><p style="font-size:1.3rem;">🎯 ${correctCount} / ${total} 正解 (${percent}%)</p>`;
         scoreHistory.push(percent);
         if (scoreHistory.length > 8) scoreHistory.shift();
-        localStorage.setItem('spanish_exam_history_15', JSON.stringify(scoreHistory));
+        localStorage.setItem('spanish_exam_history_16', JSON.stringify(scoreHistory));
         const avg = scoreHistory.length ? Math.round(scoreHistory.reduce((a,b)=>a+b,0)/scoreHistory.length) : 0;
         resultHtml += `<p>📈 直近${scoreHistory.length}回の平均点: ${avg}%</p>`;
         document.getElementById('result').innerHTML = resultHtml;
