@@ -6,57 +6,68 @@
 <title>gustar型動詞 総合テスト</title>
 
 <style>
-    body{
-        font-family: Arial, sans-serif;
-        background:#f3f4f6;
-        padding:20px;
-    }
+body{
+    font-family: Arial, sans-serif;
+    background:#f3f4f6;
+    padding:20px;
+}
 
-    h1{
-        text-align:center;
-    }
+h1{
+    text-align:center;
+}
 
-    .question{
-        background:white;
-        padding:15px;
-        margin:15px 0;
-        border-radius:10px;
-        box-shadow:0 2px 5px rgba(0,0,0,0.1);
-        line-height:2.2;
-    }
+.question{
+    background:white;
+    padding:18px;
+    margin:18px 0;
+    border-radius:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
 
-    input{
-        width:90px;
-        padding:5px;
-        font-size:16px;
-        text-align:center;
-        margin:0 3px;
-    }
+.jp{
+    color:#444;
+    font-weight:bold;
+    margin-bottom:10px;
+}
 
-    button{
-        padding:12px 24px;
-        font-size:16px;
-        cursor:pointer;
-        border:none;
-        border-radius:8px;
-        background:#2563eb;
-        color:white;
-    }
+.line{
+    line-height:2.5;
+    font-size:18px;
+}
 
-    .correct{
-        color:green;
-        font-weight:bold;
-    }
+input{
+    width:90px;
+    padding:6px;
+    font-size:16px;
+    text-align:center;
+    margin:0 4px;
+}
 
-    .wrong{
-        color:red;
-        font-weight:bold;
-    }
+button{
+    padding:12px 24px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    margin-right:10px;
+}
 
-    #score{
-        font-size:24px;
-        margin-top:20px;
-    }
+.correct{
+    color:green;
+    font-weight:bold;
+}
+
+.wrong{
+    color:red;
+    font-weight:bold;
+}
+
+#score{
+    margin-top:25px;
+    font-size:28px;
+}
 </style>
 </head>
 
@@ -65,202 +76,198 @@
 <h1>gustar型動詞 総合テスト</h1>
 
 <p>
-対象：
+対象動詞：
 <b>gustar / importar / interesar / apetecer / doler</b><br>
-A + 名詞 / A + 前置詞の後の人称代名詞 / 間接目的語代名詞 / 動詞活用
+問題順は毎回ランダムになります。
 </p>
 
 <div id="quiz"></div>
 
 <button onclick="checkAnswers()">答え合わせ</button>
+<button onclick="location.reload()">問題を並び替える</button>
 
 <h2 id="score"></h2>
 
 <script>
+
 const questions = [
+
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" los libros."
-],
+jp:"私は本が好きです。",
+parts:["A ",""," ",""," ",""," los libros."],
 answers:["mí","me","gustan"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" estudiar matemáticas."
-],
+jp:"フアンは数学を勉強することに興味があります。",
+parts:["A ",""," ",""," ",""," estudiar matemáticas."],
 answers:["Juan","le","interesa"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" una pizza?"
-],
+jp:"君はピザが食べたい？",
+parts:["A ",""," ",""," ",""," una pizza?"],
 answers:["ti","te","apetece"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" las películas."
-],
+jp:"私たちにとって映画は重要です。",
+parts:["A ",""," ",""," ",""," las películas."],
 answers:["nosotros","nos","importan"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" la cabeza."
-],
+jp:"彼女は頭が痛いです。",
+parts:["A ",""," ",""," ",""," la cabeza."],
 answers:["ella","le","duele"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" los videojuegos."
-],
+jp:"君たちはゲームが好きです。",
+parts:["A ",""," ",""," ",""," los videojuegos."],
 answers:["vosotros","os","gustan"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" aprender español."
-],
+jp:"彼らはスペイン語を学ぶことに興味があります。",
+parts:["A ",""," ",""," ",""," aprender español."],
 answers:["ellos","les","interesa"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" salir hoy?"
-],
+jp:"君たちは今日出かけたい？",
+parts:["A ",""," ",""," ",""," salir hoy?"],
 answers:["vosotros","os","apetece"]
 },
 
 {
-parts:[
-"A ",
-"",
-" no ",
-"",
-" ",
-"",
-" los exámenes."
-],
+jp:"私にとって試験は重要ではありません。",
+parts:["A ",""," no ",""," ",""," los exámenes."],
 answers:["mí","me","importan"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" los pies."
-],
+jp:"ペドロは足が痛いです。",
+parts:["A ",""," ",""," ",""," los pies."],
 answers:["Pedro","le","duelen"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" la música clásica."
-],
+jp:"あなた（usted）はクラシック音楽が好きです。",
+parts:["A ",""," ",""," ",""," la música clásica."],
 answers:["usted","le","gusta"]
 },
 
 {
-parts:[
-"A ",
-"",
-" ",
-"",
-" ",
-"",
-" las manos."
-],
+jp:"私たちは手が痛いです。",
+parts:["A ",""," ",""," ",""," las manos."],
 answers:["nosotras","nos","duelen"]
+},
+
+{
+jp:"マリアは日本文化に興味があります。",
+parts:["A ",""," ",""," ",""," la cultura japonesa."],
+answers:["María","le","interesa"]
+},
+
+{
+jp:"君たちにとってお金は重要です。",
+parts:["A ",""," ",""," ",""," el dinero."],
+answers:["vosotros","os","importa"]
+},
+
+{
+jp:"私は寿司が食べたいです。",
+parts:["A ",""," ",""," ",""," sushi."],
+answers:["mí","me","apetece"]
+},
+
+{
+jp:"彼は犬が好きです。",
+parts:["A ",""," ",""," ",""," los perros."],
+answers:["él","le","gustan"]
+},
+
+{
+jp:"あなたたちは頭が痛いです。",
+parts:["A ",""," ",""," ",""," la cabeza."],
+answers:["ustedes","les","duele"]
+},
+
+{
+jp:"私たちは歴史に興味があります。",
+parts:["A ",""," ",""," ",""," la historia."],
+answers:["nosotros","nos","interesa"]
+},
+
+{
+jp:"ルシアは宿題をしたくありません。",
+parts:["A ",""," no ",""," ",""," hacer la tarea."],
+answers:["Lucía","le","apetece"]
+},
+
+{
+jp:"君はその本が好きですか？",
+parts:["A ",""," ",""," ",""," el libro?"],
+answers:["ti","te","gusta"]
 }
+
 ];
+
+function shuffle(array){
+
+    let arr = [...array];
+
+    for(let i = arr.length - 1; i > 0; i--){
+
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    return arr;
+}
+
+const shuffledQuestions = shuffle(questions);
 
 const quiz = document.getElementById("quiz");
 
-questions.forEach((q, qi) => {
+shuffledQuestions.forEach((q, qi)=>{
 
-    let html = `<div class="question"><p>${qi+1}. `;
+    let html = `<div class="question">`;
+
+    html += `<div class="jp">(${qi+1}) ${q.jp}</div>`;
+
+    html += `<div class="line">`;
 
     for(let i=0;i<q.parts.length;i++){
 
         html += q.parts[i];
 
         if(i < q.answers.length){
-            html += `<input type="text" id="q${qi}_${i}">`;
+
+            html += `
+            <input type="text" id="q${qi}_${i}">
+            `;
         }
     }
 
-    html += `</p><div id="result${qi}"></div></div>`;
+    html += `</div>`;
+
+    html += `<div id="result${qi}"></div>`;
+
+    html += `</div>`;
 
     quiz.innerHTML += html;
 });
 
 function normalize(str){
+
     return str
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function checkAnswers(){
@@ -268,37 +275,48 @@ function checkAnswers(){
     let total = 0;
     let correct = 0;
 
-    questions.forEach((q, qi)=>{
+    shuffledQuestions.forEach((q, qi)=>{
 
-        let allCorrect = true;
+        let ok = true;
 
         q.answers.forEach((ans, ai)=>{
 
             total++;
 
-            const input = document.getElementById(`q${qi}_${ai}`);
+            const input =
+            document.getElementById(`q${qi}_${ai}`);
+
             const user = normalize(input.value);
             const real = normalize(ans);
 
             if(user === real){
+
                 correct++;
                 input.style.background = "#dcfce7";
+
             }else{
-                allCorrect = false;
+
+                ok = false;
                 input.style.background = "#fecaca";
             }
+
         });
 
-        const result = document.getElementById(`result${qi}`);
+        const result =
+        document.getElementById(`result${qi}`);
 
-        if(allCorrect){
-            result.innerHTML = `<span class="correct">○ 正解</span>`;
-        }else{
-
-            let answerText = q.answers.join(" / ");
+        if(ok){
 
             result.innerHTML =
-            `<span class="wrong">× 正答: ${answerText}</span>`;
+            `<p class="correct">○ 正解</p>`;
+
+        }else{
+
+            result.innerHTML =
+            `<p class="wrong">
+            × 正答:
+            ${q.answers.join(" / ")}
+            </p>`;
         }
 
     });
@@ -306,6 +324,7 @@ function checkAnswers(){
     document.getElementById("score").innerText =
     `点数: ${correct} / ${total}`;
 }
+
 </script>
 
 </body>
