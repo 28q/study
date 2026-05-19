@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>スペイン語 二列 小テスト5 演習</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 36px; line-height: 1.8; color: #111; }
+    h1 { text-align: center; margin: 0.2em 0 0.4em; }
+    h2 { margin: 1.2em 0 0.5em; font-size: 1.1em; }
+    .meta { margin: 18px 0 22px; font-size: 17px; }
+    .meta div { margin: 4px 0; }
+    .note { color: #b00020; font-weight: bold; font-size: 0.95em; margin-top: 10px; }
+    .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; background: #f8f8f8; padding: 10px 14px; border-radius: 8px; }
+    button { padding: 9px 16px; font-size: 15px; cursor: pointer; border: 1px solid #ccc; background: #fff; border-radius: 4px; }
+    button:hover { background: #eee; }
+    select { padding: 7px; font-size: 15px; }
+    .section { margin-top: 28px; padding-top: 10px; border-top: 2px solid #ddd; }
+    .section-title { font-weight: bold; margin-bottom: 10px; }
+    .small { font-size: 0.95em; color: #444; }
+    .verb-table, .blank-table { width: 100%; border-collapse: collapse; margin: 10px 0 18px; table-layout: fixed; }
+    .verb-table th, .verb-table td, .blank-table th, .blank-table td { border: 2px solid #333; padding: 6px 5px; vertical-align: middle; text-align: center; }
+    .verb-table th { font-size: 18px; }
+    .rowhead { width: 120px; font-weight: bold; text-align: left !important; padding-left: 10px !important; background: #fafafa; }
+    .verbhead { font-size: 18px; }
+    .cell-input { width: 100%; box-sizing: border-box; border: none; outline: none; font-size: 16px; text-align: center; background: transparent; min-height: 28px; }
+    .cell-input::placeholder { color: #bbb; }
+    .qa { margin: 12px 0 14px; }
+    .qa .prompt { margin-bottom: 4px; }
+    .translation { display: none; color: #0056b3; font-weight: bold; margin-left: 8px; }
+    .answer-input { width: 100%; max-width: 650px; padding: 8px 10px; font-size: 16px; box-sizing: border-box; }
+    .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.1em; padding: 0 5px; vertical-align: middle; }
+    .audio-btn:hover { opacity: 0.6; }
+    .blank { display: inline-block; min-width: 85px; border-bottom: 2px solid #111; margin: 0 4px; text-align: center; }
+    .correct { color: #0a7a0a; font-weight: bold; }
+    .incorrect { color: #b00020; font-weight: bold; }
+    #result { margin-top: 18px; font-size: 16px; }
+    .footer { margin-top: 24px; }
+    .subnote { margin-top: 6px; color: #666; font-size: 0.93em; }
+  </style>
+</head>
+<body>
+  <h1>スペイン語 二列 小テスト5 演習</h1>
+
+  <div class="meta">
+    <div>1.　次の動詞を、主語に合うように直説法現在形で活用しなさい。</div>
+    <div>2.　次の質問に、スペイン語で答えなさい。</div>
+    <div>3.　表を見て、空欄をすべて埋めなさい。</div>
+    <div>4.　目的語人称代名詞や no を空欄に入れなさい。</div>
+    <div class="note" style="margin-left: 1.2em;">※ 3人称の le / les は se に変わること、直接目的語と間接目的語の順番に注意。</div>
+  </div>
+
+  <div class="controls">
+    <button type="button" onclick="generateQuiz()">問題生成</button>
+    <button type="button" onclick="toggleAnswers()" id="toggleBtn">答え表示</button>
+    <button type="button" onclick="gradeQuiz()">採点</button>
+    <button type="button" onclick="resetHistory()">履歴リセット</button>
+  </div>
+
+  <form id="quizForm"></form>
+  <div id="result"></div>
+  <p class="footer"><a href="../spanish.html">← 目次に戻る</a></p>
+
+  <script>
+    let showAnswers = false;
+    let currentAnswers = [];
+    let history = JSON.parse(localStorage.getItem('scoreHistory_spanish2_5_format') || '[]');
+
+    const rowLabels = ['yo', 'tú', 'él / ella / usted', 'nosotros / as', 'vosotros / as', 'ellos / as ustedes'];
+
+    const verbGroups = [
+      ['hablar', 'comer', 'vivir'],
+      ['trabajar', 'esperar', 'llegar'],
+      ['correr', 'beber', 'vender'],
+      ['abrir', 'escribir', 'recibir']
+    ];
+
+    const conjugationAnswers = {
+      hablar: ['hablo','hablas','habla','hablamos','habláis','hablan'],
+      comer: ['como','comes','come','comemos','coméis','comen'],
+      vivir: ['vivo','vives','vive','vivimos','vivís','viven'],
+      trabajar: ['trabajo','trabajas','trabaja','trabajamos','trabajáis','trabajan'],
+      esperar: ['espero','esperas','espera','esperamos','esperáis','esperan'],
+      llegar: ['llego','llegas','llega','llegamos','llegáis','llegan'],
+      correr: ['corro','corres','corre','corremos','corréis','corren'],
+      beber: ['bebo','bebes','bebe','bebemos','bebéis','beben'],
+      vender: ['vendo','vendes','vende','vendemos','vendéis','venden'],
+      abrir: ['abro','abres','abre','abrimos','abrís','abren'],
+      escribir: ['escribo','escribes','escribe','escribimos','escribís','escriben'],
+      recibir: ['recibo','recibes','recibe','recibimos','recibís','reciben']
+    };
+
+    const questionStock = [
+      { q: '¿Tocas el piano?', a: ['Sí, la toco.', 'Sí, toco el piano.'] },
+      { q: '¿Tocas la guitarra?', a: ['Sí, la toco.', 'Sí, toco la guitarra.'] },
+      { q: '¿Tocas el violín?', a: ['Sí, lo toco.', 'Sí, toco el violín.'] },
+      { q: '¿Qué desayunas?', a: ['Desayuno pan y café.', 'Desayuno café y pan.', 'Desayuno leche y pan.'] },
+      { q: '¿Qué idiomas hablas tú?', a: ['Hablo japonés e inglés.', 'Hablo español e inglés.', 'Hablo francés.'] },
+      { q: '¿Lees el periódico todos los días?', a: ['Sí, lo leo.', 'Sí, lo leo todos los días.'] },
+      { q: '¿Le prestas los libros a tu amiga?', a: ['No, no se los presto.', 'Sí, se los presto.'] },
+      { q: '¿Tu madre te prepara la comida española?', a: ['Sí, me la prepara.', 'No, no me la prepara.'] }
+    ];
+
+    const pronounStock = [
+      { q: '¿Conocéis a los padres de Carmen? No, no ( ) conocemos.', a: 'los' },
+      { q: '¿Me enseñas las fotos de las vacaciones? Sí, ( ) ( ) enseño.', a: ['te las', 'te las enseño'] },
+      { q: '¿Os enseña la profesora la cultura española? Sí, ( ) ( ) enseña.', a: ['os la', 'os la enseña'] },
+      { q: '¿Me compráis un helado? No, no ( ) ( ) compramos.', a: ['te lo', 'te lo compramos'] },
+      { q: '¿Le compras una corbata a tu padre para celebrar el día del padre? Sí, ( ) ( ) compro.', a: ['se la', 'se la compro'] },
+      { q: 'Alejandra no me regala su bicicleta. (Ella) me ( ) vende.', a: 'la' },
+      { q: 'Te dejo las llaves en la mesa. Te ( ) dejo en la mesa.', a: 'las' },
+      { q: '¿Le regalas flores a tu madre para celebrar el día de la madre? Sí, ( ) ( ) regalo.', a: ['se las', 'se las regalo'] }
+    ];
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function norm(s) {
+      return String(s)
+        .toLowerCase()
+        .replace(/　/g, ' ')
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[.,¿?¡!。、()]/g, '')
+        .replace(/\s+/g, ' ');
+    }
+
+    function toggleAnswers() {
+      showAnswers = !showAnswers;
+      document.querySelectorAll('.translation').forEach(el => el.style.display = showAnswers ? 'inline' : 'none');
+      document.getElementById('toggleBtn').textContent = showAnswers ? '答え非表示' : '答え表示';
+    }
+
+    function speak(text) {
+      window.speechSynthesis.cancel();
+      const esText = text.replace(/（.*?）/g, '').trim();
+      const u = new SpeechSynthesisUtterance(esText);
+      u.lang = 'es-ES';
+      u.rate = 0.9;
+      window.speechSynthesis.speak(u);
+    }
+
+    function addInputQuestion(form, promptHtml, expected, index, showAudio = true) {
+      currentAnswers.push(expected);
+      const displayExpected = Array.isArray(expected) ? expected[0] : expected;
+      const audioBtn = showAudio ? `<button type="button" class="audio-btn" data-text="${displayExpected}" onclick="speak(this.dataset.text)" title="発音">🔊</button>` : '';
+      form.innerHTML += `
+        <div class="qa">
+          <div class="prompt">(${index + 1}) ${promptHtml}${audioBtn}<span class="translation">（${displayExpected}）</span></div>
+          <input id="q${index}" class="answer-input" autocomplete="off" placeholder="解答を入力" />
+        </div>`;
+    }
+
+    function addConjugationTable(form, verbs, tableIndex, qIndexStart) {
+      form.innerHTML += `<div class="section"><div class="section-title">1-${tableIndex + 1}. ${verbs.join(' / ')}</div>`;
+      form.innerHTML += `<table class="verb-table"><tr><th style="width:120px;"></th>${verbs.map(v => `<th class="verbhead">${v}</th>`).join('')}</tr>`;
+
+      rowLabels.forEach((row, r) => {
+        form.innerHTML += `<tr><td class="rowhead">${row}</td>`;
+        verbs.forEach((verb, c) => {
+          const qid = qIndexStart.value++;
+          const expected = conjugationAnswers[verb][r];
+          currentAnswers.push(expected);
+          form.innerHTML += `<td><input id="q${qid}" class="cell-input" autocomplete="off" placeholder="" /></td>`;
+        });
+        form.innerHTML += `</tr>`;
+      });
+      form.innerHTML += `</table></div>`;
+    }
+
+    function addBlankPronounTable(form) {
+      form.innerHTML += `<div class="section"><div class="section-title">3. 目的語人称代名詞の表（空欄を埋めなさい）</div>`;
+      form.innerHTML += `<table class="blank-table">
+        <tr><th style="width:130px;">人称</th><th>直接目的語</th><th>間接目的語</th></tr>
+        <tr><td class="rowhead">1人称単数</td><td><input id="q${currentAnswers.length}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 1}" class="cell-input" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">2人称単数</td><td><input id="q${currentAnswers.length + 2}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 3}" class="cell-input" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">3人称単数</td><td><input id="q${currentAnswers.length + 4}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 5}" class="cell-input" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">1人称複数</td><td><input id="q${currentAnswers.length + 6}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 7}" class="cell-input" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">2人称複数</td><td><input id="q${currentAnswers.length + 8}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 9}" class="cell-input" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">3人称複数</td><td><input id="q${currentAnswers.length + 10}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 11}" class="cell-input" autocomplete="off"></td></tr>
+      </table>
+      <div class="subnote">※ 採点用の答えはこの版では未設定です。必要ならこの表にも正答を入れられます。</div></div>`;
+      for (let i = 0; i < 12; i++) currentAnswers.push(null);
+    }
+
+    function addPronounExercise(form, html, expected, index) {
+      currentAnswers.push(expected);
+      const displayExpected = Array.isArray(expected) ? expected[0] : expected;
+      form.innerHTML += `
+        <div class="qa">
+          <div class="prompt">(${index + 1}) ${html}<span class="translation">（${displayExpected}）</span></div>
+          <input id="q${index}" class="answer-input" autocomplete="off" placeholder="解答を入力" />
+        </div>`;
+    }
+
+    function generateQuiz() {
+      const form = document.getElementById('quizForm');
+      const result = document.getElementById('result');
+      form.innerHTML = '';
+      result.innerHTML = '';
+      currentAnswers = [];
+      let qIndex = { value: 0 };
+
+      form.innerHTML += `<div class="section"><div class="section-title">1. 次の動詞を、主語に合うように直説法現在形で活用しなさい。</div><div class="small">※ 添付写真の12個をすべて入れています。</div></div>`;
+      verbGroups.forEach((group, idx) => addConjugationTable(form, group, idx, qIndex));
+
+      form.innerHTML += `<div class="section"><div class="section-title">2. 次の質問に、スペイン語で答えなさい。</div><div class="small">※ 例と同じように、短く答えてもOK。</div></div>`;
+      shuffle(questionStock).slice(0, 4).forEach(q => addInputQuestion(form, q.q, q.a, qIndex.value++, true));
+
+      addBlankPronounTable(form);
+
+      form.innerHTML += `<div class="section"><div class="section-title">4. 目的語人称代名詞や no を空欄に入れなさい。</div></div>`;
+      shuffle(pronounStock).slice(0, 6).forEach(q => addPronounExercise(form, q.q, q.a, qIndex.value++));
+
+      if (showAnswers) document.querySelectorAll('.translation').forEach(el => el.style.display = 'inline');
+    }
+
+    function isCorrect(userAns, expected) {
+      if (expected === null) return userAns.trim() === '';
+      const u = norm(userAns);
+      if (Array.isArray(expected)) return expected.some(e => u === norm(e));
+      return u === norm(expected);
+    }
+
+    function gradeQuiz() {
+      let score = 0;
+      let out = '';
+      currentAnswers.forEach((expected, i) => {
+        const input = document.getElementById('q' + i);
+        const userAns = input ? input.value : '';
+        const ok = isCorrect(userAns, expected);
+        const expectedStr = expected === null ? '（空欄）' : (Array.isArray(expected) ? expected.join(' / ') : expected);
+        if (ok) score++;
+        out += `<p class="${ok ? 'correct' : 'incorrect'}">${i + 1}: ${ok ? '〇' : '× → ' + expectedStr}</p>`;
+      });
+      const total = currentAnswers.length;
+      const percent = total ? Math.round((score / total) * 100) : 0;
+      history.push(percent);
+      if (history.length > 10) history.shift();
+      localStorage.setItem('scoreHistory_spanish2_5_format', JSON.stringify(history));
+      const avg = Math.round(history.reduce((a, b) => a + b, 0) / history.length);
+      out += `<h3>結果: ${score}/${total} (${percent}%)</h3>`;
+      out += `<p>直近${history.length}回の平均: ${avg}%</p>`;
+      document.getElementById('result').innerHTML = out;
+    }
+
+    function resetHistory() {
+      history = [];
+      localStorage.removeItem('scoreHistory_spanish2_5_format');
+      document.getElementById('result').innerHTML = '<p>履歴をリセットしました。</p>';
+    }
+
+    generateQuiz();
+  </script>
+</body>
+</html>
