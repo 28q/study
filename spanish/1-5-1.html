@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gustar型動詞 総合テスト</title>
+
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        background:#f3f4f6;
+        padding:20px;
+    }
+
+    h1{
+        text-align:center;
+    }
+
+    .question{
+        background:white;
+        padding:15px;
+        margin:15px 0;
+        border-radius:10px;
+        box-shadow:0 2px 5px rgba(0,0,0,0.1);
+        line-height:2.2;
+    }
+
+    input{
+        width:90px;
+        padding:5px;
+        font-size:16px;
+        text-align:center;
+        margin:0 3px;
+    }
+
+    button{
+        padding:12px 24px;
+        font-size:16px;
+        cursor:pointer;
+        border:none;
+        border-radius:8px;
+        background:#2563eb;
+        color:white;
+    }
+
+    .correct{
+        color:green;
+        font-weight:bold;
+    }
+
+    .wrong{
+        color:red;
+        font-weight:bold;
+    }
+
+    #score{
+        font-size:24px;
+        margin-top:20px;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>gustar型動詞 総合テスト</h1>
+
+<p>
+対象：
+<b>gustar / importar / interesar / apetecer / doler</b><br>
+A + 名詞 / A + 前置詞の後の人称代名詞 / 間接目的語代名詞 / 動詞活用
+</p>
+
+<div id="quiz"></div>
+
+<button onclick="checkAnswers()">答え合わせ</button>
+
+<h2 id="score"></h2>
+
+<script>
+const questions = [
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" los libros."
+],
+answers:["mí","me","gustan"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" estudiar matemáticas."
+],
+answers:["Juan","le","interesa"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" una pizza?"
+],
+answers:["ti","te","apetece"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" las películas."
+],
+answers:["nosotros","nos","importan"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" la cabeza."
+],
+answers:["ella","le","duele"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" los videojuegos."
+],
+answers:["vosotros","os","gustan"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" aprender español."
+],
+answers:["ellos","les","interesa"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" salir hoy?"
+],
+answers:["vosotros","os","apetece"]
+},
+
+{
+parts:[
+"A ",
+"",
+" no ",
+"",
+" ",
+"",
+" los exámenes."
+],
+answers:["mí","me","importan"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" los pies."
+],
+answers:["Pedro","le","duelen"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" la música clásica."
+],
+answers:["usted","le","gusta"]
+},
+
+{
+parts:[
+"A ",
+"",
+" ",
+"",
+" ",
+"",
+" las manos."
+],
+answers:["nosotras","nos","duelen"]
+}
+];
+
+const quiz = document.getElementById("quiz");
+
+questions.forEach((q, qi) => {
+
+    let html = `<div class="question"><p>${qi+1}. `;
+
+    for(let i=0;i<q.parts.length;i++){
+
+        html += q.parts[i];
+
+        if(i < q.answers.length){
+            html += `<input type="text" id="q${qi}_${i}">`;
+        }
+    }
+
+    html += `</p><div id="result${qi}"></div></div>`;
+
+    quiz.innerHTML += html;
+});
+
+function normalize(str){
+    return str
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+function checkAnswers(){
+
+    let total = 0;
+    let correct = 0;
+
+    questions.forEach((q, qi)=>{
+
+        let allCorrect = true;
+
+        q.answers.forEach((ans, ai)=>{
+
+            total++;
+
+            const input = document.getElementById(`q${qi}_${ai}`);
+            const user = normalize(input.value);
+            const real = normalize(ans);
+
+            if(user === real){
+                correct++;
+                input.style.background = "#dcfce7";
+            }else{
+                allCorrect = false;
+                input.style.background = "#fecaca";
+            }
+        });
+
+        const result = document.getElementById(`result${qi}`);
+
+        if(allCorrect){
+            result.innerHTML = `<span class="correct">○ 正解</span>`;
+        }else{
+
+            let answerText = q.answers.join(" / ");
+
+            result.innerHTML =
+            `<span class="wrong">× 正答: ${answerText}</span>`;
+        }
+
+    });
+
+    document.getElementById("score").innerText =
+    `点数: ${correct} / ${total}`;
+}
+</script>
+
+</body>
+</html>
