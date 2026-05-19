@@ -7,23 +7,22 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 36px; line-height: 1.8; color: #111; }
     h1 { text-align: center; margin: 0.2em 0 0.4em; }
-    h2 { margin: 1.2em 0 0.5em; font-size: 1.1em; }
     .meta { margin: 18px 0 22px; font-size: 17px; }
     .meta div { margin: 4px 0; }
     .note { color: #b00020; font-weight: bold; font-size: 0.95em; margin-top: 10px; }
     .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; background: #f8f8f8; padding: 10px 14px; border-radius: 8px; }
     button { padding: 9px 16px; font-size: 15px; cursor: pointer; border: 1px solid #ccc; background: #fff; border-radius: 4px; }
     button:hover { background: #eee; }
-    select { padding: 7px; font-size: 15px; }
     .section { margin-top: 28px; padding-top: 10px; border-top: 2px solid #ddd; }
     .section-title { font-weight: bold; margin-bottom: 10px; }
     .small { font-size: 0.95em; color: #444; }
     .verb-table, .blank-table { width: 100%; border-collapse: collapse; margin: 10px 0 18px; table-layout: fixed; }
-    .verb-table th, .verb-table td, .blank-table th, .blank-table td { border: 2px solid #333; padding: 6px 5px; vertical-align: middle; text-align: center; }
+    .verb-table th, .verb-table td, .blank-table th, .blank-table td { border: 2px solid #333; padding: 6px 5px; vertical-align: middle; text-align: center; overflow: visible; }
     .verb-table th { font-size: 18px; }
     .rowhead { width: 120px; font-weight: bold; text-align: left !important; padding-left: 10px !important; background: #fafafa; }
     .verbhead { font-size: 18px; }
-    .cell-input { width: 100%; box-sizing: border-box; border: none; outline: none; font-size: 16px; text-align: center; background: transparent; min-height: 28px; }
+    .cell-input { width: calc(100% - 8px); box-sizing: border-box; border: 1px solid #999; outline: none; font-size: 16px; text-align: center; background: #fff; min-height: 32px; padding: 4px 6px; border-radius: 4px; display: block; margin: 0 auto; }
+    .cell-input:focus, .answer-input:focus { border-color: #333; box-shadow: 0 0 0 2px rgba(0,0,0,0.06); }
     .cell-input::placeholder { color: #bbb; }
     .qa { margin: 12px 0 14px; }
     .qa .prompt { margin-bottom: 4px; }
@@ -31,7 +30,6 @@
     .answer-input { width: 100%; max-width: 650px; padding: 8px 10px; font-size: 16px; box-sizing: border-box; }
     .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.1em; padding: 0 5px; vertical-align: middle; }
     .audio-btn:hover { opacity: 0.6; }
-    .blank { display: inline-block; min-width: 85px; border-bottom: 2px solid #111; margin: 0 4px; text-align: center; }
     .correct { color: #0a7a0a; font-weight: bold; }
     .incorrect { color: #b00020; font-weight: bold; }
     #result { margin-top: 18px; font-size: 16px; }
@@ -45,7 +43,7 @@
   <div class="meta">
     <div>1.　次の動詞を、主語に合うように直説法現在形で活用しなさい。</div>
     <div>2.　次の質問に、スペイン語で答えなさい。</div>
-    <div>3.　表を見て、空欄をすべて埋めなさい。</div>
+    <div>3.　表の空欄をすべて埋めなさい。</div>
     <div>4.　目的語人称代名詞や no を空欄に入れなさい。</div>
     <div class="note" style="margin-left: 1.2em;">※ 3人称の le / les は se に変わること、直接目的語と間接目的語の順番に注意。</div>
   </div>
@@ -112,6 +110,15 @@
       { q: '¿Le regalas flores a tu madre para celebrar el día de la madre? Sí, ( ) ( ) regalo.', a: ['se las', 'se las regalo'] }
     ];
 
+    const pronounTableAnswers = [
+      'me', 'me',
+      'te', 'te',
+      'lo / la', 'le',
+      'nos', 'nos',
+      'os', 'os',
+      'los / las', 'les'
+    ];
+
     function shuffle(arr) {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -154,40 +161,40 @@
       form.innerHTML += `
         <div class="qa">
           <div class="prompt">(${index + 1}) ${promptHtml}${audioBtn}<span class="translation">（${displayExpected}）</span></div>
-          <input id="q${index}" class="answer-input" autocomplete="off" placeholder="解答を入力" />
+          <input id="q${index}" class="answer-input" type="text" autocomplete="off" placeholder="解答を入力" />
         </div>`;
     }
 
-    function addConjugationTable(form, verbs, tableIndex, qIndexStart) {
+    function addConjugationTable(form, verbs, tableIndex, qIndex) {
       form.innerHTML += `<div class="section"><div class="section-title">1-${tableIndex + 1}. ${verbs.join(' / ')}</div>`;
       form.innerHTML += `<table class="verb-table"><tr><th style="width:120px;"></th>${verbs.map(v => `<th class="verbhead">${v}</th>`).join('')}</tr>`;
 
       rowLabels.forEach((row, r) => {
         form.innerHTML += `<tr><td class="rowhead">${row}</td>`;
-        verbs.forEach((verb, c) => {
-          const qid = qIndexStart.value++;
+        verbs.forEach((verb) => {
+          const id = qIndex.value++;
           const expected = conjugationAnswers[verb][r];
           currentAnswers.push(expected);
-          form.innerHTML += `<td><input id="q${qid}" class="cell-input" autocomplete="off" placeholder="" /></td>`;
+          form.innerHTML += `<td><input id="q${id}" class="cell-input" type="text" autocomplete="off" placeholder="" /></td>`;
         });
         form.innerHTML += `</tr>`;
       });
       form.innerHTML += `</table></div>`;
     }
 
-    function addBlankPronounTable(form) {
-      form.innerHTML += `<div class="section"><div class="section-title">3. 目的語人称代名詞の表（空欄を埋めなさい）</div>`;
+    function addPronounTable(form, qIndex) {
+      form.innerHTML += `<div class="section"><div class="section-title">3. 表の空欄をすべて埋めなさい。</div>`;
       form.innerHTML += `<table class="blank-table">
         <tr><th style="width:130px;">人称</th><th>直接目的語</th><th>間接目的語</th></tr>
-        <tr><td class="rowhead">1人称単数</td><td><input id="q${currentAnswers.length}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 1}" class="cell-input" autocomplete="off"></td></tr>
-        <tr><td class="rowhead">2人称単数</td><td><input id="q${currentAnswers.length + 2}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 3}" class="cell-input" autocomplete="off"></td></tr>
-        <tr><td class="rowhead">3人称単数</td><td><input id="q${currentAnswers.length + 4}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 5}" class="cell-input" autocomplete="off"></td></tr>
-        <tr><td class="rowhead">1人称複数</td><td><input id="q${currentAnswers.length + 6}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 7}" class="cell-input" autocomplete="off"></td></tr>
-        <tr><td class="rowhead">2人称複数</td><td><input id="q${currentAnswers.length + 8}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 9}" class="cell-input" autocomplete="off"></td></tr>
-        <tr><td class="rowhead">3人称複数</td><td><input id="q${currentAnswers.length + 10}" class="cell-input" autocomplete="off"></td><td><input id="q${currentAnswers.length + 11}" class="cell-input" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">1人称単数</td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">2人称単数</td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">3人称単数</td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">1人称複数</td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">2人称複数</td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td></tr>
+        <tr><td class="rowhead">3人称複数</td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td><td><input id="q${qIndex.value++}" class="cell-input" type="text" autocomplete="off"></td></tr>
       </table>
-      <div class="subnote">※ 採点用の答えはこの版では未設定です。必要ならこの表にも正答を入れられます。</div></div>`;
-      for (let i = 0; i < 12; i++) currentAnswers.push(null);
+      <div class="subnote">※ 3人称の直接目的語は lo / la / los / las、間接目的語は le / les です。</div></div>`;
+      pronounTableAnswers.forEach(a => currentAnswers.push(a));
     }
 
     function addPronounExercise(form, html, expected, index) {
@@ -196,7 +203,7 @@
       form.innerHTML += `
         <div class="qa">
           <div class="prompt">(${index + 1}) ${html}<span class="translation">（${displayExpected}）</span></div>
-          <input id="q${index}" class="answer-input" autocomplete="off" placeholder="解答を入力" />
+          <input id="q${index}" class="answer-input" type="text" autocomplete="off" placeholder="解答を入力" />
         </div>`;
     }
 
@@ -214,7 +221,7 @@
       form.innerHTML += `<div class="section"><div class="section-title">2. 次の質問に、スペイン語で答えなさい。</div><div class="small">※ 例と同じように、短く答えてもOK。</div></div>`;
       shuffle(questionStock).slice(0, 4).forEach(q => addInputQuestion(form, q.q, q.a, qIndex.value++, true));
 
-      addBlankPronounTable(form);
+      addPronounTable(form, qIndex);
 
       form.innerHTML += `<div class="section"><div class="section-title">4. 目的語人称代名詞や no を空欄に入れなさい。</div></div>`;
       shuffle(pronounStock).slice(0, 6).forEach(q => addPronounExercise(form, q.q, q.a, qIndex.value++));
@@ -223,7 +230,6 @@
     }
 
     function isCorrect(userAns, expected) {
-      if (expected === null) return userAns.trim() === '';
       const u = norm(userAns);
       if (Array.isArray(expected)) return expected.some(e => u === norm(e));
       return u === norm(expected);
@@ -236,7 +242,7 @@
         const input = document.getElementById('q' + i);
         const userAns = input ? input.value : '';
         const ok = isCorrect(userAns, expected);
-        const expectedStr = expected === null ? '（空欄）' : (Array.isArray(expected) ? expected.join(' / ') : expected);
+        const expectedStr = Array.isArray(expected) ? expected.join(' / ') : expected;
         if (ok) score++;
         out += `<p class="${ok ? 'correct' : 'incorrect'}">${i + 1}: ${ok ? '〇' : '× → ' + expectedStr}</p>`;
       });
