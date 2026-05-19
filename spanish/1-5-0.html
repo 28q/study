@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>スペイン語 不規則動詞 現在活用 練習</title>
+<style>
+    body {
+        font-family: sans-serif;
+        margin: 20px;
+        background: #f4f4f4;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .verb-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .verb-box {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    .verb-title {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    td {
+        border: 1px solid #ccc;
+        padding: 8px;
+    }
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5px;
+        font-size: 16px;
+    }
+
+    .correct {
+        background-color: #b7ffb7;
+    }
+
+    .wrong {
+        background-color: #ffb7b7;
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+
+<h1>スペイン語 不規則動詞 現在活用 練習</h1>
+
+<div class="verb-grid" id="container"></div>
+
+<div style="text-align:center;">
+    <button onclick="checkAnswers()">答え合わせ</button>
+</div>
+
+<script>
+const data = {
+    tener: ["tengo", "tienes", "tiene", "tenemos", "tenéis", "tienen"],
+    decir: ["digo", "dices", "dice", "decimos", "decís", "dicen"],
+    venir: ["vengo", "vienes", "viene", "venimos", "venís", "vienen"],
+    construir: ["construyo", "construyes", "construye", "construimos", "construís", "construyen"],
+    oír: ["oigo", "oyes", "oye", "oímos", "oís", "oyen"],
+    ir: ["voy", "vas", "va", "vamos", "vais", "van"],
+    concluir: ["concluyo", "concluyes", "concluye", "concluimos", "concluís", "concluyen"]
+};
+
+const persons = [
+    "yo",
+    "tú",
+    "él / ella",
+    "nosotros",
+    "vosotros",
+    "ellos / ellas"
+];
+
+const container = document.getElementById("container");
+
+for (const [verb, forms] of Object.entries(data)) {
+    const box = document.createElement("div");
+    box.className = "verb-box";
+
+    let html = `<div class="verb-title">${verb}</div>`;
+    html += `<table>`;
+
+    for (let i = 0; i < 6; i++) {
+        html += `
+        <tr>
+            <td>${persons[i]}</td>
+            <td>
+                <input 
+                    type="text" 
+                    data-answer="${forms[i]}"
+                >
+            </td>
+        </tr>
+        `;
+    }
+
+    html += `</table>`;
+    box.innerHTML = html;
+    container.appendChild(box);
+}
+
+function checkAnswers() {
+    const inputs = document.querySelectorAll("input");
+
+    inputs.forEach(input => {
+        const answer = input.dataset.answer.trim().toLowerCase();
+        const user = input.value.trim().toLowerCase();
+
+        input.classList.remove("correct", "wrong");
+
+        if (user === answer) {
+            input.classList.add("correct");
+        } else {
+            input.classList.add("wrong");
+        }
+    });
+}
+</script>
+
+</body>
+</html>
