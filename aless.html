@@ -1,256 +1,570 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reading Speed Test</title>
-    
-    <!-- 細字・標準・太字を確実に区別するためのフォント読み込み -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            /* 読み込んだ Roboto フォントを適用 */
-            font-family: 'Roboto', Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .controls {
-            margin-bottom: 20px;
-        }
-
-        /* 独立して選択できるようにグループ化 */
-        .button-group {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-        }
-
-        h3 {
-            font-size: 16px;
-            margin: 0 0 10px 0;
-        }
-
-        button {
-            padding: 12px 15px;
-            margin: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            background-color: #f0f0f0;
-            touch-action: manipulation;
-        }
-
-        button:hover {
-            background-color: #ddd;
-        }
-
-        .active {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-        }
-
-        .action-btn {
-            font-size: 16px;
-            font-weight: bold;
-            padding: 15px 30px;
-            margin-top: 10px;
-        }
-
-        #text-container {
-            display: none;
-            max-width: 800px;
-            margin: 20px auto;
-            line-height: 1.8;
-            text-align: left;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            font-size: 18px; 
-        }
-
-        #quiz-container {
-            display: none;
-            margin-top: 30px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
-        #result {
-            font-size: 18px;
-            margin-top: 20px;
-            line-height: 1.6;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>英文読解実験</title>
+  <!-- Interフォント：300,400,700を確実に区別 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      padding: 28px 24px;
+      text-align: center;
+      transition: background 0.3s, color 0.3s;
+    }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: -0.3px;
+    }
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin: 12px 0 16px;
+    }
+    .subtitle {
+      font-size: 0.95rem;
+      color: #5e6b7c;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .participant-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin: 24px 0 20px;
+    }
+    .participant-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 32px;
+      border: 2px solid #dce2ea;
+      background: white;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1e2b3c;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+    }
+    .participant-btn:active {
+      background: #eef3ff;
+      border-color: #3f6ef0;
+      transform: scale(0.96);
+    }
+    .btn {
+      display: inline-block;
+      background: #1e2b3c;
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-radius: 40px;
+      cursor: pointer;
+      width: 100%;
+      max-width: 260px;
+      margin: 10px auto;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+    }
+    .btn:active {
+      background: #0f1922;
+      transform: scale(0.97);
+    }
+    .btn:disabled {
+      background: #b0bec5;
+      pointer-events: none;
+    }
+    .reading-area {
+      text-align: left;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      padding: 24px 20px;
+      border-radius: 20px;
+      margin: 16px 0;
+      min-height: 220px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #f2f4f8;
+      border: 2px solid transparent;
+      padding: 14px 18px;
+      margin: 10px 0;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .quiz-option.selected {
+      border-color: #3f6ef0;
+      background: #eef3ff;
+    }
+    .break-timer {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin: 24px 0;
+      color: #c7512e;
+    }
+    .result-table {
+      width: 100%;
+      font-size: 0.85rem;
+      border-collapse: collapse;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .result-table th, .result-table td {
+      border-bottom: 1px solid #e0e4ea;
+      padding: 10px 6px;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .note {
+      color: #6f7c8c;
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+  </style>
 </head>
 <body>
-
-    <h1>Reading Speed Test</h1>
-
-    <!-- 設定パネル -->
-    <div class="controls" id="settings-panel">
-        
-        <!-- 太さのグループ -->
-        <div class="button-group">
-            <h3>文字の太さ (Font Weight)</h3>
-            <button onclick="setFontWeight('300', this)">細字</button>
-            <button onclick="setFontWeight('400', this)">標準</button>
-            <button onclick="setFontWeight('700', this)">太字</button>
-        </div>
-
-        <!-- 配色のグループ -->
-        <div class="button-group">
-            <h3>配色 (Contrast)</h3>
-            <button onclick="setColorTheme('light', this)">白背景 × 黒文字</button>
-            <button onclick="setColorTheme('dark', this)">黒背景 × 白文字</button>
-        </div>
-
+  <div class="container" id="app">
+    <!-- 参加者選択 -->
+    <div id="screen-participant">
+      <h1>📖 英文読解実験</h1>
+      <p class="subtitle">参加者番号（1〜6）を選んでください。<br>番号によって表示条件の順序が変わります。</p>
+      <div class="participant-select" id="participant-buttons"></div>
+      <p class="note">※ 練習試行の後、本番6試行を実施します</p>
     </div>
 
-    <!-- アクションボタン -->
-    <div id="action-buttons">
-        <button class="action-btn" id="start-btn" onclick="startReading()">開始</button>
-        <button class="action-btn" id="end-btn" onclick="endReading()" style="display:none;">終了</button>
+    <!-- 練習説明 -->
+    <div id="screen-practice-intro" class="hidden">
+      <h2>練習試行</h2>
+      <p class="subtitle">これから本番と同じ流れで1回練習します。<br>「開始」をタップすると文章が表示され、タイマーが動き始めます。読み終わったら「読み終わり」をタップしてください。</p>
+      <button class="btn" id="start-practice-btn">練習を開始する</button>
     </div>
 
-    <!-- 読む文章 -->
-    <div id="text-container">
-        <p id="reading-text">
-            The North Wind and the Sun were disputing which was the stronger, when a traveler came along wrapped in a warm cloak. 
-            They agreed that the one who first succeeded in making the traveler take off his cloak should be considered stronger 
-            than the other. Then the North Wind blew as hard as he could, but the more he blew, the more closely the traveler 
-            wrapped his cloak around him; and at last the North Wind gave up the attempt. Then the Sun shone out warmly, and 
-            immediately the traveler took off his cloak. And so the North Wind was obliged to confess that the Sun was the stronger 
-            of the two.
-        </p>
+    <!-- 読文画面（条件表示・タイマー非表示） -->
+    <div id="screen-reading" class="hidden">
+      <div class="reading-area" id="passage-text"></div>
+      <button class="btn" id="finish-reading-btn">読み終わり</button>
     </div>
 
-    <!-- 理解度テスト -->
-    <div id="quiz-container">
-        <h3>Comprehension Test</h3>
-        <p>Who was considered stronger at the end of the story?</p>
-        <button onclick="checkAnswer('The North Wind')">The North Wind</button>
-        <button onclick="checkAnswer('The Sun')">The Sun</button>
-        <button onclick="checkAnswer('The Traveler')">The Traveler</button>
+    <!-- クイズ -->
+    <div id="screen-quiz" class="hidden">
+      <h2>内容確認クイズ</h2>
+      <p class="subtitle" id="quiz-question"></p>
+      <div id="quiz-options"></div>
+      <button class="btn hidden" id="submit-quiz-btn">回答する</button>
+      <p class="note" id="quiz-feedback"></p>
     </div>
 
-    <!-- 計測結果表示 -->
-    <div id="result"></div>
+    <!-- 休憩（30秒強制＋任意開始） -->
+    <div id="screen-break" class="hidden">
+      <h2>☕ 休憩時間</h2>
+      <p class="subtitle">次の文章まで休憩してください。<br>あと <strong id="break-countdown">30</strong> 秒</p>
+      <div class="break-timer" id="break-timer-large">30</div>
+      <button class="btn hidden" id="start-after-break-btn">次の文章を読む</button>
+      <p class="note" id="break-auto-note">30秒後に開始ボタンが表示されます</p>
+    </div>
 
-    <script>
-        let startTime = null;
-        let wordCount = 0;
-        let timeSeconds = 0;
-        let wpm = 0;
+    <!-- 本番前 -->
+    <div id="screen-main-intro" class="hidden">
+      <h2>本番を始めます</h2>
+      <p class="subtitle">これから6つの文章を読みます。準備ができたら「開始」を押してください。</p>
+      <button class="btn" id="start-main-btn">本番を開始する</button>
+    </div>
 
-        // ボタンの緑色（アクティブ）を切り替える
-        function setActive(button) {
-            // 同じボタングループ（div.button-group）内のボタンのみリセットする
-            const siblings = button.parentElement.querySelectorAll("button");
-            siblings.forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
+    <!-- 結果 -->
+    <div id="screen-results" class="hidden">
+      <h2>実験終了</h2>
+      <p class="subtitle">ご協力ありがとうございました。</p>
+      <table class="result-table" id="result-table">
+        <thead><tr><th>試行</th><th>条件</th><th>読了時間(秒)</th><th>WPM</th><th>正答率</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="note">データはコンソールにも出力されています。</p>
+      <button class="btn" onclick="location.reload()">もう一度やり直す</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ---------- 本番モード（30秒休憩＋任意開始） ----------
+      const TEST_MODE = false;   // 本番では false
+
+      // 条件定義
+      const CONDITIONS = [
+        { name: 'Thin / Black on White', fontWeight: '300', color: '#000', bg: '#fff', label: '細字・黒/白' },
+        { name: 'Regular / Black on White', fontWeight: '400', color: '#000', bg: '#fff', label: '標準・黒/白' },
+        { name: 'Bold / Black on White', fontWeight: '700', color: '#000', bg: '#fff', label: '太字・黒/白' },
+        { name: 'Thin / White on Black', fontWeight: '300', color: '#fff', bg: '#000', label: '細字・白/黒' },
+        { name: 'Regular / White on Black', fontWeight: '400', color: '#fff', bg: '#000', label: '標準・白/黒' },
+        { name: 'Bold / White on Black', fontWeight: '700', color: '#fff', bg: '#000', label: '太字・白/黒' }
+      ];
+
+      // 背景色が交互になるラテン方格
+      const LATIN_SQUARE = [
+        [0, 3, 1, 4, 2, 5],
+        [3, 1, 4, 2, 5, 0],
+        [1, 4, 2, 5, 0, 3],
+        [4, 2, 5, 0, 3, 1],
+        [2, 5, 0, 3, 1, 4],
+        [5, 0, 3, 1, 4, 2]
+      ];
+
+      // 長文（各文章の単語数を確認し、WPM計算に使用します）
+      const PASSAGES = [
+        "【長文1】\n\nPublic libraries matter because they help a community turn information into practical use, and use into better judgment in daily public life and public debate. In an age of phones and search tools, it may seem that books and reading rooms are less important than before, yet the opposite is often true. People now face more data than they can judge alone, and they need places where reading is not tied to sales, advertising, or quick reaction. A library gives access, but it also gives quiet, order, and a setting where study can happen without pressure to buy anything or perform for others. Students can work there, job seekers can search there, and new residents can find help in a place that is open to many people. This public role matters because not everyone has a calm home, a fast device, a private room, or the time needed for long reading or careful note taking and review. Libraries also support local life through classes, book groups, language help, digital support, and small events that build trust across age and background in practical and useful ways. These services may look modest, but they often remove the first barrier that keeps a person from learning something genuinely useful or asking a needed question. A strong library system therefore does more than store books and records. It lowers the cost of attention, which is one of the hardest things to protect in modern life, and it gives people a fairer chance to learn. It also helps readers compare sources, check facts, and slow down before they accept a claim as true or repeat it to others. A society that protects libraries gives itself a better chance to learn, to share, and to take part in public life with more care, more patience, and less confusion over time.",
+        "【長文2】\n\nCoral reef restoration has become a major concern because warming seas, acid water, and repeated storms are damaging habitats that support many species and local jobs. A reef is not only a bright landscape for divers, because it also shelters young fish, protects coasts, and helps nearby markets and fishing crews survive. When coral breaks down, the loss spreads beyond one site, since nearby food webs and storm barriers can weaken at the same time. Scientists now test methods that plant small coral pieces, grow hardy strains, and place new structures where young coral can attach and spread. These methods can help, but they are not enough on their own, because water that stays too warm or too polluted will still slow recovery. That is why restoration must be tied to wider care of the sea, including runoff control, cleaner ports, and better rules for coastal use and construction. The work also depends on time, because coral grows slowly and damage may take years to reverse in any visible way. Managers must therefore accept that success will often appear in stages rather than in one dramatic result that ends the debate. Some projects show clear gains in fish numbers, yet others fail when a storm or heat wave arrives too soon after planting. Successful projects also depend on monitoring, because data on water chemistry, bleaching, and survival rates help teams decide when to repair, pause, or redesign a site. For that reason, researchers keep testing which species, sites, and methods are most resilient under stress from climate and human use. They also measure social results, because coastal people depend on reefs for work, food, and protection from waves and wind. In the end, reef recovery is a shared task that joins ecology, public policy, and local knowledge in a future that is changing faster than before.",
+        "【長文3】\n\nPaper conservation requires more than keeping books on a shelf. It asks how to slow damage from light, dust, moisture, and the acids that weaken old pages over time. A rare manuscript may look stable, but small changes in humidity can make paper curl, crack, or fade in ways that are hard to reverse. Conservators therefore study the material before choosing how to clean, flatten, repair, or store it. They may use special boxes, controlled rooms, and careful handling to reduce stress on the object. The goal is not to make every page look new. It is to preserve enough structure and detail that readers can still study the text and its history. That task is partly technical and partly ethical, because a damaged page may still hold evidence of use, ownership, and age. If a repair hides all traces of the past, some of that meaning disappears with the stain. If a repair is too weak, the page may continue to fall apart. The best answer usually lies between those extremes, and it depends on the item’s purpose and value. A working archive, a private family album, and a national treasure may each need a different level of care. Digital copies can help by reducing handling, but scanning does not replace the physical object itself. The feel, ink, and paper fibers all carry information that images cannot fully capture. For that reason, paper conservation remains essential in libraries, museums, and archives. It protects not only text, but also the material form that lets later readers see how knowledge once traveled through hands, rooms, and time. Careful documentation also matters, because future conservators need to know which materials were added and why. That record helps museums avoid mistakes, repeat good methods, and explain each intervention to the public clearly.",
+        "【長文4】\n\nVolcanic ash can damage homes, engines, croplands, and lungs, yet it can also change topsoil in ways that matter over long periods. Fresh ash is often rich in minerals, and after weathering it may support strong plant growth in certain regions. This dual nature makes volcanoes important subjects for both hazard planning and land study. When an eruption sends ash into the air, the first concern is usually immediate safety. People may need masks, clean water, roof checks, and protection for roads and machines. Airports can close because even a thin ash cloud may threaten aircraft engines and visibility. After the emergency passes, researchers study how the new layer will affect crops, rivers, and local rebuilding. Some places recover quickly, while others face years of cleaning and repair. The result depends on ash depth, rain, wind, and the kind of terrain already present before the eruption. Farmers may welcome future soil gains, but they still have to survive the loss of a season or more while fields are blocked. This is why volcanic risk cannot be reduced to a single timeline. It includes the minutes of a blast, the months of cleanup, and the years of ecological change that follow. Public planning should therefore prepare for both danger and regeneration. Good policy may not stop an eruption, but it can reduce harm and help people use the landscape again with greater safety. In that sense, volcanic ash is a reminder that destruction and fertility can come from the same source, and that resilience often depends on how well communities respond after the first shock. Some regions even benefit from ash in the long run, but only after roads are cleared and farms recover. Public agencies therefore need maps, drills, and emergency supplies before the next plume appears over a town.",
+        "【長文5】\n\nCities often grow by reacting to urgent needs, not by following a coordinated strategy, and that habit can shape neighborhoods for decades. The pattern is understandable, because land is costly, time is limited, and many groups compete for the same street, block, budget, and thoroughfare. Even so, reactive growth can produce transport corridors that are hard to walk, homes that are far from employment centers, and parks that feel marginal rather than collective. It can also leave transit networks weak, which then pushes more people into cars and adds pressure to roads, emissions, congestion, and noise. A city that seems efficient from a distance may in fact force long trips, thin services, and heavy stress on the people who live there. Good planning tries to see those hidden costs before they become daily habits or expensive repairs. It asks how a road, a bus line, a school, and a clinic work together, not just how each one looks on a map. It also asks who benefits from a change and who pays for it over many years through rent, taxes, missed work, or lost time. That wider view does not always produce the fastest result, but it often produces a fairer one with better public support and less resentment. Streets with trees, sidewalks, and safe crossings may take more care to design, yet they can sustain health, commerce, and civic life in ways that last. When planners listen to residents, they often learn that small choices, such as shade, benches, lighting, accessibility, and crossings, can shape comfort more than large slogans do. The lesson is simple enough to state, but hard to practice: a city is not only a set of buildings and roads, but a layered system of movement, services, daily exchange, maintenance, and public responsibility.",
+        "【長文6】\n\nFestival crowd management is often judged only when something goes wrong, yet its success depends on quiet preparation long before the first guest arrives or the music begins. Organizers must think about entry lines, emergency exits, stage placement, water access, signs, security staff, and the flow of people across the site, all at the same time. If those elements are planned well, the crowd can move comfortably without feeling pushed or confused. If they are planned badly, even a small bottleneck can become stressful, unsafe, or slow to fix once thousands of people are already inside and moving at once. Good management begins with the simple idea that people do not move like identical units. They stop to talk, take photos, search for friends, and change direction for many reasons that are hard to predict in full, especially when the event is large. That is why maps, barriers, and staff guidance must be designed around real behavior rather than ideal behavior drawn on paper. Weather adds another layer, since heat, rain, or wind can alter how long people stay in one area and how quickly they try to leave. Emergency plans also matter because clear routes and visible instructions can save time during medical problems or sudden disruption. Some events now use ticket data and live counting systems to track pressure before it becomes a risk. These tools help, but they cannot replace human judgment on the ground, where small signs often appear before numbers change. Staff members still need to read the mood of the crowd, notice signs of fatigue, and act before stress turns into panic or conflict. In that sense, crowd management is a practical study of movement, trust, and timing. It shows that safety is not created by force alone. It is built through layout, communication, and respect for how people actually behave in public space."
+      ];
+
+      // 各長文の正確な単語数 (WPM計算用)
+      const PASSAGE_WORD_COUNTS = [304, 306, 299, 300, 397, 310];
+
+      // 各長文に合わせた内容確認クイズ (5択)
+      const QUIZZES = [
+        {
+          question: "According to the passage, what is one major role of public libraries?",
+          options: [
+            "To sell books at discounted prices",
+            "To provide a quiet space for study without commercial pressure",
+            "To replace schools and universities",
+            "To train people in social media marketing",
+            "To store old furniture"
+          ],
+          correct: 1
+        },
+        {
+          question: "Why is coral reef restoration not enough on its own?",
+          options: [
+            "Because coral grows too fast",
+            "Because restoration must be tied to wider care of the sea and pollution control",
+            "Because fish do not like restored reefs",
+            "Because it is too cheap to implement",
+            "Because tourists damage the new coral immediately"
+          ],
+          correct: 1
+        },
+        {
+          question: "What does the passage say about digital copies?",
+          options: [
+            "They are better than the original in every way",
+            "They help by reducing handling but cannot replace the physical object",
+            "They cause acid damage to paper",
+            "They are too expensive for most museums",
+            "They are illegal to create"
+          ],
+          correct: 1
+        },
+        {
+          question: "What dual nature of volcanic ash does the passage discuss?",
+          options: [
+            "It is both hot and cold",
+            "It creates damage but can also support strong plant growth after weathering",
+            "It is found only on land and never in the sea",
+            "It only affects airplanes and nothing else",
+            "It disappears after one week"
+          ],
+          correct: 1
+        },
+        {
+          question: "What is the main point the author makes about city growth?",
+          options: [
+            "Cities always grow perfectly without any problems",
+            "Building only skyscrapers solves all issues",
+            "Reactive growth can create hidden costs like long commutes and weak transit",
+            "Parks are completely useless in modern cities",
+            "Only rich people should decide city plans"
+          ],
+          correct: 2
+        },
+        {
+          question: "According to the passage, what is the foundation of good crowd management?",
+          options: [
+            "Quiet preparation and understanding real human behavior",
+            "Using only loudspeakers to control people",
+            "Canceling the event if it gets too crowded",
+            "Letting crowds move freely without any barriers",
+            "Relying only on luck"
+          ],
+          correct: 0
+        }
+      ];
+
+      const PRACTICE_PASSAGE = "【練習用文章】\n\nThis is a practice passage to familiarize you with the task. It is shorter than the main passages. Please read at your normal speed. When you finish, tap the button below. The timer will stop, and you will answer a simple question. This data will not be recorded.";
+      const PRACTICE_QUIZ = { question: "練習クイズ：この文章は実験の練習である。", options: ["正しい", "誤り"], correct: 0 };
+
+      // 状態
+      let participantId = null;
+      let conditionOrder = [];
+      let currentTrialIndex = 0;
+      let isPractice = true;
+      let readingStartTime = null;
+      let timerInterval = null;
+      let readingTimeMs = 0;
+      let selectedQuizAnswer = null;
+      let results = [];
+      let breakInterval = null;
+
+      // DOM要素
+      const screens = {
+        participant: document.getElementById('screen-participant'),
+        practiceIntro: document.getElementById('screen-practice-intro'),
+        reading: document.getElementById('screen-reading'),
+        quiz: document.getElementById('screen-quiz'),
+        break: document.getElementById('screen-break'),
+        mainIntro: document.getElementById('screen-main-intro'),
+        results: document.getElementById('screen-results')
+      };
+
+      function showScreen(screenId) {
+        Object.values(screens).forEach(el => el.classList.add('hidden'));
+        if (screens[screenId]) screens[screenId].classList.remove('hidden');
+      }
+
+      function startReadingTimer() {
+        readingStartTime = Date.now();
+        timerInterval = setInterval(() => {}, 100); // タイマーは内部で動作（表示しない）
+      }
+
+      function stopReadingTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+        if (readingStartTime) {
+          readingTimeMs = Date.now() - readingStartTime;
+        }
+        return readingTimeMs;
+      }
+
+      function applyCondition(condition) {
+        const readingArea = document.getElementById('passage-text');
+        readingArea.style.fontWeight = condition.fontWeight;
+        readingArea.style.color = condition.color;
+        readingArea.style.backgroundColor = condition.bg;
+        document.querySelector('.container').style.backgroundColor = condition.bg === '#000' ? '#1a1a1a' : '#ffffff';
+        document.querySelector('.container').style.color = condition.bg === '#000' ? '#e0e0e0' : '#1e2b3c';
+      }
+
+      function resetContainerStyle() {
+        document.querySelector('.container').style.backgroundColor = '#ffffff';
+        document.querySelector('.container').style.color = '#1e2b3c';
+      }
+
+      function setupReading(passageText, condition) {
+        document.getElementById('passage-text').textContent = passageText;
+        applyCondition(condition);
+        readingStartTime = null;
+        readingTimeMs = 0;
+        if (timerInterval) clearInterval(timerInterval);
+        document.getElementById('finish-reading-btn').disabled = false;
+      }
+
+      function setupQuiz(quizData) {
+        document.getElementById('quiz-question').textContent = quizData.question;
+        const optionsDiv = document.getElementById('quiz-options');
+        optionsDiv.innerHTML = '';
+        selectedQuizAnswer = null;
+        quizData.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'quiz-option';
+          btn.textContent = opt;
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedQuizAnswer = idx;
+            document.getElementById('submit-quiz-btn').classList.remove('hidden');
+          });
+          optionsDiv.appendChild(btn);
+        });
+        document.getElementById('submit-quiz-btn').classList.add('hidden');
+        document.getElementById('quiz-feedback').textContent = '';
+      }
+
+      // 休憩開始（30秒カウントダウン後、手動開始ボタン表示）
+      function startBreak() {
+        showScreen('break');
+        let breakSeconds = 30;
+        const countdownEl = document.getElementById('break-countdown');
+        const timerLargeEl = document.getElementById('break-timer-large');
+        const startBtn = document.getElementById('start-after-break-btn');
+        const autoNote = document.getElementById('break-auto-note');
+
+        countdownEl.textContent = breakSeconds;
+        timerLargeEl.textContent = breakSeconds;
+        startBtn.classList.add('hidden');
+        autoNote.classList.remove('hidden');
+
+        if (breakInterval) clearInterval(breakInterval);
+        breakInterval = setInterval(() => {
+          breakSeconds--;
+          countdownEl.textContent = breakSeconds;
+          timerLargeEl.textContent = breakSeconds;
+          if (breakSeconds <= 0) {
+            clearInterval(breakInterval);
+            breakInterval = null;
+            // 30秒経過→ボタン表示
+            startBtn.classList.remove('hidden');
+            autoNote.classList.add('hidden');
+          }
+        }, 1000);
+      }
+
+      function afterBreak() {
+        resetContainerStyle();
+        if (isPractice) {
+          showScreen('mainIntro');
+        } else {
+          currentTrialIndex++;
+          if (currentTrialIndex < 6) {
+            runMainTrial(currentTrialIndex);
+          } else {
+            showResults();
+          }
+        }
+      }
+
+      function runPractice() {
+        isPractice = true;
+        setupReading(PRACTICE_PASSAGE, CONDITIONS[1]); // 練習は標準 黒/白
+        showScreen('reading');
+        startReadingTimer();
+      }
+
+      function runMainTrial(trialIdx) {
+        isPractice = false;
+        const condIdx = conditionOrder[trialIdx];
+        const condition = CONDITIONS[condIdx];
+        const passage = PASSAGES[trialIdx];
+        setupReading(passage, condition);
+        showScreen('reading');
+        startReadingTimer();
+        // デバッグ用：コンソールに条件を出力（参加者には見えない）
+        console.log(`試行${trialIdx+1}: ${condition.label}`);
+      }
+
+      // 読み終わりボタン
+      document.getElementById('finish-reading-btn').addEventListener('click', () => {
+        const ms = stopReadingTimer();
+        document.getElementById('finish-reading-btn').disabled = true;
+        const quizData = isPractice ? PRACTICE_QUIZ : QUIZZES[currentTrialIndex];
+        setupQuiz(quizData);
+        showScreen('quiz');
+      });
+
+      // クイズ回答
+      document.getElementById('submit-quiz-btn').addEventListener('click', () => {
+        if (selectedQuizAnswer === null) return;
+        const quizData = isPractice ? PRACTICE_QUIZ : QUIZZES[currentTrialIndex];
+        const isCorrect = (selectedQuizAnswer === quizData.correct);
+        const feedback = document.getElementById('quiz-feedback');
+        feedback.textContent = isCorrect ? '✅ 正解です' : '❌ 不正解です';
+        document.getElementById('submit-quiz-btn').classList.add('hidden');
+        document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+
+        if (!isPractice) {
+          // 各文章の正確な単語数を使用してWPMを計算
+          const words = PASSAGE_WORD_COUNTS[currentTrialIndex];
+          const seconds = readingTimeMs / 1000;
+          const wpm = (words / seconds) * 60;
+          const correctPercent = isCorrect ? 100 : 0;
+          results.push({
+            trial: currentTrialIndex + 1,
+            condition: CONDITIONS[conditionOrder[currentTrialIndex]].label,
+            seconds: seconds.toFixed(2),
+            wpm: Math.round(wpm),
+            correctPercent: correctPercent
+          });
         }
 
-        // フォントの太さを変更
-        function setFontWeight(weight, button) {
-            document.getElementById("reading-text").style.fontWeight = weight;
-            setActive(button);
+        setTimeout(() => {
+          startBreak();
+        }, 1200);
+      });
+
+      // 休憩後の開始ボタン
+      document.getElementById('start-after-break-btn').addEventListener('click', () => {
+        afterBreak();
+      });
+
+      function showResults() {
+        showScreen('results');
+        const tbody = document.querySelector('#result-table tbody');
+        tbody.innerHTML = '';
+        results.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${r.trial}</td><td>${r.condition}</td><td>${r.seconds}</td><td>${r.wpm}</td><td>${r.correctPercent}%</td>`;
+          tbody.appendChild(tr);
+        });
+        console.log('=== 実験結果 ===');
+        console.table(results);
+        const lowComprehension = results.filter(r => r.correctPercent < 50);
+        if (lowComprehension.length > 0) {
+          console.warn('理解度50%未満の試行（分析から除外推奨）:', lowComprehension);
         }
+      }
 
-        // 配色を変更
-        function setColorTheme(theme, button) {
-            const body = document.body;
-            const container = document.getElementById("text-container");
-
-            if (theme === "light") {
-                body.style.backgroundColor = "#ffffff";
-                body.style.color = "#000000";
-                container.style.backgroundColor = "#ffffff";
-            } else if (theme === "dark") {
-                body.style.backgroundColor = "#121212";
-                body.style.color = "#ffffff";
-                container.style.backgroundColor = "#222222";
-            }
-            setActive(button);
+      function buildParticipantButtons() {
+        const container = document.getElementById('participant-buttons');
+        for (let i = 1; i <= 6; i++) {
+          const btn = document.createElement('button');
+          btn.className = 'participant-btn';
+          btn.textContent = i;
+          btn.addEventListener('click', () => {
+            participantId = i;
+            conditionOrder = LATIN_SQUARE[i - 1];
+            results = [];
+            currentTrialIndex = 0;
+            showScreen('practiceIntro');
+          });
+          container.appendChild(btn);
         }
+      }
 
-        // 読書開始
-        function startReading() {
-            const textElement = document.getElementById("reading-text");
-            wordCount = textElement.innerText.trim().split(/\s+/).length;
+      document.getElementById('start-practice-btn').addEventListener('click', () => {
+        runPractice();
+      });
 
-            document.getElementById("settings-panel").style.display = "none";
-            document.getElementById("text-container").style.display = "block";
-            document.getElementById("start-btn").style.display = "none";
-            document.getElementById("end-btn").style.display = "inline-block";
-            document.getElementById("result").innerHTML = "";
+      document.getElementById('start-main-btn').addEventListener('click', () => {
+        currentTrialIndex = 0;
+        runMainTrial(0);
+      });
 
-            startTime = new Date();
-        }
-
-        // 読書終了
-        function endReading() {
-            if (!startTime) return;
-
-            const endTime = new Date();
-            timeSeconds = ((endTime - startTime) / 1000).toFixed(2);
-            wpm = Math.round((wordCount / timeSeconds) * 60);
-
-            document.getElementById("text-container").style.display = "none";
-            document.getElementById("end-btn").style.display = "none";
-            document.getElementById("quiz-container").style.display = "block";
-            
-            startTime = null;
-        }
-
-        // 答え合わせ
-        function checkAnswer(answer) {
-            document.getElementById("quiz-container").style.display = "none";
-            document.getElementById("settings-panel").style.display = "block";
-            document.getElementById("start-btn").style.display = "inline-block";
-            document.getElementById("start-btn").textContent = "もう一度テストする";
-
-            let resultHTML = `読んだ単語数：${wordCount} words<br>`;
-            resultHTML += `かかった時間：${timeSeconds} 秒<br>`;
-            resultHTML += `<span style="font-size:24px; color:#4CAF50;">読書速度：${wpm} WPM</span><br><br>`;
-
-            if(answer === 'The Sun') {
-                resultHTML += `理解度テスト：<span style="color:blue;">正解 (The Sun)</span>`;
-            } else {
-                resultHTML += `理解度テスト：<span style="color:red;">不正解 (正解は The Sun)</span>`;
-            }
-
-            document.getElementById("result").innerHTML = resultHTML;
-
-            // テーマを初期状態の白背景に戻す（結果を見やすくするため）
-            document.body.style.backgroundColor = "#ffffff";
-            document.body.style.color = "#000000";
-        }
-
-        // 初期設定：ページ読み込み時にデフォルトを選択
-        window.onload = function () {
-            const groups = document.querySelectorAll(".button-group");
-            groups[0].querySelectorAll("button")[1].click(); // 文字の太さ：標準(400)
-            groups[1].querySelectorAll("button")[0].click(); // 配色：白背景×黒文字
-        };
-    </script>
-
+      buildParticipantButtons();
+      showScreen('participant');
+      resetContainerStyle();
+    })();
+  </script>
 </body>
 </html>
