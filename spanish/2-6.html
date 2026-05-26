@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>スペイン語演習2-6｜指示詞・Gustar型(ランダム)・西訳・規則動詞</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fef5e9;
+            font-family: 'Segoe UI', 'Noto Sans JP', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 24px 20px;
+            color: #2d3e2b;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            background: #c4412c;
+            color: white;
+            display: inline-block;
+            padding: 6px 28px;
+            border-radius: 40px;
+            font-size: 1.6rem;
+            margin: 0 0 12px 0;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            border-left: 8px solid #e67e22;
+            padding-left: 18px;
+            margin: 32px 0 18px 0;
+            color: #a23b1c;
+            background: #fff0e2;
+            border-radius: 0 30px 30px 0;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #b64926;
+            margin: 16px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            padding: 20px 24px;
+            margin-bottom: 30px;
+            border: 1px solid #ffe0bc;
+            transition: 0.2s;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fffdf9;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            border: 1px solid #e6cfaa;
+            padding: 12px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #f7e5d2;
+            font-weight: 700;
+            color: #8b4513;
+        }
+
+        .demo-input {
+            width: 100%;
+            min-width: 80px;
+            padding: 8px 6px;
+            border-radius: 30px;
+            border: 1px solid #e2b87a;
+            text-align: center;
+            background: #fffcf5;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+
+        .gustar-item {
+            background: #fef6ed;
+            border-radius: 24px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 12px;
+            border-left: 6px solid #e67e22;
+        }
+
+        .gustar-sentence {
+            font-weight: 500;
+            font-size: 1rem;
+            flex: 2;
+            font-family: 'Courier New', monospace;
+            background: #fff7e8;
+            padding: 5px 10px;
+            border-radius: 30px;
+        }
+
+        .gustar-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .gustar-inputs input {
+            padding: 7px 12px;
+            border-radius: 40px;
+            border: 1px solid #dbb87a;
+            width: 120px;
+            text-align: center;
+            background: white;
+        }
+
+        .trans-card {
+            background: #fef5ea;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            padding: 16px 18px;
+        }
+
+        .trans-jp {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .trans-input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 50px;
+            border: 1px solid #e2b87a;
+            font-family: monospace;
+            margin-top: 5px;
+        }
+
+        .verb-conj-item {
+            background: #f9f0e4;
+            border-radius: 20px;
+            margin: 15px 0;
+            padding: 14px 18px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 12px;
+        }
+
+        .verb-prompt {
+            font-weight: 600;
+            font-size: 1.05rem;
+            background: #f5e2cf;
+            padding: 4px 14px;
+            border-radius: 40px;
+        }
+
+        button {
+            background: #d64b2c;
+            color: white;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 8px 10px 0 0;
+            font-size: 0.9rem;
+        }
+
+        button.secondary {
+            background: #f39c12;
+        }
+
+        button.outline {
+            background: white;
+            color: #c0392b;
+            border: 1px solid #c4412c;
+        }
+
+        button.small {
+            padding: 5px 14px;
+            font-size: 0.8rem;
+        }
+
+        button:hover {
+            opacity: 0.85;
+            transform: scale(0.97);
+        }
+
+        .feedback {
+            background: #eaf7ea;
+            padding: 12px 18px;
+            border-radius: 24px;
+            margin-top: 20px;
+            border-left: 5px solid #2e7d32;
+            font-size: 0.9rem;
+        }
+
+        .wrong-feedback {
+            background: #ffefed;
+            border-left-color: #c0392b;
+        }
+
+        .flex-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #a5682c;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 750px) {
+            .gustar-item {
+                flex-direction: column;
+            }
+            .gustar-inputs {
+                justify-content: flex-start;
+            }
+            th, td {
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📘 演習2-6 · 総合ドリル</h1>
+    <p style="color:#8b5a2b;">指示詞・Gustar型(ランダムバリエーション)・西訳応用・規則動詞活用</p>
+
+    <!-- 1. 指示詞表 (すべて空欄、デフォルト非表示) -->
+    <div class="card">
+        <h2>📌 指示詞 (demonstrativos) — すべての欄を埋めなさい</h2>
+        <table id="demTable">
+            <thead>
+                <tr><th>性・数</th><th>この・これ (este/esta/estos/estas/esto)</th><th>その・それ (ese/esa/esos/esas/eso)</th><th>あの・あれ (aquel/aquella/aquellos/aquellas/aquello)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>男性・単数</td><td><input type="text" class="demo-input" id="dem_m_sg_este" placeholder="例: este" data-correct="este"></td><td><input type="text" class="demo-input" id="dem_m_sg_ese" placeholder="?" data-correct="ese"></td><td><input type="text" class="demo-input" id="dem_m_sg_aquel" placeholder="?" data-correct="aquel"></td></tr>
+                <tr><td>女性・単数</td><td><input type="text" class="demo-input" id="dem_f_sg_esta" placeholder="?" data-correct="esta"></td><td><input type="text" class="demo-input" id="dem_f_sg_esa" placeholder="例: esa" data-correct="esa"></td><td><input type="text" class="demo-input" id="dem_f_sg_aquella" placeholder="?" data-correct="aquella"></td></tr>
+                <tr><td>男性・複数</td><td><input type="text" class="demo-input" id="dem_m_pl_estos" placeholder="?" data-correct="estos"></td><td><input type="text" class="demo-input" id="dem_m_pl_esos" placeholder="?" data-correct="esos"></td><td><input type="text" class="demo-input" id="dem_m_pl_aquellos" placeholder="?" data-correct="aquellos"></td></tr>
+                <tr><td>女性・複数</td><td><input type="text" class="demo-input" id="dem_f_pl_estas" placeholder="?" data-correct="estas"></td><td><input type="text" class="demo-input" id="dem_f_pl_esas" placeholder="?" data-correct="esas"></td><td><input type="text" class="demo-input" id="dem_f_pl_aquellas" placeholder="?" data-correct="aquellas"></td></tr>
+                <tr><td>中性 (指示代名詞)</td><td><input type="text" class="demo-input" id="dem_neutro_esto" placeholder="?" data-correct="esto"></td><td><input type="text" class="demo-input" id="dem_neutro_eso" placeholder="?" data-correct="eso"></td><td><input type="text" class="demo-input" id="dem_neutro_aquello" placeholder="?" data-correct="aquello"></td></tr>
+            </tbody>
+        </table>
+        <div class="flex-btns">
+            <button id="checkDemBtn">✅ 指示詞をチェック</button>
+            <button id="showDemAnswers" class="secondary">📖 正解を表示</button>
+            <button id="resetDemBtn" class="outline">🧹 リセット</button>
+        </div>
+        <div id="demFeedback" class="feedback" style="display: none;"></div>
+    </div>
+
+    <!-- 2. Gustar型動詞 (5種類固定、各動詞ごとにランダムな間接目的語バリエーション) -->
+    <div class="card">
+        <h2>⚡ Gustar型動詞 空欄補充 (間接目的語 + 動詞)  ※動詞5種・毎回ランダムな主語</h2>
+        <div id="gustarContainer" class="grammar-block"></div>
+        <div class="flex-btns">
+            <button id="checkGustarBtn">🔍 答えを確認</button>
+            <button id="showGustarAnswers" class="secondary">✨ 正解を入力</button>
+            <button id="randomizeGustarBtn" class="outline">🔄 問題をランダム生成</button>
+        </div>
+        <div id="gustarFeedback" class="feedback" style="display: none;"></div>
+    </div>
+
+    <!-- 3. 西訳応用問題 (4問シャッフル, 第3問のスペイン語ヒントを隠す) -->
+    <div class="card">
+        <h2>📝 練習4 西訳応用問題 (順不同・第3問は語彙ヒントなし)</h2>
+        <div id="translationShuffleArea"></div>
+        <div class="flex-btns">
+            <button id="checkTransBtn">🎯 翻訳を確認</button>
+            <button id="showTransAnswers" class="secondary">📘 模範訳を表示</button>
+            <button id="reshuffleTransBtn" class="outline">🔄 問題をシャッフル</button>
+        </div>
+        <div id="transFeedback" class="feedback" style="display: none;"></div>
+    </div>
+
+    <!-- 4. 規則動詞活用 (3種類 + ランダムな主語) -->
+    <div class="card">
+        <h2>📖 規則動詞活用 (3動詞・ランダム主語)</h2>
+        <div id="verbConjArea"></div>
+        <div class="flex-btns">
+            <button id="checkVerbsBtn">✅ 活用を確認</button>
+            <button id="newVerbsBtn" class="secondary">🔄 新しい問題を生成</button>
+            <button id="showVerbAnswers" class="outline">💡 正解を表示</button>
+        </div>
+        <div id="verbFeedback" class="feedback" style="display: none;"></div>
+    </div>
+    <footer>※ Gustar型: 間接目的語＋動詞(主語の人称・数に一致) / 規則動詞は現在形活用</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 1. 指示詞 (デフォルト全て空欄)
+    // --------------------------------------------------------------
+    const demInputs = [
+        "dem_m_sg_este", "dem_m_sg_ese", "dem_m_sg_aquel",
+        "dem_f_sg_esta", "dem_f_sg_esa", "dem_f_sg_aquella",
+        "dem_m_pl_estos", "dem_m_pl_esos", "dem_m_pl_aquellos",
+        "dem_f_pl_estas", "dem_f_pl_esas", "dem_f_pl_aquellas",
+        "dem_neutro_esto", "dem_neutro_eso", "dem_neutro_aquello"
+    ];
+    const demCorrectMap = {
+        dem_m_sg_este: "este", dem_m_sg_ese: "ese", dem_m_sg_aquel: "aquel",
+        dem_f_sg_esta: "esta", dem_f_sg_esa: "esa", dem_f_sg_aquella: "aquella",
+        dem_m_pl_estos: "estos", dem_m_pl_esos: "esos", dem_m_pl_aquellos: "aquellos",
+        dem_f_pl_estas: "estas", dem_f_pl_esas: "esas", dem_f_pl_aquellas: "aquellas",
+        dem_neutro_esto: "esto", dem_neutro_eso: "eso", dem_neutro_aquello: "aquello"
+    };
+
+    function checkDem() {
+        let allOk = true;
+        let errors = [];
+        for (let id of demInputs) {
+            const inp = document.getElementById(id);
+            const user = inp.value.trim().toLowerCase();
+            const correct = demCorrectMap[id];
+            if (user !== correct) {
+                allOk = false;
+                errors.push(`${inp.placeholder || id}: あなた→「${user || "空"}」 正解→「${correct}」`);
+            }
+        }
+        const fb = document.getElementById("demFeedback");
+        fb.style.display = "block";
+        if (allOk) {
+            fb.className = "feedback";
+            fb.innerHTML = "🎉 指示詞完全正解！ ¡Perfecto!";
+        } else {
+            fb.className = "feedback wrong-feedback";
+            fb.innerHTML = `<strong>一部誤りがあります</strong><br>${errors.slice(0, 8).join(" · ")}<br>${errors.slice(8).join(" · ")}<br>★ もう一度確認してください。`;
+        }
+    }
+    function fillDemAnswers() {
+        for (let id of demInputs) document.getElementById(id).value = demCorrectMap[id];
+        checkDem();
+    }
+    function resetDem() {
+        for (let id of demInputs) document.getElementById(id).value = "";
+        document.getElementById("demFeedback").style.display = "none";
+    }
+    document.getElementById("checkDemBtn").addEventListener("click", checkDem);
+    document.getElementById("showDemAnswers").addEventListener("click", fillDemAnswers);
+    document.getElementById("resetDemBtn").addEventListener("click", resetDem);
+
+    // --------------------------------------------------------------
+    // 2. Gustar型動詞: 動詞5種類(gustar,interesar,apetecer,encantar,importar)
+    // 各動詞ごとに複数のバリエーション(異なる間接目的語/主語)を用意し、ランダムに1つ選ぶ
+    // --------------------------------------------------------------
+    const verbPools = {
+        gustar: {
+            variants: [
+                { sentence: "A mí ______ ______ la música.", correctPron: "me", correctVerb: "gusta" },
+                { sentence: "A ti ______ ______ el chocolate.", correctPron: "te", correctVerb: "gusta" },
+                { sentence: "A él ______ ______ el fútbol.", correctPron: "le", correctVerb: "gusta" },
+                { sentence: "A nosotros ______ ______ viajar.", correctPron: "nos", correctVerb: "gusta" },
+                { sentence: "A ellos ______ ______ los libros.", correctPron: "les", correctVerb: "gustan" }  // 複数主語
+            ]
+        },
+        interesar: {
+            variants: [
+                { sentence: "A mí ______ ______ la historia.", correctPron: "me", correctVerb: "interesa" },
+                { sentence: "A ti ______ ______ la política.", correctPron: "te", correctVerb: "interesa" },
+                { sentence: "A ella ______ ______ el arte.", correctPron: "le", correctVerb: "interesa" },
+                { sentence: "A nosotros ______ ______ los museos.", correctPron: "nos", correctVerb: "interesan" },
+                { sentence: "A vosotros ______ ______ las matemáticas.", correctPron: "os", correctVerb: "interesan" }
+            ]
+        },
+        apetecer: {
+            variants: [
+                { sentence: "A mí ______ ______ un café.", correctPron: "me", correctVerb: "apetece" },
+                { sentence: "A ti ______ ______ una pizza.", correctPron: "te", correctVerb: "apetece" },
+                { sentence: "A Juan ______ ______ un helado.", correctPron: "le", correctVerb: "apetece" },
+                { sentence: "A nosotros ______ ______ las tapas.", correctPron: "nos", correctVerb: "apetecen" },
+                { sentence: "A ellos ______ ______ unos postres.", correctPron: "les", correctVerb: "apetecen" }
+            ]
+        },
+        encantar: {
+            variants: [
+                { sentence: "A mí ______ ______ el cine.", correctPron: "me", correctVerb: "encanta" },
+                { sentence: "A ti ______ ______ bailar.", correctPron: "te", correctVerb: "encanta" },
+                { sentence: "A ella ______ ______ los gatos.", correctPron: "le", correctVerb: "encantan" },
+                { sentence: "A nosotros ______ ______ las vacaciones.", correctPron: "nos", correctVerb: "encantan" },
+                { sentence: "A ellos ______ ______ viajar.", correctPron: "les", correctVerb: "encanta" }
+            ]
+        },
+        importar: {
+            variants: [
+                { sentence: "A mí ______ ______ tu opinión.", correctPron: "me", correctVerb: "importa" },
+                { sentence: "A ti ______ ______ los resultados.", correctPron: "te", correctVerb: "importan" },
+                { sentence: "A él ______ ______ su salud.", correctPron: "le", correctVerb: "importa" },
+                { sentence: "A nosotros ______ ______ las notas.", correctPron: "nos", correctVerb: "importan" },
+                { sentence: "A vosotros ______ ______ el medio ambiente.", correctPron: "os", correctVerb: "importa" }
+            ]
+        }
+    };
+
+    let currentGustarQuestions = []; // 各動詞ごとに選ばれた variant を保持
+
+    function randomizeGustarQuestions() {
+        const verbs = ["gustar", "interesar", "apetecer", "encantar", "importar"];
+        currentGustarQuestions = verbs.map(verb => {
+            const pool = verbPools[verb].variants;
+            const randomIndex = Math.floor(Math.random() * pool.length);
+            return { verb, ...pool[randomIndex] };
+        });
+        renderGustarUI();
+    }
+
+    function renderGustarUI() {
+        const container = document.getElementById("gustarContainer");
+        container.innerHTML = "";
+        currentGustarQuestions.forEach((q, idx) => {
+            const div = document.createElement("div");
+            div.className = "gustar-item";
+            div.dataset.qid = idx;
+            const sentSpan = document.createElement("span");
+            sentSpan.className = "gustar-sentence";
+            // 問題文を表示 (______ の部分はそのまま)
+            sentSpan.innerText = q.sentence;
+            const inputDiv = document.createElement("div");
+            inputDiv.className = "gustar-inputs";
+            const pronInput = document.createElement("input");
+            pronInput.type = "text";
+            pronInput.placeholder = "間接目的語 (me/te/le/nos/os/les)";
+            pronInput.classList.add(`g-pron-${idx}`);
+            const verbInput = document.createElement("input");
+            verbInput.type = "text";
+            verbInput.placeholder = "動詞活用形";
+            verbInput.classList.add(`g-verb-${idx}`);
+            inputDiv.appendChild(pronInput);
+            inputDiv.appendChild(verbInput);
+            div.appendChild(sentSpan);
+            div.appendChild(inputDiv);
+            container.appendChild(div);
+        });
+        // フィードバックリセット
+        const fbDiv = document.getElementById("gustarFeedback");
+        fbDiv.style.display = "none";
+    }
+
+    function checkGustar() {
+        let correctCount = 0;
+        let details = [];
+        for (let i = 0; i < currentGustarQuestions.length; i++) {
+            const q = currentGustarQuestions[i];
+            const userPron = document.querySelector(`.g-pron-${i}`)?.value.trim().toLowerCase() || "";
+            const userVerb = document.querySelector(`.g-verb-${i}`)?.value.trim().toLowerCase() || "";
+            const pronOk = (userPron === q.correctPron);
+            const verbOk = (userVerb === q.correctVerb);
+            const ok = pronOk && verbOk;
+            if (ok) correctCount++;
+            else {
+                details.push(`【${q.verb}】❌ 「${q.correctPron} ${q.correctVerb}」 (あなた: ${userPron || "?"} / ${userVerb || "?"})`);
+            }
+        }
+        const fbDiv = document.getElementById("gustarFeedback");
+        fbDiv.style.display = "block";
+        if (correctCount === currentGustarQuestions.length) {
+            fbDiv.className = "feedback";
+            fbDiv.innerHTML = "🌟 ¡Excelente! すべてのGustar型動詞が正確です。";
+        } else {
+            fbDiv.className = "feedback wrong-feedback";
+            fbDiv.innerHTML = `<strong>${correctCount}/${currentGustarQuestions.length} 正解</strong><br>${details.join("<br>")}<br>💡 間接目的語と動詞の単数/複数に注意！`;
+        }
+    }
+
+    function fillGustarCorrect() {
+        for (let i = 0; i < currentGustarQuestions.length; i++) {
+            const q = currentGustarQuestions[i];
+            const pronInp = document.querySelector(`.g-pron-${i}`);
+            const verbInp = document.querySelector(`.g-verb-${i}`);
+            if (pronInp) pronInp.value = q.correctPron;
+            if (verbInp) verbInp.value = q.correctVerb;
+        }
+        checkGustar();
+    }
+
+    // 初期ランダム生成
+    randomizeGustarQuestions();
+    document.getElementById("checkGustarBtn").addEventListener("click", checkGustar);
+    document.getElementById("showGustarAnswers").addEventListener("click", fillGustarCorrect);
+    document.getElementById("randomizeGustarBtn").addEventListener("click", () => {
+        randomizeGustarQuestions();
+    });
+
+    // --------------------------------------------------------------
+    // 3. 西訳応用問題 (4問シャッフル, 第3問のスペイン語ヒントを隠す)
+    // 元の文章: 第3問目 (index=2, ワインの文) から (vino) と (botella) を削除
+    // --------------------------------------------------------------
+    const originalTranslations = [
+        { jp: "1. 私は水泳 (nadar) とスキー (esquiar) が好きです。", es: "Me gusta nadar y esquiar.", alt: ["Me gustan nadar y esquiar"] },
+        { jp: "2. 日本人の主食は米だ。", es: "El alimento básico de los japoneses es el arroz.", alt: ["La base de la alimentación de los japoneses es el arroz."] },
+        { jp: "3. 私達は彼らのためにワインを一本買います。", es: "Compramos una botella de vino para ellos.", alt: ["Nosotros compramos una botella de vino para ellos."] },  // スペイン語ヒント削除（vino, botella を非表示）
+        { jp: "4. ワカモレ (el guacamole) には、アボカド (aguacate)、トマト、玉ねぎ (cebolla)、その他の食材 (otros ingredientes) が入っている。", es: "El guacamole lleva aguacate, tomate, cebolla y otros ingredientes.", alt: ["El guacamole contiene aguacate, tomate, cebolla y otros ingredientes."] }
+    ];
+    let shuffledTrans = [...originalTranslations];
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function renderTranslation() {
+        const container = document.getElementById("translationShuffleArea");
+        container.innerHTML = "";
+        shuffledTrans.forEach((item, idx) => {
+            const div = document.createElement("div");
+            div.className = "trans-card";
+            div.innerHTML = `
+                <div class="trans-jp">${item.jp}</div>
+                <input type="text" class="trans-input" id="trans_${idx}" placeholder="スペイン語を入力" autocomplete="off">
+                <div class="trans-fb" id="trans_fb_${idx}" style="font-size:0.8rem; margin-top:6px;"></div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function normalize(s) {
+        return s.trim().toLowerCase().replace(/[.,!?;:¿¡]+/g, '').replace(/\s+/g, ' ').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function checkTranslations() {
+        let allCorrect = true;
+        for (let i = 0; i < shuffledTrans.length; i++) {
+            const userInput = document.getElementById(`trans_${i}`)?.value.trim() || "";
+            const normUser = normalize(userInput);
+            const correctNorm = normalize(shuffledTrans[i].es);
+            const altNorm = shuffledTrans[i].alt ? shuffledTrans[i].alt.map(s => normalize(s)) : [];
+            const isOk = (normUser === correctNorm) || altNorm.includes(normUser);
+            const fbSpan = document.getElementById(`trans_fb_${i}`);
+            if (isOk) {
+                fbSpan.innerHTML = "✅ 正解！";
+                fbSpan.style.color = "#2e7d32";
+            } else {
+                fbSpan.innerHTML = `❌ 誤り。参考: ${shuffledTrans[i].es}`;
+                fbSpan.style.color = "#c0392b";
+                allCorrect = false;
+            }
+        }
+        const globalDiv = document.getElementById("transFeedback");
+        globalDiv.style.display = "block";
+        if (allCorrect) {
+            globalDiv.className = "feedback";
+            globalDiv.innerHTML = "🎉 翻訳完全正解！ ¡Muy bien!";
+        } else {
+            globalDiv.className = "feedback wrong-feedback";
+            globalDiv.innerHTML = "📝 いくつか誤訳があります。上記のヒントを参考に修正してください。";
+        }
+    }
+
+    function fillTranslationAnswers() {
+        for (let i = 0; i < shuffledTrans.length; i++) {
+            const inp = document.getElementById(`trans_${i}`);
+            if (inp) inp.value = shuffledTrans[i].es;
+            const fbSpan = document.getElementById(`trans_fb_${i}`);
+            if (fbSpan) fbSpan.innerHTML = "📘 模範訳を入力しました。";
+        }
+        checkTranslations();
+    }
+
+    function reshuffleAndRender() {
+        shuffledTrans = shuffleArray([...originalTranslations]);
+        renderTranslation();
+        document.getElementById("transFeedback").style.display = "none";
+    }
+
+    renderTranslation();
+    document.getElementById("checkTransBtn").addEventListener("click", checkTranslations);
+    document.getElementById("showTransAnswers").addEventListener("click", fillTranslationAnswers);
+    document.getElementById("reshuffleTransBtn").addEventListener("click", reshuffleAndRender);
+
+    // --------------------------------------------------------------
+    // 4. 規則動詞活用 (3種類 + ランダムな主語)
+    // --------------------------------------------------------------
+    const verbBank = [
+        { infinitive: "hablar", type: "ar", conjugations: { yo: "hablo", tú: "hablas", él: "habla", nosotros: "hablamos", vosotros: "habláis", ellos: "hablan" } },
+        { infinitive: "comer", type: "er", conjugations: { yo: "como", tú: "comes", él: "come", nosotros: "comemos", vosotros: "coméis", ellos: "comen" } },
+        { infinitive: "vivir", type: "ir", conjugations: { yo: "vivo", tú: "vives", él: "vive", nosotros: "vivimos", vosotros: "vivís", ellos: "viven" } }
+    ];
+    const subjectsList = ["yo", "tú", "él", "nosotros", "vosotros", "ellos"];
+    let currentVerbTasks = [];
+
+    function generateRandomTasks() {
+        const tasks = [];
+        const usedVerbs = new Set();
+        while (tasks.length < 3 && usedVerbs.size < verbBank.length) {
+            const randomVerb = verbBank[Math.floor(Math.random() * verbBank.length)];
+            if (usedVerbs.has(randomVerb.infinitive)) continue;
+            usedVerbs.add(randomVerb.infinitive);
+            const randomSubject = subjectsList[Math.floor(Math.random() * subjectsList.length)];
+            const correctForm = randomVerb.conjugations[randomSubject];
+            tasks.push({
+                infinitive: randomVerb.infinitive,
+                subject: randomSubject,
+                correct: correctForm,
+                type: randomVerb.type
+            });
+        }
+        while (tasks.length < 3) {
+            const fallback = verbBank[0];
+            const subj = subjectsList[tasks.length % subjectsList.length];
+            tasks.push({ infinitive: fallback.infinitive, subject: subj, correct: fallback.conjugations[subj], type: fallback.type });
+        }
+        return tasks;
+    }
+
+    function renderVerbTasks() {
+        currentVerbTasks = generateRandomTasks();
+        const container = document.getElementById("verbConjArea");
+        container.innerHTML = "";
+        currentVerbTasks.forEach((task, idx) => {
+            const div = document.createElement("div");
+            div.className = "verb-conj-item";
+            div.innerHTML = `
+                <div class="verb-prompt">📌 ${task.infinitive} (${task.type}) の <strong>${task.subject}</strong> 形</div>
+                <input type="text" class="verb-input" id="verb_input_${idx}" placeholder="活用を入力" style="flex:1; min-width:150px; padding:8px 12px; border-radius:60px; border:1px solid #e2b87a;">
+                <div class="verb-fb" id="verb_fb_${idx}" style="font-size:0.8rem; margin-left:5px;"></div>
+            `;
+            container.appendChild(div);
+        });
+        document.getElementById("verbFeedback").style.display = "none";
+    }
+
+    function checkVerbs() {
+        let allGood = true;
+        for (let i = 0; i < currentVerbTasks.length; i++) {
+            const task = currentVerbTasks[i];
+            const userInput = document.getElementById(`verb_input_${i}`)?.value.trim().toLowerCase();
+            const isCorrect = (userInput === task.correct.toLowerCase());
+            const fbSpan = document.getElementById(`verb_fb_${i}`);
+            if (isCorrect) {
+                fbSpan.innerHTML = "✅ 正しい活用";
+                fbSpan.style.color = "#2e7d32";
+            } else {
+                fbSpan.innerHTML = `❌ 誤り。正解: ${task.correct}`;
+                fbSpan.style.color = "#c0392b";
+                allGood = false;
+            }
+        }
+        const globalFb = document.getElementById("verbFeedback");
+        globalFb.style.display = "block";
+        if (allGood) {
+            globalFb.className = "feedback";
+            globalFb.innerHTML = "🎉 規則動詞活用 完全正解！ ¡Fenomenal!";
+        } else {
+            globalFb.className = "feedback wrong-feedback";
+            globalFb.innerHTML = "⚠️ 活用を再確認してください。規則動詞の語尾に注意。";
+        }
+    }
+
+    function showVerbAnswers() {
+        for (let i = 0; i < currentVerbTasks.length; i++) {
+            const inp = document.getElementById(`verb_input_${i}`);
+            if (inp) inp.value = currentVerbTasks[i].correct;
+            const fbSpan = document.getElementById(`verb_fb_${i}`);
+            if (fbSpan) fbSpan.innerHTML = `📖 正解: ${currentVerbTasks[i].correct}`;
+        }
+        checkVerbs();
+    }
+
+    renderVerbTasks();
+    document.getElementById("checkVerbsBtn").addEventListener("click", checkVerbs);
+    document.getElementById("newVerbsBtn").addEventListener("click", () => renderVerbTasks());
+    document.getElementById("showVerbAnswers").addEventListener("click", showVerbAnswers);
+</script>
+</body>
+</html>
