@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>語彙テスト：食べ物・調味料 (スペイン語 → 日本語)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 30px 20px;
+            background: #f0f2f5;
+            line-height: 1.5;
+        }
+        .wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #1e2a3e;
+            font-size: 1.9rem;
+            margin-bottom: 0.2rem;
+        }
+        .sub {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 1rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: normal;
+            border-bottom: 2px solid #ffb74d;
+            display: inline-block;
+            width: auto;
+            padding-bottom: 6px;
+        }
+        .header-center {
+            text-align: center;
+        }
+        .note {
+            background: #fff8e7;
+            border-left: 5px solid #ff9800;
+            padding: 12px 20px;
+            border-radius: 16px;
+            margin: 20px 0 25px;
+            font-size: 0.9rem;
+            color: #5d4037;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .controls {
+            text-align: center;
+            margin: 25px 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        button {
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 28px;
+            border: none;
+            border-radius: 40px;
+            background-color: #2c3e50;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button.main-btn {
+            background-color: #2c7a4d;
+        }
+        button.main-btn:hover {
+            background-color: #1e5a38;
+            transform: translateY(-1px);
+        }
+        button.grade-btn {
+            background-color: #1976d2;
+        }
+        button.grade-btn:hover {
+            background-color: #0e5a9e;
+            transform: translateY(-1px);
+        }
+        .show-opt-btn {
+            background-color: #f57c00;
+            padding: 6px 18px;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            border-radius: 30px;
+            font-weight: normal;
+            box-shadow: none;
+        }
+        .show-opt-btn:hover {
+            background-color: #e65100;
+            transform: translateY(-1px);
+        }
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .question {
+            background: white;
+            border-radius: 24px;
+            padding: 18px 22px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s;
+            border-left: 6px solid #ffa726;
+        }
+        .question-word {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #bf360c;
+            letter-spacing: -0.3px;
+            word-break: break-word;
+            background: #fff3e0;
+            display: inline-block;
+            padding: 5px 18px;
+            border-radius: 50px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 18px;
+            margin-bottom: 12px;
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            background: #fef9f0;
+            padding: 10px 16px;
+            border-radius: 40px;
+            border: 1px solid #ffe0b5;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+        .radio-label:hover {
+            background: #fff1e0;
+            border-color: #ffb347;
+            transform: scale(0.99);
+        }
+        input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.1);
+            accent-color: #f57c00;
+            cursor: pointer;
+        }
+        .result-msg {
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #score-display {
+            text-align: center;
+            font-size: 1.7rem;
+            font-weight: bold;
+            background: #1e2a3e;
+            color: #ffd966;
+            padding: 12px 20px;
+            border-radius: 60px;
+            margin: 15px 0 20px;
+            display: inline-block;
+            width: auto;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        .footer-credit {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        @media (max-width: 650px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .question-word {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="header-center">
+        <h1>🍽️ 食べ物・調味料 語彙テスト</h1>
+        <div class="sub">🇪🇸 スペイン語 → 日本語 🇯🇵</div>
+    </div>
+
+    <div class="note">
+        💡 ヒント: スペイン語を見て意味を考えてから「選択肢を表示」ボタンを押してください。<br>
+        📚 出題範囲: 画像内の「食べ物や調味料」セクション (全42語／実用的な訳に調整)
+    </div>
+
+    <div class="controls">
+        <button class="main-btn" onclick="generateQuiz()">🔄 シャッフルして再出題</button>
+        <button class="grade-btn" onclick="checkAnswers()">✅ 採点する</button>
+    </div>
+
+    <div style="text-align: center;" id="score-container">
+        <div id="score-display" style="display: none;"></div>
+    </div>
+
+    <div class="quiz-container" id="quiz"></div>
+
+    <div class="controls" style="margin-top: 25px;">
+        <button class="grade-btn" onclick="checkAnswers()">📋 採点する</button>
+        <button class="main-btn" onclick="generateQuiz()">🎲 新しい問題セット</button>
+    </div>
+    <div class="footer-credit">
+        ⭐ 「食べ物・調味料」単元 | 全単語ランダム出題
+    </div>
+</div>
+
+<script>
+    // ========================
+    // 食べ物・調味料セクション (画像の内容を基に作成、明らかな誤記は学習上有効に修正)
+    // 原文の zanahoria = にんじん (画像内「ニンニク」は誤りなので修正)
+    // ternera, res は「牛肉」として統一、cerdo/pollo なども自然な食品名に
+    // ========================
+    const vocabList = [
+        // 基本食品カテゴリ
+        { sp: "alimento", jp: "食品" },
+        { sp: "carne", jp: "肉" },
+        { sp: "ternera", jp: "牛肉" },          // 画像では「牛」だが学習用に牛肉
+        { sp: "res", jp: "牛肉" },              // 同義
+        { sp: "cerdo", jp: "豚肉" },
+        { sp: "pollo", jp: "鶏肉" },
+        { sp: "jamón", jp: "ハム" },
+        { sp: "pescado", jp: "魚" },
+        { sp: "salmón", jp: "サケ" },
+        { sp: "sardina", jp: "イワシ" },
+        { sp: "atún", jp: "マグロ" },
+        { sp: "marisco", jp: "海産物 (魚以外)" },
+        { sp: "gamba", jp: "エビ" },
+        { sp: "camarón", jp: "エビ" },
+        { sp: "pulpo", jp: "タコ" },
+        { sp: "almeja", jp: "アサリ・ハマグリ" },
+        { sp: "huevo", jp: "卵" },
+        { sp: "pan", jp: "パン" },
+        { sp: "bocadillo", jp: "バゲットのサンドイッチ" },
+        { sp: "sandwich", jp: "食パンのサンドイッチ" },
+        { sp: "hamburguesa", jp: "ハンバーガー" },
+        { sp: "verdura", jp: "野菜" },
+        { sp: "lechuga", jp: "レタス" },
+        { sp: "patata", jp: "ジャガイモ" },
+        { sp: "papa", jp: "ジャガイモ" },
+        { sp: "tomate", jp: "トマト" },
+        { sp: "zanahoria", jp: "ニンジン" },       // 画像表記「ニンニク」は明らかに誤りなので修正
+        { sp: "fruta", jp: "果物" },
+        { sp: "manzana", jp: "リンゴ" },
+        { sp: "naranja", jp: "オレンジ" },
+        { sp: "plátano", jp: "バナナ" },
+        { sp: "queso", jp: "チーズ" },
+        { sp: "yogur", jp: "ヨーグルト" },
+        { sp: "mantequilla", jp: "バター" },
+        { sp: "mayonesa", jp: "マヨネーズ" },
+        { sp: "salsa", jp: "ソース" },
+        { sp: "pasta", jp: "パスタ" },
+        { sp: "arroz", jp: "ごはん・米" },
+        { sp: "chocolate", jp: "チョコレート" },
+        { sp: "azúcar", jp: "砂糖" },
+        { sp: "sal", jp: "塩" },
+        { sp: "pimienta", jp: "胡椒" },
+        { sp: "aceite", jp: "油" },
+        { sp: "vinagre", jp: "酢" }
+    ];
+
+    // ユニークな日本語訳のリスト (選択肢生成用)
+    const uniqueJpList = [...new Map(vocabList.map(item => [item.jp, item.jp])).values()];
+    
+    let currentQuizSet = [];    // 現在出題中の単語リスト (シャッフル済み)
+
+    // フィッシャー・イェーツ シャッフル
+    function shuffleArray(arr) {
+        const array = [...arr];
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // 選択肢 (正解 + ランダムなダミー3つ)
+    function getOptions(correctJp) {
+        // 正解以外の候補をフィルタ
+        let candidates = uniqueJpList.filter(jp => jp !== correctJp);
+        // ダミーは最大3つ、足りなければ重複なく全て使う
+        let dummies = shuffleArray(candidates);
+        dummies = dummies.slice(0, 3);
+        let options = [correctJp, ...dummies];
+        return shuffleArray(options);
+    }
+
+    // テストを描画 (すべてリセット)
+    function generateQuiz() {
+        const quizContainer = document.getElementById("quiz");
+        quizContainer.innerHTML = "";
+        
+        // スコア表示を隠す
+        const scoreDiv = document.getElementById("score-display");
+        if (scoreDiv) scoreDiv.style.display = "none";
+        
+        // 全単語をシャッフルして出題順決定
+        currentQuizSet = shuffleArray(vocabList);
+        
+        currentQuizSet.forEach((item, idx) => {
+            const options = getOptions(item.jp);
+            const questionId = `q-${idx}`;
+            const optionsId = `options-${idx}`;
+            const resultId = `result-${idx}`;
+            
+            // 選択肢HTML作成
+            let optionsHtml = options.map(opt => `
+                <label class="radio-label">
+                    <input type="radio" name="${questionId}" value="${escapeHtml(opt)}">
+                    ${escapeHtml(opt)}
+                </label>
+            `).join("");
+            
+            const questionDiv = document.createElement("div");
+            questionDiv.className = "question";
+            questionDiv.id = `questionBox-${idx}`;
+            questionDiv.innerHTML = `
+                <div class="question-word">
+                    📌 ${idx+1}. &nbsp; ${escapeHtml(item.sp)}
+                </div>
+                <button type="button" class="show-opt-btn" data-target="${optionsId}">
+                    🔍 選択肢を表示
+                </button>
+                <div class="options-grid" id="${optionsId}" style="display: none;">
+                    ${optionsHtml}
+                </div>
+                <div class="result-msg" id="${resultId}"></div>
+            `;
+            quizContainer.appendChild(questionDiv);
+        });
+        
+        // 「選択肢を表示」ボタンのイベントを再バインド (動的に追加されたため)
+        document.querySelectorAll('.show-opt-btn').forEach(btn => {
+            btn.removeEventListener('click', handleShowOptions);
+            btn.addEventListener('click', handleShowOptions);
+        });
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // 選択肢表示処理
+    function handleShowOptions(e) {
+        const btn = e.currentTarget;
+        const targetId = btn.getAttribute('data-target');
+        const optionsDiv = document.getElementById(targetId);
+        if (optionsDiv) {
+            optionsDiv.style.display = 'grid';
+            btn.style.display = 'none';
+        }
+    }
+    
+    // 簡単なXSS対策
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+    
+    // 採点処理
+    function checkAnswers() {
+        if (!currentQuizSet.length) {
+            alert("問題が生成されていません。再読み込みまたは「シャッフルして再出題」を押してください。");
+            return;
+        }
+        
+        let score = 0;
+        
+        currentQuizSet.forEach((item, idx) => {
+            const questionName = `q-${idx}`;
+            const selectedRadio = document.querySelector(`input[name="${questionName}"]:checked`);
+            const resultMsgDiv = document.getElementById(`result-${idx}`);
+            const questionBoxDiv = document.getElementById(`questionBox-${idx}`);
+            const optionsDiv = document.getElementById(`options-${idx}`);
+            const showBtn = questionBoxDiv?.querySelector('.show-opt-btn');
+            
+            // もし未表示の選択肢があれば強制表示 (採点时は全て表示しておく)
+            if (optionsDiv && optionsDiv.style.display === 'none') {
+                if (optionsDiv) optionsDiv.style.display = 'grid';
+                if (showBtn) showBtn.style.display = 'none';
+            }
+            
+            if (!resultMsgDiv) return;
+            
+            const correctAnswer = item.jp;
+            
+            if (!selectedRadio) {
+                // 未解答
+                resultMsgDiv.innerHTML = `❌ 未解答 (正解: ${escapeHtml(correctAnswer)})`;
+                resultMsgDiv.className = "result-msg incorrect";
+                if (questionBoxDiv) {
+                    questionBoxDiv.style.borderLeftColor = "#c62828";
+                    questionBoxDiv.style.backgroundColor = "#fff5f5";
+                }
+                return;
+            }
+            
+            const userAnswer = selectedRadio.value;
+            if (userAnswer === correctAnswer) {
+                score++;
+                resultMsgDiv.innerHTML = "✅ 正解！";
+                resultMsgDiv.className = "result-msg correct";
+                if (questionBoxDiv) {
+                    questionBoxDiv.style.borderLeftColor = "#2e7d32";
+                    questionBoxDiv.style.backgroundColor = "#e9f7ef";
+                }
+            } else {
+                resultMsgDiv.innerHTML = `❌ 不正解 (正解: ${escapeHtml(correctAnswer)})`;
+                resultMsgDiv.className = "result-msg incorrect";
+                if (questionBoxDiv) {
+                    questionBoxDiv.style.borderLeftColor = "#c62828";
+                    questionBoxDiv.style.backgroundColor = "#ffeaea";
+                }
+            }
+        });
+        
+        // スコア表示
+        const total = currentQuizSet.length;
+        const scoreDisplay = document.getElementById("score-display");
+        if (scoreDisplay) {
+            scoreDisplay.innerHTML = `🎯 採点結果: ${score} / ${total} 点  (${Math.round(score/total*100)}%)`;
+            scoreDisplay.style.display = "block";
+        }
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // 初期表示
+    generateQuiz();
+</script>
+</body>
+</html>
