@@ -255,19 +255,39 @@
     <h1>📘 演習2-6 · 総合ドリル</h1>
     <p style="color:#8b5a2b;">指示詞・Gustar型(ランダムバリエーション)・西訳応用・規則動詞活用</p>
 
-    <!-- 1. 指示詞表 (すべて空欄、デフォルト非表示) -->
+    <!-- 1. 指示詞表 (すべて空欄・ヒント文字なし) -->
     <div class="card">
         <h2>📌 指示詞 (demonstrativos) — すべての欄を埋めなさい</h2>
         <table id="demTable">
             <thead>
-                <tr><th>性・数</th><th>この・これ (este/esta/estos/estas/esto)</th><th>その・それ (ese/esa/esos/esas/eso)</th><th>あの・あれ (aquel/aquella/aquellos/aquellas/aquello)</th></tr>
+                <tr><th>性・数</th><th>この・これ</th><th>その・それ</th><th>あの・あれ</th></tr>
             </thead>
             <tbody>
-                <tr><td>男性・単数</td><td><input type="text" class="demo-input" id="dem_m_sg_este" placeholder="例: este" data-correct="este"></td><td><input type="text" class="demo-input" id="dem_m_sg_ese" placeholder="?" data-correct="ese"></td><td><input type="text" class="demo-input" id="dem_m_sg_aquel" placeholder="?" data-correct="aquel"></td></tr>
-                <tr><td>女性・単数</td><td><input type="text" class="demo-input" id="dem_f_sg_esta" placeholder="?" data-correct="esta"></td><td><input type="text" class="demo-input" id="dem_f_sg_esa" placeholder="例: esa" data-correct="esa"></td><td><input type="text" class="demo-input" id="dem_f_sg_aquella" placeholder="?" data-correct="aquella"></td></tr>
-                <tr><td>男性・複数</td><td><input type="text" class="demo-input" id="dem_m_pl_estos" placeholder="?" data-correct="estos"></td><td><input type="text" class="demo-input" id="dem_m_pl_esos" placeholder="?" data-correct="esos"></td><td><input type="text" class="demo-input" id="dem_m_pl_aquellos" placeholder="?" data-correct="aquellos"></td></tr>
-                <tr><td>女性・複数</td><td><input type="text" class="demo-input" id="dem_f_pl_estas" placeholder="?" data-correct="estas"></td><td><input type="text" class="demo-input" id="dem_f_pl_esas" placeholder="?" data-correct="esas"></td><td><input type="text" class="demo-input" id="dem_f_pl_aquellas" placeholder="?" data-correct="aquellas"></td></tr>
-                <tr><td>中性 (指示代名詞)</td><td><input type="text" class="demo-input" id="dem_neutro_esto" placeholder="?" data-correct="esto"></td><td><input type="text" class="demo-input" id="dem_neutro_eso" placeholder="?" data-correct="eso"></td><td><input type="text" class="demo-input" id="dem_neutro_aquello" placeholder="?" data-correct="aquello"></td></tr>
+                <tr><td>男性・単数</td>
+                    <td><input type="text" class="demo-input" id="dem_m_sg_este" data-correct="este" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_m_sg_ese" data-correct="ese" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_m_sg_aquel" data-correct="aquel" placeholder=""></td>
+                 </tr>
+                <tr><td>女性・単数</td>
+                    <td><input type="text" class="demo-input" id="dem_f_sg_esta" data-correct="esta" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_f_sg_esa" data-correct="esa" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_f_sg_aquella" data-correct="aquella" placeholder=""></td>
+                 </tr>
+                <tr><td>男性・複数</td>
+                    <td><input type="text" class="demo-input" id="dem_m_pl_estos" data-correct="estos" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_m_pl_esos" data-correct="esos" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_m_pl_aquellos" data-correct="aquellos" placeholder=""></td>
+                 </tr>
+                <tr><td>女性・複数</td>
+                    <td><input type="text" class="demo-input" id="dem_f_pl_estas" data-correct="estas" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_f_pl_esas" data-correct="esas" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_f_pl_aquellas" data-correct="aquellas" placeholder=""></td>
+                 </tr>
+                <tr><td>中性 (指示代名詞)</td>
+                    <td><input type="text" class="demo-input" id="dem_neutro_esto" data-correct="esto" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_neutro_eso" data-correct="eso" placeholder=""></td>
+                    <td><input type="text" class="demo-input" id="dem_neutro_aquello" data-correct="aquello" placeholder=""></td>
+                 </tr>
             </tbody>
         </table>
         <div class="flex-btns">
@@ -290,9 +310,9 @@
         <div id="gustarFeedback" class="feedback" style="display: none;"></div>
     </div>
 
-    <!-- 3. 西訳応用問題 (4問シャッフル, 第3問のスペイン語ヒントを隠す) -->
+    <!-- 3. 西訳応用問題 (4問シャッフル, 余計なスペイン語ヒントはすべて削除済み) -->
     <div class="card">
-        <h2>📝 練習4 西訳応用問題 (順不同・第3問は語彙ヒントなし)</h2>
+        <h2>📝 練習4 西訳応用問題 (順不同・語彙ヒントなし)</h2>
         <div id="translationShuffleArea"></div>
         <div class="flex-btns">
             <button id="checkTransBtn">🎯 翻訳を確認</button>
@@ -318,7 +338,7 @@
 
 <script>
     // --------------------------------------------------------------
-    // 1. 指示詞 (デフォルト全て空欄)
+    // 1. 指示詞 (デフォルト全て空欄、ヒントなし)
     // --------------------------------------------------------------
     const demInputs = [
         "dem_m_sg_este", "dem_m_sg_ese", "dem_m_sg_aquel",
@@ -344,7 +364,7 @@
             const correct = demCorrectMap[id];
             if (user !== correct) {
                 allOk = false;
-                errors.push(`${inp.placeholder || id}: あなた→「${user || "空"}」 正解→「${correct}」`);
+                errors.push(`${id}: あなた→「${user || "空"}」 正解→「${correct}」`);
             }
         }
         const fb = document.getElementById("demFeedback");
@@ -380,7 +400,7 @@
                 { sentence: "A ti ______ ______ el chocolate.", correctPron: "te", correctVerb: "gusta" },
                 { sentence: "A él ______ ______ el fútbol.", correctPron: "le", correctVerb: "gusta" },
                 { sentence: "A nosotros ______ ______ viajar.", correctPron: "nos", correctVerb: "gusta" },
-                { sentence: "A ellos ______ ______ los libros.", correctPron: "les", correctVerb: "gustan" }  // 複数主語
+                { sentence: "A ellos ______ ______ los libros.", correctPron: "les", correctVerb: "gustan" }
             ]
         },
         interesar: {
@@ -421,7 +441,7 @@
         }
     };
 
-    let currentGustarQuestions = []; // 各動詞ごとに選ばれた variant を保持
+    let currentGustarQuestions = [];
 
     function randomizeGustarQuestions() {
         const verbs = ["gustar", "interesar", "apetecer", "encantar", "importar"];
@@ -442,7 +462,6 @@
             div.dataset.qid = idx;
             const sentSpan = document.createElement("span");
             sentSpan.className = "gustar-sentence";
-            // 問題文を表示 (______ の部分はそのまま)
             sentSpan.innerText = q.sentence;
             const inputDiv = document.createElement("div");
             inputDiv.className = "gustar-inputs";
@@ -460,7 +479,6 @@
             div.appendChild(inputDiv);
             container.appendChild(div);
         });
-        // フィードバックリセット
         const fbDiv = document.getElementById("gustarFeedback");
         fbDiv.style.display = "none";
     }
@@ -502,7 +520,6 @@
         checkGustar();
     }
 
-    // 初期ランダム生成
     randomizeGustarQuestions();
     document.getElementById("checkGustarBtn").addEventListener("click", checkGustar);
     document.getElementById("showGustarAnswers").addEventListener("click", fillGustarCorrect);
@@ -511,14 +528,14 @@
     });
 
     // --------------------------------------------------------------
-    // 3. 西訳応用問題 (4問シャッフル, 第3問のスペイン語ヒントを隠す)
-    // 元の文章: 第3問目 (index=2, ワインの文) から (vino) と (botella) を削除
+    // 3. 西訳応用問題 (4問シャッフル, 余計なスペイン語ヒントを完全除去)
+    // 第3問: ワインのヒント削除済み, 第4問: el guacamole, aguacate, cebolla, otros ingredientes の西語表記を削除
     // --------------------------------------------------------------
     const originalTranslations = [
-        { jp: "1. 私は水泳 (nadar) とスキー (esquiar) が好きです。", es: "Me gusta nadar y esquiar.", alt: ["Me gustan nadar y esquiar"] },
+        { jp: "1. 私は水泳とスキーが好きです。", es: "Me gusta nadar y esquiar.", alt: ["Me gustan nadar y esquiar"] },
         { jp: "2. 日本人の主食は米だ。", es: "El alimento básico de los japoneses es el arroz.", alt: ["La base de la alimentación de los japoneses es el arroz."] },
-        { jp: "3. 私達は彼らのためにワインを一本買います。", es: "Compramos una botella de vino para ellos.", alt: ["Nosotros compramos una botella de vino para ellos."] },  // スペイン語ヒント削除（vino, botella を非表示）
-        { jp: "4. ワカモレ (el guacamole) には、アボカド (aguacate)、トマト、玉ねぎ (cebolla)、その他の食材 (otros ingredientes) が入っている。", es: "El guacamole lleva aguacate, tomate, cebolla y otros ingredientes.", alt: ["El guacamole contiene aguacate, tomate, cebolla y otros ingredientes."] }
+        { jp: "3. 私達は彼らのためにワインを一本買います。", es: "Compramos una botella de vino para ellos.", alt: ["Nosotros compramos una botella de vino para ellos."] },
+        { jp: "4. ワカモレには、アボカド、トマト、玉ねぎ、その他の食材が入っている。", es: "El guacamole lleva aguacate, tomate, cebolla y otros ingredientes.", alt: ["El guacamole contiene aguacate, tomate, cebolla y otros ingredientes."] }
     ];
     let shuffledTrans = [...originalTranslations];
 
