@@ -536,7 +536,7 @@
     // セクション2: 時刻
     const sec2 = document.createElement('div');
     sec2.className = 'section';
-    sec2.innerHTML = `<h3>2. 時刻の表現 ⏰</h3><div class="note">¿Qué hora es? / A qué hora の空欄、および時刻文を完成させてください。</div>`;
+    sec2.innerHTML = `<h3>2. 時刻の表現 ⏰</h3><div class="note"></div>`;
     const timeQs = buildTimeQuestions();
     timeQs.forEach(q => {
       const qDiv = document.createElement('div');
@@ -554,7 +554,7 @@
     // セクション3: 天気 (全語空欄)
     const sec3 = document.createElement('div');
     sec3.className = 'section';
-    sec3.innerHTML = `<h3>3. 天気・天候 🌦️ (名詞・形容詞も全て空欄)</h3><div class="note">hacer/estar、名詞・形容詞、全ての単語を埋めてください。</div>`;
+    sec3.innerHTML = `<h3>3. 天気・天候 🌦️ (名詞・形容詞も全て空欄)</h3><div class="note">名詞・形容詞、全ての単語を埋めてください。</div>`;
     const weatherQs = buildWeatherQuestions();
     weatherQs.forEach(q => {
       const qDiv = document.createElement('div');
@@ -572,7 +572,7 @@
     // セクション4: 最上級 (de/del 徹底)
     const sec4 = document.createElement('div');
     sec4.className = 'section';
-    sec4.innerHTML = `<h3>4. 最上級 (形容詞) 🥇 (de/del も全て空欄)</h3><div class="note">冠詞・más/mejor・de/del などを補ってください。</div>`;
+    sec4.innerHTML = `<h3>4. 最上級 (形容詞) 🥇 (de/del も全て空欄)</h3><div class="note"></div>`;
     const supQs = buildSuperlativeQuestions();
     supQs.forEach(q => {
       const qDiv = document.createElement('div');
@@ -590,7 +590,7 @@
     // セクション5: 現在分詞 (全動詞網羅 + 進行形/代名詞接続)
     const sec5 = document.createElement('div');
     sec5.className = 'section';
-    sec5.innerHTML = `<h3>5. 現在分詞 (プリント内の全動詞・原形なし) ✍️</h3><div class="note">「話しながら」などの日本語から現在分詞を入力。さらにestar+分詞（estarも空欄）・代名詞付き（アクセント可）の練習も含む。</div>`;
+    sec5.innerHTML = `<h3>5. 現在分詞 (プリント内の全動詞・原形なし) ✍️</h3><div class="note">「話しながら」などの日本語から現在分詞を入力。</div>`;
     const partQs = buildParticipleQuestions();
     partQs.forEach(q => {
       const qDiv = document.createElement('div');
