@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>演習2-7：不規則動詞現在形活用テスト (全動詞シャッフル)</title>
+    <title>演習2-7：不規則動詞現在形活用テスト（全動詞シャッフル・正誤色分け改善版）</title>
     <style>
         * {
             box-sizing: border-box;
@@ -175,15 +175,17 @@
             box-shadow: 0 0 0 2px rgba(44,95,45,0.2);
         }
 
-        /* 正解/不正解の色 */
+        /* 正誤の色 (明確に視認できるように) */
         .correct-input {
             background-color: #c8e6d9 !important;
             border-color: #2e7d32 !important;
+            border-width: 2px;
         }
 
         .wrong-input {
             background-color: #ffe0db !important;
             border-color: #c62828 !important;
+            border-width: 2px;
         }
 
         .verb-buttons {
@@ -216,6 +218,13 @@
             color: #3b5c2a;
         }
 
+        .local-feedback {
+            font-size: 0.8rem;
+            margin-left: 12px;
+            font-weight: normal;
+            color: #2d5a2c;
+        }
+
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -245,22 +254,22 @@
 <body>
 <div class="title-block">
     <h1>📖 演習 2-7</h1>
-    <div class="sub">不規則動詞現在形活用テスト（全動詞シャッフル）</div>
+    <div class="sub">不規則動詞現在形活用テスト（全動詞シャッフル・正誤色分け）</div>
 </div>
 <div class="global-controls">
     <button id="reshuffleBtn">🔄 問題順序をシャッフル</button>
     <button id="globalGradeBtn" class="secondary-btn">⭐ 全問一括採点</button>
-    <button id="globalHideAnswersBtn">🔎 すべての答えを表示</button>
+    <button id="globalShowAnswersBtn">🔎 すべての答えをフラッシュ表示</button>
     <button id="globalClearColorsBtn" class="danger-btn">🧹 色リセット</button>
 </div>
 <div id="verbContainer" class="verb-grid"></div>
 <div class="footer">
-    ✅ アクセント記号なし・大文字小文字不問で正答判定 (例: "juego" / "JUEGO" どちらも可) <br>
-    📌 各動詞ごとに採点ボタンがあります。正解の入力欄は緑、不正解は赤になります。
+    ✅ アクセント記号なし・大文字小文字・前後スペース無視で正答判定 (例: "juego" / "JUEGO" どちらも可)<br>
+    📌 各動詞ごとに採点ボタンがあります。正解の入力欄は<span style="background:#c8e6d9; padding:2px 8px; border-radius:20px;">緑</span>、不正解は<span style="background:#ffe0db; padding:2px 8px; border-radius:20px;">赤</span>になります。
 </div>
 
 <script>
-    // ---------- 活用データ (6人称: yo, tú, él/ella/usted, nosotros, vosotros, ellos/ellas/ustedes) ----------
+    // ---------- 完全な活用データ (全29動詞) ----------
     const ALL_VERBS_DATA = [
         // ① 語幹母音変化動詞 (e-ie / o-ue / e-i / u-ue)
         { name: "pensar", type: "e → ie", forms: ["pienso", "piensas", "piensa", "pensamos", "pensáis", "piensan"] },
@@ -298,22 +307,145 @@
         { name: "estar", type: "estar", forms: ["estoy", "estás", "está", "estamos", "estáis", "están"] }
     ];
 
-    // 正規化 (アクセント除去・小文字化)
+    // 正規化 (アクセント除去・小文字化・前後空白削除)
     function normalizeStr(str) {
-        if (!str) return "";
-        return str.toLowerCase().trim()
+        if (str === null || str === undefined) return "";
+        return String(str).toLowerCase().trim()
             .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .replace(/\s+/g, '');
+            .replace(/\s+/g, ' ');
     }
 
-    let currentVerbsList = [];          // シャッフル後の動詞データ (name, type, forms)
-    let inputsMap = new Map();          // key: `${verbIndex}_${pos}`  => input DOM element
-    let currentAnswerMap = new Map();   // key: `${verbIndex}_${pos}` => 正解文字列
+    let currentVerbsList = [];          // シャッフル後の動詞配列
+    let inputsMap = new Map();          // key: `${verbIndex}_${pos}` => input DOM要素
+    let currentAnswerMap = new Map();   // key: `${verbIndex}_${pos}` => 正解文字列(正規化済み)
 
-    // コンテナ
     const container = document.getElementById("verbContainer");
 
-    // カード生成 (動詞リスト順)
+    // 単一動詞の採点＆色付け (完全に対応)
+    function gradeSingleVerb(verbIndex, correctFormsRaw) {
+        // 正解配列を正規化したものを事前に用意 (アクセント除去など)
+        const normalizedCorrect = correctFormsRaw.map(f => normalizeStr(f));
+        let allCorrectCount = 0;
+
+        for (let pos = 0; pos < correctFormsRaw.length; pos++) {
+            const inputElem = inputsMap.get(`${verbIndex}_${pos}`);
+            if (!inputElem) continue;
+
+            const userValue = inputElem.value;
+            const normUser = normalizeStr(userValue);
+            const normAnswer = normalizedCorrect[pos];
+            const isCorrect = (normUser === normAnswer);
+
+            // 色クラス更新 (既存のクラス削除)
+            inputElem.classList.remove("correct-input", "wrong-input");
+            if (isCorrect) {
+                inputElem.classList.add("correct-input");
+                allCorrectCount++;
+            } else {
+                inputElem.classList.add("wrong-input");
+            }
+        }
+
+        // 簡単なフィードバックをカード内に表示 (任意、ユーザー補助)
+        const card = document.querySelector(`.verb-card[data-verb-index='${verbIndex}']`);
+        if (card) {
+            let feedbackSpan = card.querySelector(".local-feedback");
+            if (!feedbackSpan) {
+                const btnDiv = card.querySelector(".verb-buttons");
+                if (btnDiv) {
+                    feedbackSpan = document.createElement("span");
+                    feedbackSpan.className = "local-feedback";
+                    btnDiv.appendChild(feedbackSpan);
+                }
+            }
+            if (feedbackSpan) {
+                feedbackSpan.textContent = ` (${allCorrectCount}/6 正解)`;
+                setTimeout(() => {
+                    if (feedbackSpan) feedbackSpan.textContent = "";
+                }, 1800);
+            }
+        }
+    }
+
+    // 一時的に正解をハイライト＆フラッシュ (表示のみ)
+    function flashCorrectAnswers(verbIndex, correctFormsRaw) {
+        for (let pos = 0; pos < correctFormsRaw.length; pos++) {
+            const inputElem = inputsMap.get(`${verbIndex}_${pos}`);
+            if (!inputElem) continue;
+            const originalTransition = inputElem.style.transition;
+            inputElem.style.transition = "background 0.15s";
+            inputElem.style.backgroundColor = "#fff2b5";
+            setTimeout(() => {
+                if (inputElem) inputElem.style.backgroundColor = "";
+                inputElem.style.transition = originalTransition;
+            }, 900);
+        }
+        // ヒントスパンも表示
+        const card = document.querySelector(`.verb-card[data-verb-index='${verbIndex}']`);
+        if (card) {
+            const hintSpan = card.querySelector(".answer-hint");
+            if (hintSpan) {
+                hintSpan.style.display = "inline-block";
+                setTimeout(() => {
+                    if (hintSpan) hintSpan.style.display = "none";
+                }, 2800);
+            }
+        }
+    }
+
+    // 全動詞一括採点
+    function gradeAllVerbs() {
+        currentVerbsList.forEach((verb, idx) => {
+            gradeSingleVerb(idx, verb.forms);
+        });
+    }
+
+    // 全色リセット (正誤クラス除去)
+    function resetAllColors() {
+        for (let [key, inputElem] of inputsMap.entries()) {
+            inputElem.classList.remove("correct-input", "wrong-input");
+        }
+        // ローカルフィードバックスパンも消去
+        document.querySelectorAll(".local-feedback").forEach(span => span.textContent = "");
+    }
+
+    // 全動詞の正解を一括フラッシュ表示 (色は変えない)
+    function globalFlashAnswers() {
+        currentVerbsList.forEach((verb, idx) => {
+            for (let pos = 0; pos < verb.forms.length; pos++) {
+                const inputElem = inputsMap.get(`${idx}_${pos}`);
+                if (inputElem) {
+                    inputElem.style.transition = "background 0.12s";
+                    inputElem.style.backgroundColor = "#fff2b5";
+                    setTimeout((el) => {
+                        if (el) el.style.backgroundColor = "";
+                    }, 800, inputElem);
+                }
+            }
+            const card = document.querySelector(`.verb-card[data-verb-index='${idx}']`);
+            if (card) {
+                const hintSpan = card.querySelector(".answer-hint");
+                if (hintSpan) {
+                    hintSpan.style.display = "inline-block";
+                    setTimeout(() => {
+                        if (hintSpan) hintSpan.style.display = "none";
+                    }, 2500);
+                }
+            }
+        });
+    }
+
+    // シャッフル (Fisher-Yates)
+    function shuffleArray(arr) {
+        const newArr = [...arr];
+        for (let i = newArr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+        }
+        return newArr;
+    }
+
+    // 完全再描画 (動詞順序をランダムに)
     function renderAllVerbs(verbsArray) {
         container.innerHTML = "";
         inputsMap.clear();
@@ -323,7 +455,7 @@
             const { name, type, forms } = verbData;
             const card = document.createElement("div");
             card.className = "verb-card";
-            card.dataset.verbIndex = vIdx;
+            card.setAttribute("data-verb-index", vIdx);
 
             // ヘッダー
             const headerDiv = document.createElement("div");
@@ -334,21 +466,21 @@
             `;
             card.appendChild(headerDiv);
 
-            // 活用表 (6人称: yo, tú, él/ella/Ud, nosotros, vosotros, ellos/ellas/Uds)
+            // 活用表 (yo, tú, él... / nosotros, vosotros, ellos...)
             const table = document.createElement("table");
             table.className = "conj-table";
             const tbody = document.createElement("tbody");
-            // 行: 単数 / 複数 を2行で表示 (見やすく)
             const rows = [
                 ["yo", "nosotros"],
                 ["tú", "vosotros"],
                 ["él / ella / usted", "ellos / ellas / ustedes"]
             ];
+
             for (let r = 0; r < rows.length; r++) {
                 const tr = document.createElement("tr");
                 const leftPerson = rows[r][0];
                 const rightPerson = rows[r][1];
-                // 左セル (人称)
+                // 左人称
                 const tdLeftPerson = document.createElement("td");
                 tdLeftPerson.className = "person-cell";
                 tdLeftPerson.textContent = leftPerson;
@@ -360,12 +492,12 @@
                 leftInput.type = "text";
                 leftInput.placeholder = "_____";
                 leftInput.className = "blank-input";
-                const leftPos = (r === 0 ? 0 : (r === 1 ? 1 : 2)); // yo=0, tú=1, él=2
+                let leftPos = (r === 0 ? 0 : (r === 1 ? 1 : 2));
                 leftInput.id = `v${vIdx}_${leftPos}`;
                 tdLeftInput.appendChild(leftInput);
                 tr.appendChild(tdLeftInput);
 
-                // 右セル (人称)
+                // 右人称
                 const tdRightPerson = document.createElement("td");
                 tdRightPerson.className = "person-cell";
                 tdRightPerson.textContent = rightPerson;
@@ -389,12 +521,19 @@
             table.appendChild(tbody);
             card.appendChild(table);
 
-            // 入力参照を保存
-            for (let i = 0; i < forms.length; i++) {
-                const inputElem = document.getElementById(`v${vIdx}_${i}`);
+            // 各入力要素を Map に保存 (あとで採点時に使う)
+            for (let pos = 0; pos < forms.length; pos++) {
+                const inputElem = document.getElementById(`v${vIdx}_${pos}`);
                 if (inputElem) {
-                    inputsMap.set(`${vIdx}_${i}`, inputElem);
-                    currentAnswerMap.set(`${vIdx}_${i}`, forms[i]);
+                    inputsMap.set(`${vIdx}_${pos}`, inputElem);
+                    currentAnswerMap.set(`${vIdx}_${pos}`, forms[pos]);
+                } else {
+                    // 万が一 DOM 未配置なら手動で探すことはないが、安全のため再取得
+                    const fallback = document.querySelector(`#v${vIdx}_${pos}`);
+                    if (fallback) {
+                        inputsMap.set(`${vIdx}_${pos}`, fallback);
+                        currentAnswerMap.set(`${vIdx}_${pos}`, forms[pos]);
+                    }
                 }
             }
 
@@ -410,27 +549,18 @@
             });
 
             const showAnswerBtn = document.createElement("button");
-            showAnswerBtn.textContent = "📖 正解を表示";
+            showAnswerBtn.textContent = "📖 正解をフラッシュ";
             showAnswerBtn.className = "show-answer-btn";
             showAnswerBtn.addEventListener("click", (e) => {
                 e.preventDefault();
-                revealSingleVerbAnswers(vIdx, forms);
+                flashCorrectAnswers(vIdx, forms);
             });
 
             const hintSpan = document.createElement("span");
             hintSpan.className = "answer-hint";
             hintSpan.style.display = "none";
             hintSpan.textContent = `📌 正解: ${forms.join(" / ")}`;
-            showAnswerBtn.addEventListener("click", () => {
-                if (hintSpan.style.display === "none") {
-                    hintSpan.style.display = "inline-block";
-                    setTimeout(() => {
-                        hintSpan.style.display = "none";
-                    }, 3500);
-                } else {
-                    hintSpan.style.display = "none";
-                }
-            });
+            // フラッシュボタンでヒントも同時に出るように改良 (flashCorrectAnswers内でもスパン表示)
 
             btnDiv.appendChild(gradeBtn);
             btnDiv.appendChild(showAnswerBtn);
@@ -438,127 +568,43 @@
             card.appendChild(btnDiv);
             container.appendChild(card);
         });
-    }
 
-    // 単一動詞の採点（色塗り：正解→緑、不正解→赤）
-    function gradeSingleVerb(verbIndex, correctForms) {
-        for (let pos = 0; pos < correctForms.length; pos++) {
-            const input = inputsMap.get(`${verbIndex}_${pos}`);
-            if (!input) continue;
-            const userVal = input.value;
-            const correctAns = correctForms[pos];
-            const isCorrect = (normalizeStr(userVal) === normalizeStr(correctAns));
-            // クラス適用 (既存の色クラスを削除)
-            input.classList.remove("correct-input", "wrong-input");
-            if (isCorrect) {
-                input.classList.add("correct-input");
-            } else {
-                input.classList.add("wrong-input");
-            }
-        }
-    }
-
-    // 正解を一時ポップアップ (各動詞アラートではなく、ヒントとして表示 + フラッシュ)
-    function revealSingleVerbAnswers(verbIndex, correctForms) {
-        for (let pos = 0; pos < correctForms.length; pos++) {
-            const input = inputsMap.get(`${verbIndex}_${pos}`);
-            if (!input) continue;
-            const originalBg = input.style.backgroundColor;
-            input.style.transition = "0.1s";
-            input.style.backgroundColor = "#fff2b5";
-            setTimeout(() => {
-                input.style.backgroundColor = "";
-            }, 800);
-            // さらにツールチップ的なものを末尾に表示しないが、グローバル表示機能もあるのでシンプルに
-        }
-        // コンソールではなく、カード内の小さなスパン表示があれば良いが、すでにshowAnswerBtnにヒントスパンがあるのでそれを利用
-        const card = document.querySelector(`.verb-card[data-verb-index="${verbIndex}"]`);
-        if (card) {
-            const hintSpan = card.querySelector(".answer-hint");
-            if (hintSpan) {
-                hintSpan.style.display = "inline-block";
-                setTimeout(() => {
-                    hintSpan.style.display = "none";
-                }, 3000);
-            }
-        }
-    }
-
-    // 全動詞一括採点
-    function gradeAllVerbs() {
-        const verbsData = currentVerbsList;
-        verbsData.forEach((verb, idx) => {
-            gradeSingleVerb(idx, verb.forms);
-        });
-    }
-
-    // 全色リセット (正解/不正解クラス削除)
-    function resetAllColors() {
-        for (let [key, inputElem] of inputsMap.entries()) {
-            inputElem.classList.remove("correct-input", "wrong-input");
-        }
-    }
-
-    // すべての動詞の正解を一括表示（一時的な背景フラッシュ＋ヒント表示をまとめて）
-    function globalShowAnswers() {
-        const verbsData = currentVerbsList;
-        for (let idx = 0; idx < verbsData.length; idx++) {
-            const forms = verbsData[idx].forms;
-            for (let pos = 0; pos < forms.length; pos++) {
-                const input = inputsMap.get(`${idx}_${pos}`);
-                if (input) {
-                    input.style.transition = "0.1s";
-                    input.style.backgroundColor = "#fff2b5";
-                    setTimeout((inp) => {
-                        if (inp) inp.style.backgroundColor = "";
-                    }, 1000, input);
-                }
-            }
-            // カード内のスパンをポップ表示
-            const card = document.querySelector(`.verb-card[data-verb-index="${idx}"]`);
-            if (card) {
-                const hintSpan = card.querySelector(".answer-hint");
-                if (hintSpan) {
-                    hintSpan.style.display = "inline-block";
-                    setTimeout(() => {
-                        if (hintSpan) hintSpan.style.display = "none";
-                    }, 3200);
+        // カードが全て生成された後、念のため inputsMap に未登録がないか最終チェック
+        for (let vIdx = 0; vIdx < verbsArray.length; vIdx++) {
+            for (let p = 0; p < 6; p++) {
+                const key = `${vIdx}_${p}`;
+                if (!inputsMap.has(key)) {
+                    const el = document.getElementById(`v${vIdx}_${p}`);
+                    if (el) {
+                        inputsMap.set(key, el);
+                        currentAnswerMap.set(key, verbsArray[vIdx].forms[p]);
+                    }
                 }
             }
         }
     }
 
-    // シャッフル関数 (Fisher-Yates)
-    function shuffleArray(arr) {
-        const newArr = [...arr];
-        for (let i = newArr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-        }
-        return newArr;
-    }
-
-    // メイン初期化 / シャッフルして再レンダリング
+    // 初期化 + シャッフル
     function initAndShuffle() {
-        const shuffledVerbs = shuffleArray(ALL_VERBS_DATA);
-        currentVerbsList = shuffledVerbs;
+        const shuffled = shuffleArray(ALL_VERBS_DATA);
+        currentVerbsList = shuffled;
         renderAllVerbs(currentVerbsList);
-        // 色リセット (新しく描画したのでクリア)
+        // 色リセット (新しく生成されたので既に色はないが安全のため)
         resetAllColors();
     }
 
-    // 再度シャッフル (ボタン用)
+    // 再シャッフル (ボタン用)
     function reshuffleAndRender() {
         initAndShuffle();
     }
 
-    // イベント登録と初期ロード
+    // DOM構築後にイベント設定
     document.addEventListener("DOMContentLoaded", () => {
         initAndShuffle();
 
         const reshuffleBtn = document.getElementById("reshuffleBtn");
         const globalGradeBtn = document.getElementById("globalGradeBtn");
-        const globalHideAnswersBtn = document.getElementById("globalHideAnswersBtn");
+        const globalShowAnswersBtn = document.getElementById("globalShowAnswersBtn");
         const globalClearColorsBtn = document.getElementById("globalClearColorsBtn");
 
         reshuffleBtn.addEventListener("click", () => {
@@ -569,8 +615,8 @@
             gradeAllVerbs();
         });
 
-        globalHideAnswersBtn.addEventListener("click", () => {
-            globalShowAnswers();
+        globalShowAnswersBtn.addEventListener("click", () => {
+            globalFlashAnswers();
         });
 
         globalClearColorsBtn.addEventListener("click", () => {
