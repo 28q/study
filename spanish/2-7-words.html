@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>語彙テスト：地理・地球関連 (スペイン語 → 日本語)</title>
+    <title>語彙テスト：地理・地球 (スペイン語 → 日本語)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -121,6 +121,16 @@
             padding: 5px 18px;
             border-radius: 50px;
         }
+        .gender-badge {
+            font-size: 0.8rem;
+            font-weight: normal;
+            background-color: #c8e6c9;
+            color: #1e3a1e;
+            border-radius: 20px;
+            padding: 2px 8px;
+            margin-left: 12px;
+            vertical-align: middle;
+        }
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -198,13 +208,13 @@
 <body>
 <div class="wrapper">
     <div class="header-center">
-        <h1>🌍 地理・地球関連 語彙テスト</h1>
+        <h1>🌍 地理・地球 語彙テスト</h1>
         <div class="sub">🇪🇸 スペイン語 → 日本語 🇯🇵</div>
     </div>
 
     <div class="note">
         💡 ヒント: スペイン語を見て意味を考えてから「選択肢を表示」ボタンを押してください。<br>
-        📚 出題範囲: 画像内の「地理（地理学）名詞」「地球」セクション (全20語／実用的な訳に調整)
+        📚 出題範囲: 地理／地球／都市／交通 全36単語 (性別は参考表示)
     </div>
 
     <div class="controls">
@@ -223,41 +233,51 @@
         <button class="main-btn" onclick="generateQuiz()">🎲 新しい問題セット</button>
     </div>
     <div class="footer-credit">
-        ⭐ 地理・地球単元 (宇宙・天体・地形・都市など) | 全単語ランダム出題
+        ⭐ 地理・地球単元 (宇宙・地形・行政区画・道路) | 全単語ランダム出題
     </div>
 </div>
 
 <script>
     // ========================
-    // 地理・地球関連 単語リスト (画像「Vocabulario」の内容を整理・補正)
-    // 画像内の重複・誤記 (例: planetaの誤訳) を修正し、スペイン語学習に適した訳に
+    // ご提供いただいた単語リスト (性別・日本語訳を完全反映)
     // ========================
     const vocabList = [
-        // --- 地理／天文学 カテゴリ ---
-        { sp: "universo", jp: "宇宙" },
-        { sp: "espacio", jp: "宇宙空間" },
-        { sp: "planeta", jp: "惑星" },
-        { sp: "sistema solar", jp: "太陽系" },      // 画像内「planeta：太阳系」の誤りを訂正
-        { sp: "sol", jp: "太陽" },                  // 画像内「planeta：太阳」を独立追加
-        { sp: "estrella", jp: "星" },               // 補足: 恒星 (基本語として追加)
-        
-        // --- 地球／地理一般 ---
-        { sp: "mundo", jp: "世界" },
-        { sp: "región", jp: "地方" },
-        { sp: "ciudad", jp: "都市" },
-        { sp: "campo", jp: "田舎・野原" },
-        { sp: "océano", jp: "大海" },
-        { sp: "mar", jp: "海" },
-        { sp: "río", jp: "川" },
-        { sp: "bosque", jp: "森林" },
-        { sp: "centro", jp: "中心" },
-        { sp: "plaza", jp: "広場" },
-        { sp: "barrio", jp: "街区・地区" },
-        { sp: "calle", jp: "通り" },
-        { sp: "avenida", jp: "大通り" },            // 画像内「avenue」→スペイン語正表記
-        { sp: "carretera", jp: "車道・道路" },
-        { sp: "autopista", jp: "高速道路" },
-        { sp: "paso", jp: "通路・道" }
+        { sp: "universo", jp: "宇宙、世界", gender: "m." },
+        { sp: "espacio", jp: "宇宙、空間", gender: "m." },
+        { sp: "la Tierra", jp: "地球", gender: "f." },
+        { sp: "mundo", jp: "世界", gender: "m." },
+        { sp: "continente", jp: "大陸", gender: "m." },
+        { sp: "frontera", jp: "国境、境界", gender: "f." },
+        { sp: "país", jp: "国", gender: "m." },
+        { sp: "pueblo", jp: "村", gender: "m." },
+        { sp: "región", jp: "地方", gender: "f." },
+        { sp: "Estado", jp: "国家、州", gender: "m." },
+        { sp: "provincia", jp: "県、州、prefectura", gender: "f." },
+        { sp: "municipio", jp: "市町村", gender: "m." },
+        { sp: "ciudad", jp: "都市", gender: "f." },
+        { sp: "campo", jp: "田園", gender: "m." },
+        { sp: "capital", jp: "首都", gender: "f." },
+        { sp: "montaña", jp: "山", gender: "f." },
+        { sp: "sierra", jp: "連山", gender: "f." },
+        { sp: "cordillera", jp: "山脈", gender: "f." },
+        { sp: "océano", jp: "大洋", gender: "m." },
+        { sp: "mar", jp: "海", gender: "m." },
+        { sp: "río", jp: "川", gender: "m." },
+        { sp: "playa", jp: "ビーチ", gender: "f." },
+        { sp: "costa", jp: "沿岸", gender: "f." },
+        { sp: "isla", jp: "島", gender: "f." },
+        { sp: "península", jp: "半島", gender: "f." },
+        { sp: "desierto", jp: "砂漠", gender: "m." },
+        { sp: "bosque", jp: "森", gender: "m." },
+        { sp: "centro", jp: "中心街", gender: "m." },
+        { sp: "plaza", jp: "広場", gender: "f." },
+        { sp: "barrio", jp: "街区", gender: "m." },
+        { sp: "calle", jp: "街路", gender: "f." },
+        { sp: "avenida", jp: "大通り", gender: "f." },
+        { sp: "carretera", jp: "幹線道路", gender: "f." },
+        { sp: "autopista", jp: "高速道路", gender: "f." },
+        { sp: "paseo", jp: "遊歩道", gender: "m." },
+        { sp: "camino", jp: "道", gender: "m." }
     ];
 
     // ユニークな日本語訳のリスト (選択肢生成用)
@@ -304,6 +324,9 @@
             const optionsId = `options-${idx}`;
             const resultId = `result-${idx}`;
             
+            // 性別表示用のバッジ (例: m. / f.)
+            const genderBadge = item.gender ? `<span class="gender-badge">${item.gender}</span>` : '';
+            
             // 選択肢HTML作成
             let optionsHtml = options.map(opt => `
                 <label class="radio-label">
@@ -317,7 +340,7 @@
             questionDiv.id = `questionBox-${idx}`;
             questionDiv.innerHTML = `
                 <div class="question-word">
-                    📌 ${idx+1}. &nbsp; ${escapeHtml(item.sp)}
+                    📌 ${idx+1}. &nbsp; ${escapeHtml(item.sp)} ${genderBadge}
                 </div>
                 <button type="button" class="show-opt-btn" data-target="${optionsId}">
                     🔍 選択肢を表示
