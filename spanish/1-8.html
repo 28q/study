@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>小テスト8：現在完了 vs 点過去（範囲内動詞のみ）</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+      background: #f8f6ef;
+      color: #1e2f2f;
+      padding: 24px 18px;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      background: #ffffffec;
+      border-radius: 36px;
+      padding: 20px 28px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    }
+    h1 {
+      font-size: 2rem;
+      border-left: 7px solid #c7452c;
+      padding-left: 18px;
+      margin-bottom: 10px;
+    }
+    .sub {
+      color: #4b6a3b;
+      margin-bottom: 24px;
+      font-weight: 500;
+      background: #f2efe0;
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+    }
+    .meta-card {
+      background: #eef3e6;
+      border-radius: 28px;
+      padding: 14px 22px;
+      margin: 16px 0 26px;
+      border-left: 5px solid #2b6e3c;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      background: #fff6e8;
+      padding: 12px 20px;
+      border-radius: 56px;
+      margin-bottom: 30px;
+    }
+    button {
+      background: #2b6e3c;
+      border: none;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.1s linear;
+      font-size: 0.9rem;
+    }
+    button:hover { background: #1f532c; transform: scale(0.97); }
+    .sec-btn { background: #6c757d; }
+    .danger-btn { background: #bc4a2c; }
+    select {
+      padding: 7px 12px;
+      border-radius: 32px;
+      border: 1px solid #cfc5a5;
+      background: white;
+    }
+    #timer-area {
+      background: #ffdfb3;
+      padding: 6px 14px;
+      border-radius: 32px;
+      font-weight: bold;
+      color: #a3421f;
+      display: none;
+    }
+    .section {
+      background: #fffcf5;
+      border-radius: 28px;
+      border: 1px solid #ede3ce;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .section h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+      border-bottom: 2px dashed #dbcfa9;
+      padding-bottom: 8px;
+    }
+    .question {
+      background: #ffffff;
+      margin-bottom: 22px;
+      padding: 14px 18px;
+      border-radius: 24px;
+      border: 1px solid #f1e8d6;
+      transition: 0.1s;
+    }
+    .jp-text {
+      font-weight: 700;
+      background: #eae3d0;
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    .sentence {
+      font-size: 1.08rem;
+      padding: 5px 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      row-gap: 10px;
+    }
+    .blank-input {
+      min-width: 130px;
+      width: auto;
+      padding: 9px 12px;
+      border-radius: 28px;
+      border: 1px solid #cbbc85;
+      background: #fffef7;
+      font-size: 0.98rem;
+      text-align: center;
+      transition: 0.1s;
+    }
+    .blank-input:focus {
+      border-color: #2b6e3c;
+      outline: none;
+      box-shadow: 0 0 0 2px #9fcca8;
+    }
+    .word {
+      white-space: nowrap;
+    }
+    .answer-hint {
+      display: none;
+      background: #ecf7e5;
+      margin-top: 10px;
+      padding: 6px 12px;
+      border-radius: 22px;
+      font-size: 0.85rem;
+      color: #2a6230;
+    }
+    .result-area {
+      background: #f9f3e3;
+      border-radius: 28px;
+      padding: 18px 22px;
+      margin-top: 20px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 34px;
+      font-size: 0.78rem;
+      color: #6b5e48;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 14px; }
+      .blank-input { min-width: 100px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>📘 小テスト8  <span style="font-size:1.2rem;">現在完了 / 点過去 (規則活用・範囲内動詞のみ)</span></h1>
+  <div class="sub">🎯 範囲：教科書5課(現在完了) + 6課(点過去規則活用) + プリント直説法点過去形</div>
+  <div class="meta-card">
+    ⚡ 各文の <strong>（ ）内の動詞</strong> を適切な形（点過去 または 現在完了）に活用してください。<br>
+    📌 <strong>ひとつの空欄に２語（例: he comido / ha visto）を入れても構いません</strong>。アクセント記号なしでも正解扱い（正規化）。<br>
+    🔥 問題文中に動詞の原形は表示されません。文脈に合わせて時制を選び、正しい活用を入力してください。
+  </div>
+
+  <div class="controls">
+    <button onclick="generateQuiz()">✨ 問題シャッフル</button>
+    <button onclick="gradeQuiz()" class="sec-btn">📝 採点する</button>
+    <button onclick="toggleAnswers()" id="toggleBtn">🔎 答えを表示</button>
+    <button onclick="resetHistory()" class="danger-btn">🗑 履歴リセット</button>
+    <label for="timeLimit">⏱️ 制限:</label>
+    <select id="timeLimit">
+      <option value="0">制限なし</option>
+      <option value="210">3分30秒</option>
+      <option value="300">5分</option>
+      <option value="480">8分</option>
+    </select>
+    <div id="timer-area">⏳ 残り <span id="timeDisplay">--:--</span></div>
+  </div>
+
+  <form id="quizForm"></form>
+  <div id="result" class="result-area"></div>
+  <footer>✔️ 現在完了＝haber + 過去分詞   ✔️ 点過去＝単独動詞（規則活用・一部提供動詞）<br>
+  ※ 使用動詞：現在完了→ hablar, leer, estar, invertir, pasear, comer, hacer, ver<br>
+  ※ 点過去→ pasear, comer, descubrir, hablar, vivir, leer, oír, invitar, quitar, saludar</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 問題データベース（指定動詞のみ、問題文中に原形表示なし）
+  // --------------------------------------------------------------
+  // 現在完了問題（過去分詞のみ or haber+過去分詞）
+  const presentPerfectData = [
+    // 助動詞は文に含まれ、空欄は過去分詞のみ（1語）
+    { jp: "私はマリアと話したことがある。", template: "Yo he _____________ con María.", answerKey: "hablado" },
+    { jp: "君はあの本を読んだことがある？", template: "¿Tú has _____________ ese libro?", answerKey: "leído" },
+    { jp: "私たちはスペインに滞在したことがある。", template: "Nosotros hemos _____________ en España.", answerKey: "estado" },
+    { jp: "彼らは株式市場に投資している。", template: "Ellos han _____________ en bolsa.", answerKey: "invertido" },
+    { jp: "私たちはたくさん散歩した。", template: "Hemos _____________ mucho por el parque.", answerKey: "paseado" },
+    { jp: "あなたはもう夕食を食べましたか？", template: "¿Ya has _____________ la cena?", answerKey: "comido" },
+    { jp: "私は宿題をした。", template: "Yo he _____________ los deberes.", answerKey: "hecho" },
+    { jp: "その映画を見たことがありますか？", template: "¿Has _____________ esa película alguna vez?", answerKey: "visto" },
+    // 否定文・疑問文で haber も空欄にする（2語必要）
+    { jp: "私は彼にまだ話していない。", template: "Yo no _____________ con él todavía.", answerKey: "he hablado", multiword: true },
+    { jp: "彼女はまだその本を読んでいない。", template: "Ella no _____________ el libro aún.", answerKey: "ha leído", multiword: true },
+    { jp: "私たちはあの場所に行ったことがない。", template: "Nosotros nunca _____________ en aquel lugar.", answerKey: "hemos estado", multiword: true },
+    { jp: "友達はまだそのお金を投資していない。", template: "Mis amigos aún no _____________ ese dinero.", answerKey: "han invertido", multiword: true },
+    { jp: "君はよく散歩したね（最近）。", template: "Tú _____________ mucho últimamente.", answerKey: "has paseado", multiword: true },
+    { jp: "私たちはもう食べました。", template: "Nosotros ya _____________ .", answerKey: "hemos comido", multiword: true },
+    { jp: "彼はその約束をした。", template: "Él _____________ la promesa.", answerKey: "ha hecho", multiword: true },
+    { jp: "あなた方はあの映画を見たことがある？", template: "¿Vosotros _____________ esa película?", answerKey: "habéis visto", multiword: true }
+  ];
+
+  // 点過去問題（指定動詞のみ、原形表示なし）
+  const preteriteData = [
+    { jp: "私は昨日公園を散歩した。", template: "Ayer yo _____________ por el parque.", answerKey: "paseé" },
+    { jp: "私たちはレストランで食事した。", template: "Nosotros _____________ en el restaurante.", answerKey: "comimos" },
+    { jp: "コロンブスはアメリカを発見した。", template: "Cristóbal Colón _____________ América.", answerKey: "descubrió" },
+    { jp: "彼らは私たちをパーティーに招待した。", template: "Ellos nos _____________ a la fiesta.", answerKey: "invitaron" },
+    { jp: "医者はその包帯を取り除いた。", template: "El médico _____________ la venda.", answerKey: "quitó" },
+    { jp: "マリアは先生にあいさつした。", template: "María _____________ al profesor.", answerKey: "saludó" },
+    { jp: "私は先生と話した。", template: "Yo _____________ con la profesora.", answerKey: "hablé" },
+    { jp: "あなたはスペイン語を話しましたか？", template: "¿Tú _____________ español ayer?", answerKey: "hablaste" },
+    { jp: "アナは昨日ケーキを食べた。", template: "Ana _____________ pastel ayer.", answerKey: "comió" },
+    { jp: "私の両親はマドリードに住んだ。", template: "Mis padres _____________ en Madrid.", answerKey: "vivieron" },
+    { jp: "私は去年バルセロナに住んだ。", template: "Yo _____________ en Barcelona el año pasado.", answerKey: "viví" },
+    { jp: "私はその小説を読んだ。", template: "Yo _____________ la novela.", answerKey: "leí" },
+    { jp: "あなたたちはその知らせを聞いた。", template: "Vosotros _____________ la noticia.", answerKey: "oísteis" },
+    { jp: "彼女はラジオを聞いた。", template: "Ella _____________ la radio.", answerKey: "oyó" },
+    { jp: "あなたたちはたくさん歩いた。", template: "Vosotros _____________ mucho.", answerKey: "paseasteis" },
+    { jp: "私とルイスはその映画を観た。", template: "Luis y yo _____________ la película.", answerKey: "vimos" }
+  ];
+
+  // 混合時制問題（適切な時制を選ばせる。範囲内動詞のみ、原形非表示）
+  const mixedTenseData = [
+    { jp: "昨日私は市場で果物を買った（買う＝comprarは範囲外なので除外せず → 代わりに「話す」を使用）", template: "Ayer yo _____________ con mi amigo por teléfono.", answerKey: "hablé", multiword: false },
+    { jp: "もう昼ごはんを食べましたか？", template: "¿Ya _____________ la comida?", answerKey: "has comido", multiword: true },
+    { jp: "先週、彼はその秘密を発見した。", template: "La semana pasada él _____________ el secreto.", answerKey: "descubrió", multiword: false },
+    { jp: "今までに日本のどこに滞在したことがありますか？", template: "¿Dónde _____________ en Japón alguna vez?", answerKey: "has estado", multiword: true },
+    { jp: "昨夜9時に私は勉強した（勉強する＝estudiarは範囲外 → 代わりに『散歩した』）", template: "Anoche a las nueve yo _____________ por el parque.", answerKey: "paseé", multiword: false },
+    { jp: "私たちはまだその知らせを聞いていない。", template: "Nosotros todavía no _____________ la noticia.", answerKey: "hemos oído", multiword: true },
+    { jp: "君はもうあの本を読んだ？", template: "¿Tú ya _____________ ese libro?", answerKey: "has leído", multiword: true },
+    { jp: "彼女は3年前にバルセロナに住んだ。", template: "Ella _____________ en Barcelona hace tres años.", answerKey: "vivió", multiword: false }
+  ];
+
+  // 全問題をマージ（使用動詞はすべて指定範囲内）
+  let masterQuestions = [];
+
+  function buildMasterList() {
+    let qlist = [];
+    presentPerfectData.forEach((item, idx) => {
+      qlist.push({
+        id: `pp_${idx}`,
+        jp: item.jp,
+        template: item.template,
+        answerKey: item.answerKey,
+        multiword: item.multiword || false,
+      });
+    });
+    preteriteData.forEach((item, idx) => {
+      qlist.push({
+        id: `pret_${idx}`,
+        jp: item.jp,
+        template: item.template,
+        answerKey: item.answerKey,
+        multiword: false,
+      });
+    });
+    mixedTenseData.forEach((item, idx) => {
+      qlist.push({
+        id: `mix_${idx}`,
+        jp: item.jp,
+        template: item.template,
+        answerKey: item.answerKey,
+        multiword: item.multiword || false,
+      });
+    });
+    return qlist;
+  }
+
+  // 正規化関数 (小文字, アクセント除去, スペース調整)
+  function normalize(str) {
+    if (!str) return "";
+    return str.toLowerCase().trim()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[¿?¡!.,;:]/g, "")
+      .replace(/\s+/g, " ");
+  }
+
+  function shuffleArray(arr) {
+    let copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  // 問題レンダリング（アンダースコア部分をインプットに置換）
+  function renderQuestion(q, idx) {
+    let template = q.template;
+    let parts = template.split(/(_{3,})/);  // アンダースコア3個以上で分割（空欄認識）
+    let finalHtml = `<div class="question" data-qid="${q.id}">
+      <div class="jp-text">📖 ${q.jp}</div>
+      <div class="sentence">`;
+    let blankCounter = 0;
+    let inputIds = [];
+    for (let i = 0; i < parts.length; i++) {
+      let part = parts[i];
+      if (part && part.match(/_{3,}/)) {
+        let inpId = `blank_${idx}_${blankCounter++}`;
+        finalHtml += `<input class="blank-input" id="${inpId}" type="text" placeholder="活用形を入力" autocomplete="off">`;
+        inputIds.push(inpId);
+      } else {
+        if (part && part.trim() !== "") {
+          finalHtml += `<span class="word">${part}</span>`;
+        }
+      }
+    }
+    finalHtml += `</div><div class="answer-hint" id="hint_${idx}">✅ 正解例: ${q.answerKey}</div></div>`;
+    return { html: finalHtml, inputIds: inputIds, answerKey: q.answerKey };
+  }
+
+  let currentQuestions = [];       // { inputIds, answerKey }
+  let activeQuizItems = [];
+  let showAnswersFlag = false;
+  let timerInterval = null;
+  let timeLeft = 0;
+  let scoreHistory = JSON.parse(localStorage.getItem('quiz8_score') || '[]');
+
+  function generateQuiz() {
+    if (timerInterval) clearInterval(timerInterval);
+    const form = document.getElementById('quizForm');
+    form.innerHTML = "";
+    document.getElementById('result').innerHTML = "";
+    let all = buildMasterList();
+    let shuffledFull = shuffleArray(all);
+    // 全問題数が多いので22〜24問程度出題（バランスよく）
+    let selected = shuffledFull.slice(0, 24);
+    activeQuizItems = selected;
+    currentQuestions = [];
+
+    let sectionDiv = document.createElement('div');
+    sectionDiv.className = "section";
+    sectionDiv.innerHTML = `<h2>✍️ 現在完了 / 点過去 穴埋め問題</h2><p style="margin-bottom:12px;">🔻 動詞を適切な時制に活用（必要なら２語でもOK）。原形は表示されていません。</p>`;
+    form.appendChild(sectionDiv);
+
+    for (let i = 0; i < activeQuizItems.length; i++) {
+      const q = activeQuizItems[i];
+      const rendered = renderQuestion(q, i);
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = rendered.html;
+      const questionDiv = tempDiv.firstChild;
+      sectionDiv.appendChild(questionDiv);
+      currentQuestions.push({
+        inputIds: rendered.inputIds,
+        answerKey: q.answerKey,
+        multiword: q.multiword || false
+      });
+    }
+    if (showAnswersFlag) {
+      document.querySelectorAll('.answer-hint').forEach(el => el.style.display = 'block');
+    }
+    startTimer();
+  }
+
+  function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    let limit = parseInt(document.getElementById('timeLimit').value, 10);
+    const timerDiv = document.getElementById('timer-area');
+    if (limit === 0) {
+      timerDiv.style.display = 'none';
+      return;
+    }
+    timeLeft = limit;
+    timerDiv.style.display = 'block';
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+      if (timeLeft <= 1) {
+        clearInterval(timerInterval);
+        timerDiv.style.display = 'none';
+        alert("⏰ 制限時間終了！ 自動採点します。");
+        gradeQuiz();
+      } else {
+        timeLeft--;
+        updateTimerDisplay();
+      }
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    document.getElementById('timeDisplay').innerText = `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
+  function toggleAnswers() {
+    showAnswersFlag = !showAnswersFlag;
+    document.querySelectorAll('.answer-hint').forEach(el => {
+      el.style.display = showAnswersFlag ? 'block' : 'none';
+    });
+    document.getElementById('toggleBtn').innerText = showAnswersFlag ? '🔒 答え非表示' : '🔎 答え表示';
+  }
+
+  function resetHistory() {
+    scoreHistory = [];
+    localStorage.setItem('quiz8_score', JSON.stringify(scoreHistory));
+    document.getElementById('result').innerHTML = '<p>📊 スコア履歴をリセットしました。</p>';
+  }
+
+  function gradeQuiz() {
+    if (timerInterval) clearInterval(timerInterval);
+    let correctCount = 0;
+    let totalQuestions = currentQuestions.length;
+    let detailsHtml = '<h3>📋 採点詳細</h3><ul style="list-style:none; padding-left:0;">';
+
+    for (let i = 0; i < currentQuestions.length; i++) {
+      const qInfo = currentQuestions[i];
+      const correctRaw = qInfo.answerKey;
+      const correctNorm = normalize(correctRaw);
+      let userInputs = [];
+      let allCorrect = true;
+
+      for (let inpId of qInfo.inputIds) {
+        const inputEl = document.getElementById(inpId);
+        if (inputEl) {
+          let userVal = inputEl.value;
+          userInputs.push(userVal);
+          let userNorm = normalize(userVal);
+          if (userNorm !== correctNorm) {
+            allCorrect = false;
+          }
+        } else {
+          allCorrect = false;
+        }
+      }
+      if (allCorrect) correctCount++;
+      let userShow = userInputs.length ? userInputs.join(' / ') : '(空白)';
+      detailsHtml += `<li>${allCorrect ? '✅' : '❌'} <strong>問題 ${i+1}</strong><br>
+        <span style="font-size:0.85rem;">入力: ${userShow}<br>正解: ${correctRaw}</span></li><br>`;
+    }
+
+    const percent = totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0;
+    detailsHtml += `</ul><p style="font-size:1.2rem;">🎯 ${correctCount} / ${totalQuestions} 正解 (${percent}%)</p>`;
+    scoreHistory.push(percent);
+    if (scoreHistory.length > 8) scoreHistory.shift();
+    localStorage.setItem('quiz8_score', JSON.stringify(scoreHistory));
+    const avg = scoreHistory.length ? Math.round(scoreHistory.reduce((a,b)=>a+b,0) / scoreHistory.length) : 0;
+    detailsHtml += `<p>📈 直近 ${scoreHistory.length} 回の平均点: ${avg}%</p>`;
+    document.getElementById('result').innerHTML = detailsHtml;
+  }
+
+  window.generateQuiz = generateQuiz;
+  window.gradeQuiz = gradeQuiz;
+  window.toggleAnswers = toggleAnswers;
+  window.resetHistory = resetHistory;
+
+  window.onload = () => {
+    generateQuiz();
+  };
+</script>
+</body>
+</html>
