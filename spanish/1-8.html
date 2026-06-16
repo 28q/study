@@ -125,7 +125,7 @@
       row-gap: 10px;
     }
     .blank-input {
-      min-width: 130px;
+      min-width: 150px;
       width: auto;
       padding: 9px 12px;
       border-radius: 28px;
@@ -166,7 +166,7 @@
     }
     @media (max-width: 700px) {
       .container { padding: 14px; }
-      .blank-input { min-width: 100px; }
+      .blank-input { min-width: 120px; }
     }
   </style>
 </head>
@@ -175,9 +175,9 @@
   <h1>📘 小テスト8  <span style="font-size:1.2rem;">現在完了 / 点過去 (規則活用・範囲内動詞のみ)</span></h1>
   <div class="sub">🎯 範囲：教科書5課(現在完了) + 6課(点過去規則活用) + プリント直説法点過去形</div>
   <div class="meta-card">
-    ⚡ 各文の <strong>（ ）内の動詞</strong> を適切な形（点過去 または 現在完了）に活用してください。<br>
-    📌 <strong>ひとつの空欄に２語（例: he comido / ha visto）を入れても構いません</strong>。アクセント記号なしでも正解扱い（正規化）。<br>
-    🔥 問題文中に動詞の原形は表示されません。文脈に合わせて時制を選び、正しい活用を入力してください。
+    ⚡ 各文の空欄に適切な形（点過去 または 現在完了）を入力してください。<br>
+    📌 <strong>現在完了の空欄には「haberの人称活用 + 過去分詞」（例: he comido / ha visto）を必ず2語で入れてください。</strong><br>
+    🔥 アクセント記号なしでも正解扱い（正規化）。問題文中に動詞の原形は表示されません。
   </div>
 
   <div class="controls">
@@ -197,27 +197,26 @@
 
   <form id="quizForm"></form>
   <div id="result" class="result-area"></div>
-  <footer>✔️ 現在完了＝haber + 過去分詞   ✔️ 点過去＝単独動詞（規則活用・一部提供動詞）<br>
+  <footer>✔️ 現在完了＝haber + 過去分詞（空欄に両方記入）　✔️ 点過去＝単独動詞（規則活用・一部提供動詞）<br>
   ※ 使用動詞：現在完了→ hablar, leer, estar, invertir, pasear, comer, hacer, ver<br>
   ※ 点過去→ pasear, comer, descubrir, hablar, vivir, leer, oír, invitar, quitar, saludar</footer>
 </div>
 
 <script>
   // --------------------------------------------------------------
-  // 問題データベース（指定動詞のみ、問題文中に原形表示なし）
+  // 問題データベース（すべての現在完了問題で haber も空欄に）
   // --------------------------------------------------------------
-  // 現在完了問題（過去分詞のみ or haber+過去分詞）
+  // 現在完了問題（全て multiword: true / 2語入力）
   const presentPerfectData = [
-    // 助動詞は文に含まれ、空欄は過去分詞のみ（1語）
-    { jp: "私はマリアと話したことがある。", template: "Yo he _____________ con María.", answerKey: "hablado" },
-    { jp: "君はあの本を読んだことがある？", template: "¿Tú has _____________ ese libro?", answerKey: "leído" },
-    { jp: "私たちはスペインに滞在したことがある。", template: "Nosotros hemos _____________ en España.", answerKey: "estado" },
-    { jp: "彼らは株式市場に投資している。", template: "Ellos han _____________ en bolsa.", answerKey: "invertido" },
-    { jp: "私たちはたくさん散歩した。", template: "Hemos _____________ mucho por el parque.", answerKey: "paseado" },
-    { jp: "あなたはもう夕食を食べましたか？", template: "¿Ya has _____________ la cena?", answerKey: "comido" },
-    { jp: "私は宿題をした。", template: "Yo he _____________ los deberes.", answerKey: "hecho" },
-    { jp: "その映画を見たことがありますか？", template: "¿Has _____________ esa película alguna vez?", answerKey: "visto" },
-    // 否定文・疑問文で haber も空欄にする（2語必要）
+    { jp: "私はマリアと話したことがある。", template: "Yo _____________ con María.", answerKey: "he hablado", multiword: true },
+    { jp: "君はあの本を読んだことがある？", template: "¿Tú _____________ ese libro?", answerKey: "has leído", multiword: true },
+    { jp: "私たちはスペインに滞在したことがある。", template: "Nosotros _____________ en España.", answerKey: "hemos estado", multiword: true },
+    { jp: "彼らは株式市場に投資している。", template: "Ellos _____________ en bolsa.", answerKey: "han invertido", multiword: true },
+    { jp: "私たちはたくさん散歩した。", template: "_____________ mucho por el parque.", answerKey: "hemos paseado", multiword: true },
+    { jp: "あなたはもう夕食を食べましたか？", template: "¿Ya _____________ la cena?", answerKey: "has comido", multiword: true },
+    { jp: "私は宿題をした。", template: "Yo _____________ los deberes.", answerKey: "he hecho", multiword: true },
+    { jp: "その映画を見たことがありますか？", template: "¿_____________ esa película alguna vez?", answerKey: "has visto", multiword: true },
+    // 否定文・疑問文（既に haber が空欄になっているものはそのまま）
     { jp: "私は彼にまだ話していない。", template: "Yo no _____________ con él todavía.", answerKey: "he hablado", multiword: true },
     { jp: "彼女はまだその本を読んでいない。", template: "Ella no _____________ el libro aún.", answerKey: "ha leído", multiword: true },
     { jp: "私たちはあの場所に行ったことがない。", template: "Nosotros nunca _____________ en aquel lugar.", answerKey: "hemos estado", multiword: true },
@@ -248,19 +247,19 @@
     { jp: "私とルイスはその映画を観た。", template: "Luis y yo _____________ la película.", answerKey: "vimos" }
   ];
 
-  // 混合時制問題（適切な時制を選ばせる。範囲内動詞のみ、原形非表示）
+  // 混合時制問題（現在完了のものは既に haber が空欄になっている）
   const mixedTenseData = [
-    { jp: "昨日私は市場で果物を買った（買う＝comprarは範囲外なので除外せず → 代わりに「話す」を使用）", template: "Ayer yo _____________ con mi amigo por teléfono.", answerKey: "hablé", multiword: false },
+    { jp: "昨日私は友達と電話で話した。", template: "Ayer yo _____________ con mi amigo por teléfono.", answerKey: "hablé", multiword: false },
     { jp: "もう昼ごはんを食べましたか？", template: "¿Ya _____________ la comida?", answerKey: "has comido", multiword: true },
     { jp: "先週、彼はその秘密を発見した。", template: "La semana pasada él _____________ el secreto.", answerKey: "descubrió", multiword: false },
     { jp: "今までに日本のどこに滞在したことがありますか？", template: "¿Dónde _____________ en Japón alguna vez?", answerKey: "has estado", multiword: true },
-    { jp: "昨夜9時に私は勉強した（勉強する＝estudiarは範囲外 → 代わりに『散歩した』）", template: "Anoche a las nueve yo _____________ por el parque.", answerKey: "paseé", multiword: false },
+    { jp: "昨夜9時に私は公園を散歩した。", template: "Anoche a las nueve yo _____________ por el parque.", answerKey: "paseé", multiword: false },
     { jp: "私たちはまだその知らせを聞いていない。", template: "Nosotros todavía no _____________ la noticia.", answerKey: "hemos oído", multiword: true },
     { jp: "君はもうあの本を読んだ？", template: "¿Tú ya _____________ ese libro?", answerKey: "has leído", multiword: true },
     { jp: "彼女は3年前にバルセロナに住んだ。", template: "Ella _____________ en Barcelona hace tres años.", answerKey: "vivió", multiword: false }
   ];
 
-  // 全問題をマージ（使用動詞はすべて指定範囲内）
+  // 全問題をマージ
   let masterQuestions = [];
 
   function buildMasterList() {
@@ -271,7 +270,7 @@
         jp: item.jp,
         template: item.template,
         answerKey: item.answerKey,
-        multiword: item.multiword || false,
+        multiword: item.multiword || true,  // 全て true だが念のため
       });
     });
     preteriteData.forEach((item, idx) => {
@@ -316,7 +315,7 @@
   // 問題レンダリング（アンダースコア部分をインプットに置換）
   function renderQuestion(q, idx) {
     let template = q.template;
-    let parts = template.split(/(_{3,})/);  // アンダースコア3個以上で分割（空欄認識）
+    let parts = template.split(/(_{3,})/);
     let finalHtml = `<div class="question" data-qid="${q.id}">
       <div class="jp-text">📖 ${q.jp}</div>
       <div class="sentence">`;
@@ -338,7 +337,7 @@
     return { html: finalHtml, inputIds: inputIds, answerKey: q.answerKey };
   }
 
-  let currentQuestions = [];       // { inputIds, answerKey }
+  let currentQuestions = [];
   let activeQuizItems = [];
   let showAnswersFlag = false;
   let timerInterval = null;
@@ -352,14 +351,14 @@
     document.getElementById('result').innerHTML = "";
     let all = buildMasterList();
     let shuffledFull = shuffleArray(all);
-    // 全問題数が多いので22〜24問程度出題（バランスよく）
+    // 出題数は24問程度（バランスよく）
     let selected = shuffledFull.slice(0, 24);
     activeQuizItems = selected;
     currentQuestions = [];
 
     let sectionDiv = document.createElement('div');
     sectionDiv.className = "section";
-    sectionDiv.innerHTML = `<h2>✍️ 現在完了 / 点過去 穴埋め問題</h2><p style="margin-bottom:12px;">🔻 動詞を適切な時制に活用（必要なら２語でもOK）。原形は表示されていません。</p>`;
+    sectionDiv.innerHTML = `<h2>✍️ 現在完了 / 点過去 穴埋め問題</h2><p style="margin-bottom:12px;">🔻 現在完了の空欄には <strong>haberの活用 + 過去分詞</strong>（例: he comido）を必ず2語で入力してください。</p>`;
     form.appendChild(sectionDiv);
 
     for (let i = 0; i < activeQuizItems.length; i++) {
