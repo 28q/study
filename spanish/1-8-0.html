@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>日本語→スペイン語 動詞クイズ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            margin: 0;
+            padding: 24px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            max-width: 850px;
+            width: 100%;
+            background: white;
+            border-radius: 36px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            padding: 1.8rem 2rem 2.5rem;
+            transition: all 0.2s;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f3b2c;
+            margin-top: 0;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        h1 small {
+            font-size: 0.8rem;
+            font-weight: normal;
+            background: #eef2ff;
+            color: #1e40af;
+            padding: 6px 14px;
+            border-radius: 60px;
+            letter-spacing: 0;
+        }
+
+        .sub {
+            color: #2c5f4a;
+            border-left: 4px solid #2c9a6e;
+            padding-left: 14px;
+            margin-bottom: 28px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            background: #e9f7f1;
+            border-radius: 18px;
+            padding: 10px 16px;
+            display: inline-block;
+            width: auto;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 28px;
+        }
+
+        .shuffle-btn {
+            background: #0f3b2c;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 48px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #286e54;
+        }
+
+        .shuffle-btn:hover {
+            background: #1e5a44;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        .shuffle-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* 問題リスト グリッド風 */
+        .questions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e2edf2;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            padding: 12px 18px 12px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .japanese-word {
+            font-size: 1.3rem;
+            font-weight: 650;
+            background: #fef9e3;
+            padding: 6px 16px;
+            border-radius: 60px;
+            color: #9b5e2c;
+            min-width: 110px;
+            letter-spacing: 0.5px;
+            border: 1px solid #ffecb3;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .japanese-word span {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .answer-area {
+            flex: 2;
+            min-width: 180px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .answer-input {
+            width: 100%;
+            max-width: 260px;
+            padding: 12px 18px;
+            font-size: 1rem;
+            border-radius: 60px;
+            border: 1.5px solid #cbd5e1;
+            background: white;
+            transition: 0.15s;
+            outline: none;
+            font-weight: 500;
+            color: #0b2b26;
+        }
+
+        .answer-input:focus {
+            border-color: #2c9a6e;
+            box-shadow: 0 0 0 3px rgba(44, 154, 110, 0.2);
+        }
+
+        /* 正解の光る緑 */
+        .answer-input.correct-highlight {
+            background-color: #ccf0e0;
+            border-color: #2e7d64;
+            box-shadow: 0 0 0 2px rgba(46, 125, 100, 0.3);
+            color: #0a3329;
+        }
+
+        @keyframes gentleFlash {
+            0% { background-color: #ccf0e0; }
+            100% { background-color: #ccf0e0; }
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #5f7c72;
+            border-top: 1px dashed #cbdcd6;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 1.2rem 1.2rem 1.8rem;
+            }
+            .question-card {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px;
+            }
+            .answer-area {
+                justify-content: stretch;
+            }
+            .answer-input {
+                max-width: 100%;
+            }
+            .japanese-word {
+                align-self: flex-start;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>
+        📝 日本語 → Español 
+        <small>動詞クイズ</small>
+    </h1>
+    <div class="sub">
+        ✍️ スペイン語の動詞原形を入力してください (アクセント記号があれば正確に・大文字小文字は区別しません)<br>
+        ✅ 正解すると入力欄が <span style="background:#ccf0e0; padding:2px 8px; border-radius:20px;">緑色に光ります</span>
+    </div>
+
+    <div class="toolbar">
+        <button class="shuffle-btn" id="shuffleButton">
+            🔀 問題をシャッフル
+        </button>
+    </div>
+
+    <div id="questionsContainer" class="questions-grid">
+        <!-- 動的に問題リストがここにレンダリングされます -->
+    </div>
+    <div class="footer-note">
+        💡 ヒント: 「oír」はアクセント付き「í」です。正解なら緑色に変わります。
+    </div>
+</div>
+
+<script>
+    // ---------- 動詞データ: 日本語訳 + スペイン語(正確な原形) ----------
+    const originalVerbList = [
+        { japanese: "話す", spanish: "hablar" },
+        { japanese: "読む", spanish: "leer" },
+        { japanese: "いる・ある (状態)", spanish: "estar" },
+        { japanese: "投資する", spanish: "invertir" },
+        { japanese: "散歩する", spanish: "pasear" },
+        { japanese: "食べる", spanish: "comer" },
+        { japanese: "する / 作る", spanish: "hacer" },
+        { japanese: "見る", spanish: "ver" },
+        { japanese: "発見する", spanish: "descubrir" },
+        { japanese: "生きる / 住む", spanish: "vivir" },
+        { japanese: "聞く", spanish: "oír" },      // アクセント付き í
+        { japanese: "招待する", spanish: "invitar" },
+        { japanese: "取り除く / 取る", spanish: "quitar" },
+        { japanese: "挨拶する", spanish: "saludar" }
+    ];
+
+    // アクセント記号などを正規化する関数 (大文字小文字＋ダイアクリティカルマーク除去＋トリム)
+    // 例: "oír" → "oir" , "OÍR" → "oir" など比較しやすくする
+    function normalizeString(str) {
+        if (!str) return "";
+        // 小文字化 & 前後空白除去
+        let normalized = str.trim().toLowerCase();
+        // NFD分解 → 結合文字（アクセント記号など）を除去
+        normalized = normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return normalized;
+    }
+
+    // 正解判定 (正規化後の比較)
+    function isAnswerCorrect(userInput, correctSpanish) {
+        const normalizedUser = normalizeString(userInput);
+        const normalizedCorrect = normalizeString(correctSpanish);
+        return normalizedUser === normalizedCorrect;
+    }
+
+    // 現在表示中の問題データ配列 (動的にシャッフルされる)
+    let currentQuestions = [...originalVerbList];
+
+    // 問題をシャッフル (Fisher-Yates)
+    function shuffleArray(arr) {
+        const array = [...arr];
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // 入力フィールドの背景色を更新 (クラス制御)
+    function updateInputHighlight(inputElement, correctSpanish) {
+        const currentValue = inputElement.value;
+        const isCorrect = isAnswerCorrect(currentValue, correctSpanish);
+        if (isCorrect) {
+            inputElement.classList.add("correct-highlight");
+        } else {
+            inputElement.classList.remove("correct-highlight");
+        }
+    }
+
+    // 全ての問題カードを描画 (containerをクリアして再構築)
+    function renderQuestions() {
+        const container = document.getElementById("questionsContainer");
+        if (!container) return;
+        container.innerHTML = "";  // 全削除
+
+        // 現在の currentQuestions をもとにカード生成
+        currentQuestions.forEach((item, idx) => {
+            const card = document.createElement("div");
+            card.className = "question-card";
+
+            // 日本語表示部分
+            const jpDiv = document.createElement("div");
+            jpDiv.className = "japanese-word";
+            // 分かりやすいように若干のアイコン
+            jpDiv.innerHTML = `🇯🇵 ${item.japanese} <span>→</span>`;
+            
+            // 入力エリア
+            const answerArea = document.createElement("div");
+            answerArea.className = "answer-area";
+            
+            const inputField = document.createElement("input");
+            inputField.type = "text";
+            inputField.placeholder = "スペイン語を入力...";
+            inputField.className = "answer-input";
+            inputField.autocomplete = "off";
+            inputField.spellcheck = false;
+            
+            // カスタムデータ属性で正解を保持 (アクセント元の正確なスペイン語)
+            inputField.dataset.correctSpanish = item.spanish;
+            
+            // 入力イベント: リアルタイムで緑色判定
+            inputField.addEventListener("input", function(e) {
+                const correctSpan = this.dataset.correctSpanish;
+                updateInputHighlight(this, correctSpan);
+            });
+            
+            // blur 時も念のため再判定 (万が一のため)
+            inputField.addEventListener("blur", function(e) {
+                const correctSpan = this.dataset.correctSpanish;
+                updateInputHighlight(this, correctSpan);
+            });
+            
+            answerArea.appendChild(inputField);
+            card.appendChild(jpDiv);
+            card.appendChild(answerArea);
+            container.appendChild(card);
+        });
+    }
+
+    // シャッフル実行 + 再描画 (全ての入力値はリセットされる)
+    function shuffleAndRender() {
+        // 新しい順序でシャッフル
+        currentQuestions = shuffleArray(originalVerbList);
+        renderQuestions();  // 再描画 = 入力値はすべてクリアされる
+    }
+
+    // 初期ロード (元の順序で表示)
+    function init() {
+        // 元の順序のコピーを保持
+        currentQuestions = [...originalVerbList];
+        renderQuestions();
+        
+        // シャッフルボタンのイベント登録
+        const shuffleBtn = document.getElementById("shuffleButton");
+        if (shuffleBtn) {
+            // 既存リスナーを避けるため新しいものに置換
+            shuffleBtn.replaceWith(shuffleBtn.cloneNode(true));
+            const newBtn = document.getElementById("shuffleButton");
+            newBtn.addEventListener("click", () => {
+                shuffleAndRender();
+            });
+        } else {
+            // フォールバック
+            document.getElementById("shuffleButton")?.addEventListener("click", shuffleAndRender);
+        }
+    }
+
+    // ページ読み込み時に開始
+    window.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
