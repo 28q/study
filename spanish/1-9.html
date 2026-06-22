@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-    <title>演習1-9：点過去形・再帰動詞・不規則動詞・例文</title>
+    <title>演習1-9：再帰動詞（現在形）・不規則動詞（点過去）・例文</title>
     <style>
         * {
             box-sizing: border-box;
@@ -264,11 +264,11 @@
 <body>
     <div class="title-block">
         <h1>📘 演習 1-9</h1>
-        <p>点過去形・再帰動詞・語幹母音変化・不規則動詞・例文</p>
+        <p>再帰動詞（現在形）・不規則動詞（点過去）・例文</p>
     </div>
 
     <div class="meta-box">
-        🔹 <strong>第1問</strong>：再帰動詞の点過去活用（3×2表）<br>
+        🔹 <strong>第1問</strong>：再帰動詞の現在活用（3×2表）<br>
         　不定詞は表示せず、日本語の意味のみ表示。7動詞すべてをシャッフルして出題。<br><br>
         🔹 <strong>第2問</strong>：日本語からスペイン語へ全文を記述（完全一致判定）<br>
         　3例文をシャッフルして出題。<br><br>
@@ -331,39 +331,35 @@
 
         // ========== データ定義 ==========
 
-        // 再帰動詞（点過去活用＋再帰代名詞）
+        // 再帰動詞（現在形・直説法現在）
         const reflexiveVerbs = {
             levantarse: {
                 jp: '起きる',
-                forms: ['me levanté', 'te levantaste', 'se levantó', 'nos levantamos', 'os levantasteis',
-                    'se levantaron'
-                ]
+                forms: ['me levanto', 'te levantas', 'se levanta', 'nos levantamos', 'os levantáis', 'se levantan']
             },
             mirarse: {
                 jp: '自分を見る',
-                forms: ['me miré', 'te miraste', 'se miró', 'nos miramos', 'os mirasteis', 'se miraron']
+                forms: ['me miro', 'te miras', 'se mira', 'nos miramos', 'os miráis', 'se miran']
             },
             llamarse: {
                 jp: '〜という名前である',
-                forms: ['me llamé', 'te llamaste', 'se llamó', 'nos llamamos', 'os llamasteis', 'se llamaron']
+                forms: ['me llamo', 'te llamas', 'se llama', 'nos llamamos', 'os llamáis', 'se llaman']
             },
             ponerse: {
                 jp: '身につける、〜になる',
-                forms: ['me puse', 'te pusiste', 'se puso', 'nos pusimos', 'os pusisteis', 'se pusieron']
+                forms: ['me pongo', 'te pones', 'se pone', 'nos ponemos', 'os ponéis', 'se ponen']
             },
             lavarse: {
                 jp: '体・手などを洗う',
-                forms: ['me lavé', 'te lavaste', 'se lavó', 'nos lavamos', 'os lavasteis', 'se lavaron']
+                forms: ['me lavo', 'te lavas', 'se lava', 'nos lavamos', 'os laváis', 'se lavan']
             },
             acostarse: {
                 jp: '寝る',
-                forms: ['me acosté', 'te acostaste', 'se acostó', 'nos acostamos', 'os acostasteis',
-                    'se acostaron'
-                ]
+                forms: ['me acuesto', 'te acuestas', 'se acuesta', 'nos acostamos', 'os acostáis', 'se acuestan']
             },
             ayudarse: {
                 jp: '助け合う',
-                forms: ['me ayudé', 'te ayudaste', 'se ayudó', 'nos ayudamos', 'os ayudasteis', 'se ayudaron']
+                forms: ['me ayudo', 'te ayudas', 'se ayuda', 'nos ayudamos', 'os ayudáis', 'se ayudan']
             }
         };
 
@@ -521,7 +517,6 @@
                 ids.push(`${qType}_${qIndex}_${i}`);
             }
 
-            // DOM構築後にイベントをバインドするため、setTimeoutで遅延
             setTimeout(() => {
                 ids.forEach((id, idx) => {
                     const inputEl = document.getElementById(id);
@@ -549,7 +544,6 @@
             <textarea class="full-input" id="q2_${qIndex}" rows="2" placeholder="スペイン語で全文を入力してください" autocomplete="off"></textarea>
           `;
 
-            // 音声ボタン
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'audio-btn';
@@ -558,20 +552,17 @@
             btn.onclick = () => speakText(sentenceData.es);
             q.appendChild(btn);
 
-            // 答え表示用ヒント
             const hint = document.createElement('span');
             hint.className = 'answer-hint';
             hint.textContent = `→ ${sentenceData.es}`;
             hint.style.display = showAnswersFlag ? 'inline' : 'none';
             q.appendChild(hint);
 
-            // blurイベントでリアルタイム判定
             setTimeout(() => {
                 const textarea = document.getElementById(`q2_${qIndex}`);
                 if (textarea) {
                     textarea.addEventListener('blur', () => checkTextarea(textarea, sentenceData.es));
                     textarea.addEventListener('input', () => {
-                        // input時は緑を外す（完全一致したら即緑にする方式も可能）
                         if (strictCompare(textarea.value, sentenceData.es)) {
                             textarea.classList.add('correct');
                         } else {
@@ -597,11 +588,11 @@
             form.innerHTML = '';
             document.getElementById('result').innerHTML = '';
 
-            // ---- 第1問：再帰動詞 ----
+            // ---- 第1問：再帰動詞（現在形） ----
             const sec1 = document.createElement('div');
             sec1.className = 'section';
             sec1.innerHTML = `
-            <h3>第1問：再帰動詞の点過去活用（3×2 表）</h3>
+            <h3>第1問：再帰動詞の現在活用（3×2 表）</h3>
             <div class="note">各動詞について6人称を埋めてください。<strong>アクセント記号厳密判定</strong>。正答で枠が緑色になります。</div>
           `;
             const reflexiveKeys = shuffleArray(Object.keys(reflexiveVerbs));
@@ -638,7 +629,7 @@
             });
             form.appendChild(sec2);
 
-            // ---- 第3問：語幹母音変化＋不規則動詞 ----
+            // ---- 第3問：語幹母音変化＋不規則動詞（点過去） ----
             const sec3 = document.createElement('div');
             sec3.className = 'section';
             sec3.innerHTML = `
@@ -659,7 +650,6 @@
             });
             form.appendChild(sec3);
 
-            // 答え表示状態を反映
             if (showAnswersFlag) {
                 document.querySelectorAll('.answer-hint').forEach(el => el.style.display = 'inline');
             }
@@ -681,14 +671,12 @@
                 let correctAnswers = [];
 
                 if (q.type === 'q1' || q.type === 'q3') {
-                    // 活用表問題
                     for (let i = 0; i < q.ids.length; i++) {
                         const el = document.getElementById(q.ids[i]);
                         const userVal = el ? el.value : '';
                         userAnswers.push(userVal || '(空白)');
                         correctAnswers.push(q.answers[i]);
                         if (!strictCompare(userVal, q.answers[i])) ok = false;
-                        // 色も更新
                         if (el) {
                             if (strictCompare(userVal, q.answers[i])) {
                                 el.classList.add('correct');
@@ -698,7 +686,6 @@
                         }
                     }
                 } else if (q.type === 'q2') {
-                    // 全文記述問題
                     const el = document.getElementById(q.id);
                     const userVal = el ? el.value : '';
                     userAnswers.push(userVal || '(空白)');
@@ -731,7 +718,6 @@
             document.getElementById('result').innerHTML = html;
         }
 
-        // グローバル公開
         window.generateQuiz = generateQuiz;
         window.gradeQuiz = gradeQuiz;
         window.toggleAnswers = toggleAnswers;
