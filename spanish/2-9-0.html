@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>スペイン語演習：会話テンプレート＋文法総復習 (2-9)</title>
+    <style>
+        :root {
+            --bg: #fbf8f1;
+            --panel: #ffffff;
+            --ink: #22313a;
+            --muted: #61707a;
+            --accent: #8b1e3f;
+            --accent2: #2c5f2d;
+            --soft: #f6efe0;
+            --soft2: #eef5ea;
+            --line: #e6d8be;
+            --warn: #f7e5bf;
+            --ok: #d9efd4;
+            --ans-bg: #e3f0dc;
+            --ans-border: #3a7a3b;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+            line-height: 1.65;
+        }
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 26px 18px 40px;
+        }
+        .title {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .title h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: var(--accent);
+            display: inline-block;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 6px;
+        }
+        .title p {
+            margin: 10px 0 0;
+            color: var(--muted);
+        }
+        .notice {
+            background: var(--soft);
+            border: 1px solid var(--line);
+            border-left: 8px solid var(--accent);
+            border-radius: 18px;
+            padding: 14px 16px;
+            margin: 18px 0 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            background: #fff7e8;
+            border: 1px solid #ecdab3;
+            border-radius: 20px;
+            padding: 12px 14px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+        }
+        button,
+        select {
+            font: inherit;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            padding: 9px 15px;
+        }
+        button {
+            cursor: pointer;
+            font-weight: 700;
+            color: #fff;
+            background: var(--accent2);
+            transition: transform .12s ease, opacity .12s ease;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            opacity: .96;
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.danger {
+            background: #b23c1c;
+        }
+        button.answer-toggle {
+            background: #7a5b3a;
+        }
+        select {
+            background: #fff;
+            border-color: #ccb98c;
+        }
+        .section {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 18px 18px 6px;
+            margin-bottom: 24px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+        }
+        .section h2 {
+            margin: 0 0 10px;
+            font-size: 1.28rem;
+            border-left: 7px solid var(--accent);
+            padding-left: 12px;
+        }
+        .section .sub {
+            color: var(--muted);
+            font-size: .95rem;
+            margin: 0 0 12px;
+        }
+        .card {
+            background: #fffdf8;
+            border: 1px solid #f0e5cf;
+            border-radius: 20px;
+            padding: 14px 14px 12px;
+            margin: 0 0 14px;
+        }
+        .qhead {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .qnum {
+            font-weight: 800;
+            color: var(--accent);
+            margin-right: 8px;
+        }
+        .jp {
+            display: inline-block;
+            background: #e8f2f4;
+            color: #16515b;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: .9rem;
+        }
+        .tag {
+            display: inline-block;
+            background: var(--warn);
+            color: #7a4b00;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: .86rem;
+            white-space: nowrap;
+        }
+        .dialogue {
+            margin-top: 8px;
+            border-top: 1px dashed #eadfca;
+            padding-top: 10px;
+        }
+        .line {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin: 6px 0;
+            flex-wrap: wrap;
+        }
+        .speaker {
+            min-width: 34px;
+            font-weight: 800;
+            color: var(--accent2);
+        }
+        .content {
+            flex: 1;
+            min-width: 260px;
+            line-height: 2.2;
+            font-size: 1.02rem;
+        }
+        .word {
+            white-space: nowrap;
+        }
+        .blank {
+            width: clamp(82px, 13vw, 180px);
+            max-width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #cdbb91;
+            border-radius: 14px;
+            background: #fffef9;
+            text-align: center;
+            margin: 0 4px;
+            font-size: 1rem;
+            transition: background .15s, border-color .15s;
+        }
+        .blank:focus {
+            outline: none;
+            border-color: var(--accent2);
+            box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.16);
+        }
+        .blank.showing-answer {
+            background: var(--ans-bg);
+            border-color: var(--ans-border);
+            color: #1d4a1e;
+            font-weight: 700;
+        }
+        .blank.correct {
+            background: var(--ok);
+            border-color: var(--accent2);
+        }
+        .blank.wrong {
+            background: #ffe6e0;
+            border-color: #b23c1c;
+        }
+        .inline-help {
+            margin-top: 10px;
+            color: #5d6064;
+            font-size: .9rem;
+        }
+        .small {
+            font-size: .88rem;
+            color: var(--muted);
+        }
+        #result {
+            background: #f4f1e3;
+            border: 1px solid #e3d6b7;
+            border-radius: 20px;
+            padding: 14px 16px;
+            margin-top: 20px;
+        }
+        #result ul {
+            padding-left: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        #result ul li {
+            margin-bottom: 6px;
+            border-bottom: 1px dashed #e3d6b7;
+            padding-bottom: 6px;
+        }
+        .footer {
+            text-align: center;
+            color: #69727a;
+            font-size: .83rem;
+            margin-top: 26px;
+        }
+        .ex-number {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 999px;
+            padding: 2px 14px;
+            font-size: .85rem;
+            margin-left: 10px;
+            font-weight: 700;
+        }
+        @media (max-width: 760px) {
+            .content {
+                min-width: 220px;
+            }
+            .jp {
+                display: block;
+            }
+            .tag {
+                margin-top: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="title">
+            <h1>スペイン語演習：会話テンプレート＋文法総復習 (2-9)</h1>
+            <p>第1問：会話穴埋め ／ 第2～9問：文法項目別 日本語→スペイン語</p>
+        </div>
+
+        <div class="notice">
+            <strong>■ 構成</strong><br>
+            ・<b>第1問</b>：会話テンプレート（時刻・予定・義務・直後・開始・推量など）<br>
+            ・<b>第2～9問</b>：各文法項目に絞った日本語→スペイン語演習（各項目4～8題）<br>
+            ・⑨は「hay que / deber de + 不定詞」の混合演習です。<br>
+            ・アクセント記号・大文字小文字の違いは無視して採点します。<br>
+            ・「答えを表示」で全問の正解が入力欄に表示されます。
+        </div>
+
+        <div class="controls">
+            <button type="button" onclick="generateQuiz()">問題を作り直す</button>
+            <button type="button" class="secondary" onclick="gradeQuiz()">採点する</button>
+            <button type="button" class="answer-toggle" id="toggleBtn" onclick="toggleAnswers()">答えを表示</button>
+            <button type="button" class="danger" onclick="resetHistory()">履歴リセット</button>
+            <label for="qCount" class="small">第1問の出題数：</label>
+            <select id="qCount">
+                <option value="12">12題</option>
+                <option value="16" selected>16題</option>
+                <option value="20">20題</option>
+                <option value="24">24題</option>
+            </select>
+        </div>
+
+        <form id="quizForm"></form>
+        <div id="result"></div>
+        <div class="footer">空欄は1つずつ入力してください。表示順は毎回シャッフルされます。</div>
+    </div>
+
+    <script>
+        // ------------------------------------------------------------
+        // ユーティリティ
+        // ------------------------------------------------------------
+        function normalize(str) {
+            return (str || '')
+                .toLowerCase()
+                .trim()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, ' ')
+                .replace(/[¿?¡!.,;:]/g, '');
+        }
+
+        function shuffle(array) {
+            const a = [...array];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function b(answer, w) {
+            return { blank: true, answer, width: w || 10 };
+        }
+
+        // ------------------------------------------------------------
+        // 状態
+        // ------------------------------------------------------------
+        let showAnswers = false;
+        let savedUserInputs = {};     // 答え表示前のユーザー入力保存用
+        let history = JSON.parse(localStorage.getItem('spa_exercise_history_v1') || '[]');
+        let currentQuestions = [];
+
+        // ------------------------------------------------------------
+        // 問題バンク
+        // ------------------------------------------------------------
+
+        // ---- 第1問：会話テンプレート ----
+        const q1Bank = [{
+            cat: '時刻',
+            jp: '今は午後5時半です。',
+            tag: '時刻',
+            lines: [
+                { spk: 'A', parts: ['¿Qué hora es ahora?'] },
+                { spk: 'B', parts: ['Ahora ', b('son', 8), ' las ', b('cinco', 10), ' y ', b('media', 8), ' de la ', b(
+                        'tarde', 8), '.'] }
+            ]
+        }, {
+            cat: '時刻',
+            jp: '今は8時ちょうどです。',
+            tag: '時刻',
+            lines: [
+                { spk: 'A', parts: ['¿Qué hora es?'] },
+                { spk: 'B', parts: ['Ahora ', b('son', 8), ' las ', b('ocho', 9), '.'] }
+            ]
+        }, {
+            cat: 'pensar + 不定詞',
+            jp: '私は今夜スペイン語を勉強しようと思う。',
+            tag: '思う',
+            lines: [
+                { spk: 'A', parts: ['¿Qué vas a hacer esta noche?'] },
+                { spk: 'B', parts: ['', b('Pienso', 10), ' ', b('estudiar', 12), ' español esta noche.'] }
+            ]
+        }, {
+            cat: 'pensar + 不定詞',
+            jp: '私は来週マドリードへ行こうと思う。',
+            tag: '思う',
+            lines: [
+                { spk: 'A', parts: ['¿Ya tienes planes para la semana que viene?'] },
+                { spk: 'B', parts: ['', b('Pienso', 10), ' ', b('ir', 8), ' a Madrid la semana que viene.'] }
+            ]
+        }, {
+            cat: 'pensar en + 不定詞',
+            jp: '私は明日早く起きることを考えている。',
+            tag: '考える',
+            lines: [
+                { spk: 'A', parts: ['¿En qué estás pensando?'] },
+                { spk: 'B', parts: ['Estoy pensando ', b('en', 8), ' ', b('levantarme', 13), ' temprano mañana.'] }
+            ]
+        }, {
+            cat: 'pensar en + 不定詞',
+            jp: '私は夕食のことを考えている。',
+            tag: '考える',
+            lines: [
+                { spk: 'A', parts: ['¿En qué piensas ahora?'] },
+                { spk: 'B', parts: ['Pienso ', b('en', 8), ' la cena.'] }
+            ]
+        }, {
+            cat: 'sentir + 不定詞',
+            jp: '今日は行けなくて残念です。',
+            tag: '残念',
+            lines: [
+                { spk: 'A', parts: ['¿Puedes venir hoy?'] },
+                { spk: 'B', parts: ['', b('Siento', 10), ' no ', b('poder', 10), ' ir hoy.'] }
+            ]
+        }, {
+            cat: 'sentir + 不定詞',
+            jp: '遅れてしまってすみません。',
+            tag: '残念',
+            lines: [
+                { spk: 'A', parts: ['¿Por qué llegas tan tarde?'] },
+                { spk: 'B', parts: ['Siento ', b('llegar', 10), ' tarde.'] }
+            ]
+        }, {
+            cat: 'deber + 不定詞',
+            jp: 'あなたはもっと休むべきです。',
+            tag: '義務',
+            lines: [
+                { spk: 'A', parts: ['¿Te sientes bien?'] },
+                { spk: 'B', parts: ['No mucho. ', b('Debes', 10), ' ', b('descansar', 12), ' más.'] }
+            ]
+        }, {
+            cat: 'deber + 不定詞',
+            jp: '私たちは毎日スペイン語を勉強すべきです。',
+            tag: '義務',
+            lines: [
+                { spk: 'A', parts: ['¿Qué hacemos para mejorar?'] },
+                { spk: 'B', parts: ['', b('Debemos', 10), ' ', b('estudiar', 12), ' español todos los días.'] }
+            ]
+        }, {
+            cat: 'acabar de + 不定詞',
+            jp: '私はちょうど昼ごはんを食べ終えたところです。',
+            tag: '直後',
+            lines: [
+                { spk: 'A', parts: ['¿Ya almorzaste?'] },
+                { spk: 'B', parts: ['Sí, ', b('acabo', 10), ' ', b('de', 8), ' comer.'] }
+            ]
+        }, {
+            cat: 'acabar de + 不定詞',
+            jp: '彼はちょうど帰ったところです。',
+            tag: '直後',
+            lines: [
+                { spk: 'A', parts: ['¿Está Juan?'] },
+                { spk: 'B', parts: ['No, ', b('acaba', 10), ' ', b('de', 8), ' volver.'] }
+            ]
+        }, {
+            cat: 'empezar a + 不定詞',
+            jp: '私は新しい単語を覚え始めた。',
+            tag: '開始',
+            lines: [
+                { spk: 'A', parts: ['¿Qué hiciste hoy?'] },
+                { spk: 'B', parts: ['', b('Empecé', 10), ' ', b('a', 7), ' memorizar palabras nuevas.'] }
+            ]
+        }, {
+            cat: 'empezar a + 不定詞',
+            jp: '雨が降り始めた。',
+            tag: '開始',
+            lines: [
+                { spk: 'A', parts: ['¿Cómo está el tiempo?'] },
+                { spk: 'B', parts: ['', b('Empezó', 10), ' ', b('a', 7), ' llover.'] }
+            ]
+        }, {
+            cat: 'tener que + 不定詞',
+            jp: '今日は宿題をしなければならない。',
+            tag: '必要',
+            lines: [
+                { spk: 'A', parts: ['¿Vas a salir?'] },
+                { spk: 'B', parts: ['No, ', b('tengo', 10), ' ', b('que', 8), ' hacer la tarea.'] }
+            ]
+        }, {
+            cat: 'tener que + 不定詞',
+            jp: '私たちは早く起きなければならない。',
+            tag: '必要',
+            lines: [
+                { spk: 'A', parts: ['¿A qué hora salimos?'] },
+                { spk: 'B', parts: ['', b('Tenemos', 10), ' ', b('que', 8), ' levantarnos temprano.'] }
+            ]
+        }, {
+            cat: 'hay que + 不定詞',
+            jp: 'もっと練習しなければならない。',
+            tag: '必要',
+            lines: [
+                { spk: 'A', parts: ['¿Qué hace falta para mejorar?'] },
+                { spk: 'B', parts: ['', b('Hay', 10), ' ', b('que', 8), ' practicar más.'] }
+            ]
+        }, {
+            cat: 'hay que + 不定詞',
+            jp: 'この仕事は静かにしなければならない。',
+            tag: '必要',
+            lines: [
+                { spk: 'A', parts: ['¿Cómo se hace aquí?'] },
+                { spk: 'B', parts: ['', b('Hay', 10), ' ', b('que', 8), ' hacerlo en silencio.'] }
+            ]
+        }, {
+            cat: 'deber de + 不定詞',
+            jp: '彼は家にいるに違いない。',
+            tag: '推量',
+            lines: [
+                { spk: 'A', parts: ['¿Dónde está él?'] },
+                { spk: 'B', parts: ['', b('Debe', 10), ' ', b('de', 8), ' estar en casa.'] }
+            ]
+        }, {
+            cat: 'deber de + 不定詞',
+            jp: '今ごろ彼女は寝ているに違いない。',
+            tag: '推量',
+            lines: [
+                { spk: 'A', parts: ['¿Crees que ya duerme?'] },
+                { spk: 'B', parts: ['Sí, ', b('debe', 10), ' ', b('de', 8), ' estar durmiendo ahora.'] }
+            ]
+        }];
+
+        // ---- 第2～9問：文法項目別 ----
+        const grammarCategories = {
+            'pensar': {
+                label: 'pensar + 不定詞',
+                items: [
+                    { jp: '私は今夜スペイン語を勉強しようと思う。', parts: ['', b('Pienso', 10), ' ', b('estudiar', 12),
+                            ' español esta noche.'] },
+                    { jp: '私たちは週末に映画を見ようと思う。', parts: ['', b('Pensamos', 10), ' ', b('ver', 9),
+                            ' una película el fin de semana.'] },
+                    { jp: '彼は新しい仕事を探そうと思う。', parts: ['Él ', b('piensa', 10), ' ', b('buscar', 10),
+                            ' un trabajo nuevo.'] },
+                    { jp: 'あなたは何をしようと思いますか。', parts: ['¿Qué ', b('piensas', 10), ' ', b('hacer', 10),
+                            '?'] }
+                ]
+            },
+            'pensar_en': {
+                label: 'pensar en + 不定詞',
+                items: [
+                    { jp: '私は明日早く起きることを考えている。', parts: ['Estoy ', b('pensando', 11), ' ', b('en', 8),
+                            ' levantarme temprano mañana.'] },
+                    { jp: '私は将来海外で働くことを考えています。', parts: ['Pienso ', b('en', 8),
+                            ' trabajar en el extranjero en el futuro.'] },
+                    { jp: '彼女は試験のことを考えています。', parts: ['Ella está ', b('pensando', 11), ' ', b('en', 8),
+                            ' el examen.'] },
+                    { jp: '君は来年の旅行のことを考えているの？', parts: ['¿Estás ', b('pensando', 11), ' ', b('en', 8),
+                            ' el viaje del año que viene?'] }
+                ]
+            },
+            'sentir': {
+                label: 'sentir + 不定詞',
+                items: [
+                    { jp: '遅れてしまってすみません。', parts: ['', b('Siento', 10), ' ', b('llegar', 10), ' tarde.'] },
+                    { jp: '今日は行けなくて残念です。', parts: ['', b('Siento', 10), ' no poder ir hoy.'] },
+                    { jp: '彼に会えなくて残念でした。', parts: ['', b('Sentí', 10), ' no poder verlo.'] },
+                    { jp: 'この知らせを聞いて残念に思う。', parts: ['', b('Siento', 10), ' ', b('oír', 9),
+                            ' esta noticia.'] }
+                ]
+            },
+            'deber': {
+                label: 'deber + 不定詞',
+                items: [
+                    { jp: 'あなたはもっと休むべきです。', parts: ['Tú ', b('debes', 10), ' descansar más.'] },
+                    { jp: '私たちは毎日スペイン語を勉強すべきです。', parts: ['', b('Debemos', 10),
+                            ' estudiar español todos los días.'] },
+                    { jp: '彼は医者に行くべきです。', parts: ['Él ', b('debe', 10), ' ', b('ir', 8), ' al médico.'] },
+                    { jp: '私はもっと運動すべきだと思う。', parts: ['Creo que ', b('debo', 10), ' hacer más ejercicio.'] }
+                ]
+            },
+            'acabar_de': {
+                label: 'acabar de + 不定詞',
+                items: [
+                    { jp: '私はちょうど昼ごはんを食べ終えたところです。', parts: ['', b('Acabo', 10), ' ', b('de', 8),
+                            ' comer el almuerzo.'] },
+                    { jp: '彼はちょうど帰ったところです。', parts: ['Él ', b('acaba', 10), ' ', b('de', 8), ' volver.'] },
+                    { jp: '私たちはちょうど宿題を終えたところです。', parts: ['', b('Acabamos', 10), ' ', b('de', 8),
+                            ' terminar la tarea.'] },
+                    { jp: '私は今、ちょうどニュースを見終えたところです。', parts: ['Ahora mismo ', b('acabo', 10), ' ', b(
+                            'de', 8), ' ver las noticias.'] }
+                ]
+            },
+            'empezar_a': {
+                label: 'empezar a + 不定詞',
+                items: [
+                    { jp: '私は新しい単語を覚え始めた。', parts: ['', b('Empecé', 10), ' ', b('a', 7),
+                            ' memorizar palabras nuevas.'] },
+                    { jp: '雨が降り始めた。', parts: ['', b('Empezó', 10), ' ', b('a', 7), ' llover.'] },
+                    { jp: '彼女は日本語を勉強し始めた。', parts: ['Ella ', b('empezó', 10), ' ', b('a', 7),
+                            ' estudiar japonés.'] },
+                    { jp: '子どもたちは走り始めた。', parts: ['Los niños ', b('empezaron', 11), ' ', b('a', 7),
+                            ' correr.'] }
+                ]
+            },
+            'tener_que': {
+                label: 'tener que + 不定詞',
+                items: [
+                    { jp: '今日は宿題をしなければならない。', parts: ['', b('Tengo', 10), ' ', b('que', 8),
+                            ' hacer la tarea hoy.'] },
+                    { jp: '私たちは早く起きなければならない。', parts: ['', b('Tenemos', 10), ' ', b('que', 8),
+                            ' levantarnos temprano.'] },
+                    { jp: '彼女は家に帰らなければならない。', parts: ['Ella ', b('tiene', 10), ' ', b('que', 8),
+                            ' volver a casa.'] },
+                    { jp: 'あなたは明日その本を持ってこなければならない。', parts: ['Tú ', b('tienes', 10), ' ', b('que',
+                            8), ' traer ese libro mañana.'] }
+                ]
+            },
+            'hay_que': {
+                label: 'hay que + 不定詞',
+                items: [
+                    { jp: 'もっと練習しなければならない。', parts: ['', b('Hay', 10), ' ', b('que', 8),
+                            ' practicar más.'] },
+                    { jp: 'この仕事は静かにしなければならない。', parts: ['', b('Hay', 10), ' ', b('que', 8),
+                            ' hacerlo en silencio.'] },
+                    { jp: 'この部屋は毎日掃除しなければならない。', parts: ['', b('Hay', 10), ' ', b('que', 8),
+                            ' limpiar esta habitación todos los días.'] },
+                    { jp: 'スペイン語は毎日少しずつ勉強しなければならない。', parts: ['', b('Hay', 10), ' ', b('que', 8),
+                            ' estudiar un poco de español cada día.'] }
+                ]
+            },
+            'deber_de': {
+                label: 'deber de + 不定詞',
+                items: [
+                    { jp: '彼は家にいるに違いない。', parts: ['Él ', b('debe', 10), ' ', b('de', 8), ' estar en casa.'] },
+                    { jp: '今ごろ彼女は寝ているに違いない。', parts: ['Ella ', b('debe', 10), ' ', b('de', 8),
+                            ' estar durmiendo ahora.'] },
+                    { jp: 'あの人は先生に違いない。', parts: ['Esa persona ', b('debe', 10), ' ', b('de', 8),
+                            ' ser profesora.'] },
+                    { jp: 'この店はもう閉まっているに違いない。', parts: ['Esta tienda ', b('debe', 10), ' ', b('de', 8),
+                            ' estar cerrada ya.'] }
+                ]
+            }
+        };
+
+        // Exercise 2～9 の定義（第9問は hay que と deber de を混合）
+        const exerciseOrderFinal = [
+            { id: 2, key: 'pensar', label: 'pensar + 不定詞' },
+            { id: 3, key: 'pensar_en', label: 'pensar en + 不定詞' },
+            { id: 4, key: 'sentir', label: 'sentir + 不定詞' },
+            { id: 5, key: 'deber', label: 'deber + 不定詞' },
+            { id: 6, key: 'acabar_de', label: 'acabar de + 不定詞' },
+            { id: 7, key: 'empezar_a', label: 'empezar a + 不定詞' },
+            { id: 8, key: 'tener_que', label: 'tener que + 不定詞' },
+            { id: 9, key: 'hay_que_deber_de', label: 'hay que / deber de + 不定詞' }
+        ];
+
+        // 第9問用の混合アイテム
+        const hayQueDeberDeItems = [
+            ...grammarCategories['hay_que'].items,
+            ...grammarCategories['deber_de'].items
+        ];
+
+        // ------------------------------------------------------------
+        // レンダリング補助
+        // ------------------------------------------------------------
+        function renderParts(parts, qid, blankIndexStart) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'content';
+            let blankIndex = blankIndexStart || 0;
+            parts.forEach(part => {
+                if (typeof part === 'string') {
+                    const span = document.createElement('span');
+                    span.className = 'word';
+                    span.textContent = part;
+                    wrapper.appendChild(span);
+                } else if (part && part.blank) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'blank';
+                    input.id = `${qid}_${blankIndex}`;
+                    input.autocomplete = 'off';
+                    input.dataset.answer = part.answer;
+                    input.style.width = `clamp(72px, ${part.width}vw, 210px)`;
+                    input.addEventListener('input', function() {
+                        validateInput(this);
+                    });
+                    wrapper.appendChild(input);
+                    blankIndex++;
+                }
+            });
+            return { node: wrapper, nextIndex: blankIndex };
+        }
+
+        function validateInput(el) {
+            if (!el || !el.dataset.answer) return;
+            if (el.classList.contains('showing-answer')) return;
+            if (normalize(el.value) === normalize(el.dataset.answer)) {
+                el.style.background = '#d9efd4';
+                el.style.borderColor = '#2c5f2d';
+            } else {
+                el.style.background = '#fffef9';
+                el.style.borderColor = '#cdbb91';
+            }
+        }
+
+        // ------------------------------------------------------------
+        // カード生成
+        // ------------------------------------------------------------
+        function makeCard(index, item, mode, categoryLabel) {
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const head = document.createElement('div');
+            head.className = 'qhead';
+
+            const left = document.createElement('div');
+            left.innerHTML =
+                `<span class="qnum">${index}.</span><span class="jp">${item.jp}</span>`;
+
+            const right = document.createElement('div');
+            const tagText = categoryLabel || item.cat || item.tag || '';
+            right.innerHTML = `<span class="tag">${tagText}</span>`;
+
+            head.appendChild(left);
+            head.appendChild(right);
+            card.appendChild(head);
+
+            if (mode === 'dialogue') {
+                const dialogue = document.createElement('div');
+                dialogue.className = 'dialogue';
+                item.lines.forEach((line, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'line';
+                    const spk = document.createElement('div');
+                    spk.className = 'speaker';
+                    spk.textContent = line.spk;
+                    const content = renderParts(line.parts, `q${mode}_${index}`, i * 10);
+                    row.appendChild(spk);
+                    row.appendChild(content.node);
+                    dialogue.appendChild(row);
+                });
+                card.appendChild(dialogue);
+            } else {
+                // translation mode
+                const row = document.createElement('div');
+                row.className = 'line';
+                const spk = document.createElement('div');
+                spk.className = 'speaker';
+                spk.textContent = '答';
+                const content = renderParts(item.parts, `q${mode}_${index}`);
+                row.appendChild(spk);
+                row.appendChild(content.node);
+                card.appendChild(row);
+
+                const note = document.createElement('div');
+                note.className = 'inline-help';
+                note.textContent = '日本語を見て、スペイン語を完成させてください。';
+                card.appendChild(note);
+            }
+
+            // 現在の問題リストに登録（IDと正答を保存）
+            const inputs = card.querySelectorAll('input.blank');
+            const answers = [...inputs].map(inp => inp.dataset.answer);
+            currentQuestions.push({
+                ids: [...inputs].map(inp => inp.id),
+                answers: answers
+            });
+
+            return card;
+        }
+
+        // ------------------------------------------------------------
+        // 問題生成（メイン）
+        // ------------------------------------------------------------
+        function generateQuiz() {
+            try {
+                // 状態リセット
+                currentQuestions = [];
+                savedUserInputs = {};                // 保存データもクリア
+                document.getElementById('result').innerHTML = '';
+                const form = document.getElementById('quizForm');
+                if (!form) {
+                    alert('フォーム要素が見つかりません。');
+                    return;
+                }
+                form.innerHTML = '';
+
+                // ---- 第1問：会話テンプレート ----
+                const qCountEl = document.getElementById('qCount');
+                const qCount = parseInt(qCountEl ? qCountEl.value : '16', 10);
+                const shuffledQ1 = shuffle(q1Bank).slice(0, qCount);
+
+                const sec1 = document.createElement('div');
+                sec1.className = 'section';
+                sec1.innerHTML = `
+                    <h2>第1問　会話テンプレート（穴埋め） <span class="ex-number">Exercise 1</span></h2>
+                    <p class="sub">授業で使う会話の型を実戦的に練習。時刻・予定・義務・直後・開始・推量などをまとめて復習します。</p>
+                `;
+                shuffledQ1.forEach((item, i) => {
+                    sec1.appendChild(makeCard(i + 1, item, 'dialogue', item.cat));
+                });
+                form.appendChild(sec1);
+
+                // ---- 第2～9問：文法項目別 ----
+                exerciseOrderFinal.forEach((ex) => {
+                    const sec = document.createElement('div');
+                    sec.className = 'section';
+
+                    let items = [];
+                    let label = ex.label;
+                    if (ex.key === 'hay_que_deber_de') {
+                        items = shuffle(hayQueDeberDeItems);
+                        label = 'hay que / deber de + 不定詞';
+                    } else {
+                        const cat = grammarCategories[ex.key];
+                        if (cat) {
+                            items = shuffle(cat.items);
+                            label = cat.label;
+                        } else {
+                            items = [];
+                            label = ex.label + ' (データなし)';
+                        }
+                    }
+
+                    sec.innerHTML = `
+                        <h2>第${ex.id}問　${label} <span class="ex-number">Exercise ${ex.id}</span></h2>
+                        <p class="sub">日本語の意味から、対応するスペイン語表現を作ってください（全${items.length}題）。</p>
+                    `;
+
+                    items.forEach((item, i) => {
+                        sec.appendChild(makeCard(i + 1, item, 'translate', label));
+                    });
+                    form.appendChild(sec);
+                });
+
+                // 答え表示状態をリセット
+                showAnswers = false;
+                const toggleBtn = document.getElementById('toggleBtn');
+                if (toggleBtn) toggleBtn.textContent = '答えを表示';
+                document.querySelectorAll('.blank.showing-answer').forEach(el => {
+                    el.classList.remove('showing-answer');
+                    el.style.background = '#fffef9';
+                    el.style.borderColor = '#cdbb91';
+                    el.style.color = '';
+                    el.style.fontWeight = '';
+                    el.value = '';
+                });
+
+            } catch (e) {
+                alert('問題の生成中にエラーが発生しました: ' + e.message);
+                console.error(e);
+            }
+        }
+
+        // ------------------------------------------------------------
+        // 答えの表示／隠す（改善版）
+        // ------------------------------------------------------------
+        function toggleAnswers() {
+            const allBlanks = document.querySelectorAll('input.blank');
+            if (!showAnswers) {
+                // 非表示 → 表示：現在の入力を保存し、正解を表示
+                savedUserInputs = {};
+                allBlanks.forEach(inp => {
+                    if (!inp.classList.contains('showing-answer')) {
+                        savedUserInputs[inp.id] = inp.value;
+                    }
+                    inp.value = inp.dataset.answer || '';
+                    inp.classList.add('showing-answer');
+                    inp.style.background = '#e3f0dc';
+                    inp.style.borderColor = '#3a7a3b';
+                    inp.style.color = '#1d4a1e';
+                    inp.style.fontWeight = '700';
+                    inp.readOnly = true;   // 表示中は編集不可に
+                });
+                showAnswers = true;
+            } else {
+                // 表示 → 非表示：保存していた入力を復元
+                allBlanks.forEach(inp => {
+                    inp.value = savedUserInputs[inp.id] || '';
+                    inp.classList.remove('showing-answer');
+                    inp.style.background = '#fffef9';
+                    inp.style.borderColor = '#cdbb91';
+                    inp.style.color = '';
+                    inp.style.fontWeight = '';
+                    inp.readOnly = false;
+                });
+                savedUserInputs = {};
+                showAnswers = false;
+            }
+            document.getElementById('toggleBtn').textContent = showAnswers ? '答えを隠す' : '答えを表示';
+        }
+
+        // ------------------------------------------------------------
+        // 採点（改善版）
+        // ------------------------------------------------------------
+        function gradeQuiz() {
+            // もし答えが表示されている場合は、ユーザー入力を復元してから採点
+            if (showAnswers) {
+                toggleAnswers();  // 非表示にし、元の入力を復元
+            }
+
+            let correctQuestions = 0;
+            const details = [];
+
+            currentQuestions.forEach((q, idx) => {
+                let allOk = true;
+                const userTexts = [];
+                for (let i = 0; i < q.ids.length; i++) {
+                    const el = document.getElementById(q.ids[i]);
+                    const user = el ? el.value : '';
+                    userTexts.push(user);
+                    const normUser = normalize(user);
+                    const normAns = normalize(q.answers[i] || '');
+                    if (normUser !== normAns) {
+                        allOk = false;
+                        if (el) {
+                            el.classList.add('wrong');
+                            el.classList.remove('correct');
+                            el.style.background = '#ffe6e0';
+                            el.style.borderColor = '#b23c1c';
+                        }
+                    } else {
+                        if (el) {
+                            el.classList.add('correct');
+                            el.classList.remove('wrong');
+                            el.style.background = '#d9efd4';
+                            el.style.borderColor = '#2c5f2d';
+                        }
+                    }
+                }
+                if (allOk) correctQuestions++;
+                const status = allOk ? '✅' : '❌';
+                const displayAnswers = q.answers.join(' / ');
+                const displayUsers = userTexts.join(' / ') || '(空白)';
+                details.push(`<li>${status} 問${idx + 1}：${displayUsers}<br><span class="small">正解：${displayAnswers}</span></li>`);
+            });
+
+            const totalQuestions = currentQuestions.length;
+            const score = totalQuestions ? Math.round(correctQuestions / totalQuestions * 100) : 0;
+            history.push(score);
+            if (history.length > 10) history.shift();
+            localStorage.setItem('spa_exercise_history_v1', JSON.stringify(history));
+            const avg = history.length ? Math.round(history.reduce((a, b) => a + b, 0) / history.length) : 0;
+
+            document.getElementById('result').innerHTML = `
+                <h3>採点結果</h3>
+                <p>正答数：${correctQuestions} / ${totalQuestions} 問　|　得点：${score}%</p>
+                <p>直近${history.length}回の平均：${avg}%</p>
+                <ul>${details.join('')}</ul>
+            `;
+        }
+
+        // ------------------------------------------------------------
+        // 履歴リセット
+        // ------------------------------------------------------------
+        function resetHistory() {
+            history = [];
+            localStorage.setItem('spa_exercise_history_v1', JSON.stringify(history));
+            document.getElementById('result').innerHTML = '<p>履歴をリセットしました。</p>';
+        }
+
+        // ------------------------------------------------------------
+        // 初期表示
+        // ------------------------------------------------------------
+        window.addEventListener('load', generateQuiz);
+    </script>
+</body>
+</html>
