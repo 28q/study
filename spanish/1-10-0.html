@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>スペイン語 点過去 単語帳</title>
+
+<style>
+body{
+    margin:0;
+    font-family:sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background:#f4f4f4;
+    user-select:none;
+}
+
+#card{
+    width:90%;
+    max-width:600px;
+    min-height:300px;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 0 15px rgba(0,0,0,.2);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:30px;
+    cursor:pointer;
+}
+
+#question{
+    font-size:2em;
+    margin-bottom:30px;
+}
+
+#answer{
+    font-size:2.2em;
+    color:#1565C0;
+}
+
+#hint{
+    position:absolute;
+    bottom:20px;
+    color:#888;
+}
+</style>
+</head>
+
+<body>
+
+<div id="card">
+    <div id="question"></div>
+    <div id="answer"></div>
+</div>
+
+<div id="hint">
+タップ：答え → 次の問題
+</div>
+
+<script>
+
+const cards = [
+
+{jp:"知る", person:"私", es:"supe"},
+{jp:"知る", person:"君", es:"supiste"},
+{jp:"知る", person:"彼・彼女", es:"supo"},
+{jp:"知る", person:"私たち", es:"supimos"},
+{jp:"知る", person:"君たち", es:"supisteis"},
+{jp:"知る", person:"彼ら", es:"supieron"},
+
+{jp:"歩く", person:"私", es:"anduve"},
+{jp:"歩く", person:"君", es:"anduviste"},
+{jp:"歩く", person:"彼・彼女", es:"anduvo"},
+{jp:"歩く", person:"私たち", es:"anduvimos"},
+{jp:"歩く", person:"君たち", es:"anduvisteis"},
+{jp:"歩く", person:"彼ら", es:"anduvieron"},
+
+{jp:"〜である", person:"私", es:"estuve"},
+{jp:"〜である", person:"君", es:"estuviste"},
+{jp:"〜である", person:"彼・彼女", es:"estuvo"},
+{jp:"〜である", person:"私たち", es:"estuvimos"},
+{jp:"〜である", person:"君たち", es:"estuvisteis"},
+{jp:"〜である", person:"彼ら", es:"estuvieron"},
+
+{jp:"できる", person:"私", es:"pude"},
+{jp:"できる", person:"君", es:"pudiste"},
+{jp:"できる", person:"彼・彼女", es:"pudo"},
+{jp:"できる", person:"私たち", es:"pudimos"},
+{jp:"できる", person:"君たち", es:"pudisteis"},
+{jp:"できる", person:"彼ら", es:"pudieron"},
+
+{jp:"持つ", person:"私", es:"tuve"},
+{jp:"持つ", person:"君", es:"tuviste"},
+{jp:"持つ", person:"彼・彼女", es:"tuvo"},
+{jp:"持つ", person:"私たち", es:"tuvimos"},
+{jp:"持つ", person:"君たち", es:"tuvisteis"},
+{jp:"持つ", person:"彼ら", es:"tuvieron"},
+
+{jp:"する・作る", person:"私", es:"hice"},
+{jp:"する・作る", person:"君", es:"hiciste"},
+{jp:"する・作る", person:"彼・彼女", es:"hizo"},
+{jp:"する・作る", person:"私たち", es:"hicimos"},
+{jp:"する・作る", person:"君たち", es:"hicisteis"},
+{jp:"する・作る", person:"彼ら", es:"hicieron"},
+
+{jp:"欲する", person:"私", es:"quise"},
+{jp:"欲する", person:"君", es:"quisiste"},
+{jp:"欲する", person:"彼・彼女", es:"quiso"},
+{jp:"欲する", person:"私たち", es:"quisimos"},
+{jp:"欲する", person:"君たち", es:"quisisteis"},
+{jp:"欲する", person:"彼ら", es:"quisieron"},
+
+{jp:"来る", person:"私", es:"vine"},
+{jp:"来る", person:"君", es:"viniste"},
+{jp:"来る", person:"彼・彼女", es:"vino"},
+{jp:"来る", person:"私たち", es:"vinimos"},
+{jp:"来る", person:"君たち", es:"vinisteis"},
+{jp:"来る", person:"彼ら", es:"vinieron"},
+
+{jp:"置く", person:"私", es:"puse"},
+{jp:"置く", person:"君", es:"pusiste"},
+{jp:"置く", person:"彼・彼女", es:"puso"},
+{jp:"置く", person:"私たち", es:"pusimos"},
+{jp:"置く", person:"君たち", es:"pusisteis"},
+{jp:"置く", person:"彼ら", es:"pusieron"}
+
+];
+
+function shuffle(array){
+    for(let i=array.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [array[i],array[j]]=[array[j],array[i]];
+    }
+}
+
+shuffle(cards);
+
+let index=0;
+let showingAnswer=false;
+
+const q=document.getElementById("question");
+const a=document.getElementById("answer");
+
+function showQuestion(){
+    if(index>=cards.length){
+        shuffle(cards);
+        index=0;
+    }
+
+    q.innerHTML=`<b>${cards[index].jp}</b><br><br>${cards[index].person}`;
+    a.textContent="";
+    showingAnswer=false;
+}
+
+function tap(){
+
+    if(!showingAnswer){
+        a.textContent=cards[index].es;
+        showingAnswer=true;
+    }else{
+        index++;
+        showQuestion();
+    }
+
+}
+
+document.getElementById("card").addEventListener("click",tap);
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
