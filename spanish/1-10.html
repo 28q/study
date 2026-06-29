@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>演習1-10：例文・完全不規則動詞（点過去）</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+            max-width: 1100px;
+            margin: 28px auto;
+            padding: 18px;
+            background: #fbf8f0;
+            color: #21313c;
+            line-height: 1.6;
+        }
+        h1,
+        h2,
+        h3 {
+            margin: 0.35em 0;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.9rem;
+            border-bottom: 3px solid #b22234;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+        .title-block {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .meta-box {
+            background: #eef5ea;
+            border-left: 8px solid #2c5f2d;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin: 18px 0 24px;
+            font-size: 0.96rem;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: #fff4de;
+            padding: 12px 16px;
+            border-radius: 20px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        button {
+            background: #2c5f2d;
+            color: #fff;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s ease, background .15s ease;
+            font-size: 0.92rem;
+        }
+        button:hover {
+            transform: scale(.98);
+            background: #214521;
+        }
+        .secondary {
+            background: #6c757d;
+        }
+        .danger {
+            background: #b23c1c;
+        }
+        select {
+            padding: 8px 12px;
+            border-radius: 24px;
+            border: 1px solid #cdbb91;
+            background: #fff;
+            font-weight: 600;
+        }
+        #timer-area {
+            font-weight: 700;
+            background: #ffe1b8;
+            padding: 6px 12px;
+            border-radius: 24px;
+            color: #b23c1c;
+            display: none;
+        }
+        .section {
+            background: #fff;
+            border: 1px solid #eadfc7;
+            border-radius: 24px;
+            padding: 18px 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+        }
+        .section h3 {
+            border-left: 6px solid #b22234;
+            padding-left: 12px;
+            margin-bottom: 14px;
+            text-align: left;
+        }
+        .note {
+            font-size: 0.88rem;
+            background: #f7f1df;
+            padding: 8px 12px;
+            border-radius: 18px;
+            margin: 8px 0 14px;
+            display: inline-block;
+        }
+        .question {
+            margin-bottom: 22px;
+            padding: 12px;
+            border-radius: 18px;
+            background: #fffdf7;
+            border: 1px solid #f1e7cf;
+        }
+        .question-text {
+            font-size: 1.02rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: #f6f1e6;
+            padding: 9px 12px;
+            border-radius: 18px;
+            display: inline-block;
+        }
+        .jp-hint {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 0.84rem;
+            color: #005f6b;
+            background: #e4f3f5;
+            padding: 3px 10px;
+            border-radius: 18px;
+        }
+        .answer-hint {
+            display: none;
+            margin-left: 10px;
+            font-size: 0.86rem;
+            color: #3d6b3d;
+            background: #eef6ea;
+            padding: 3px 9px;
+            border-radius: 18px;
+        }
+        .audio-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            vertical-align: middle;
+            color: #2c5f2d;
+            padding: 0 4px;
+            margin-left: 6px;
+        }
+        input.blank-input {
+            width: clamp(80px, 15vw, 180px);
+            min-width: 75px;
+            padding: 8px 10px;
+            font-size: 1rem;
+            border: 1px solid #cfb87c;
+            border-radius: 14px;
+            background: #fffef9;
+            text-align: center;
+            vertical-align: middle;
+            margin: 2px 4px;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+        input.blank-input:focus {
+            outline: none;
+            border-color: #2c5f2d;
+            box-shadow: 0 0 0 2px rgba(44, 95, 45, 0.18);
+        }
+        input.blank-input.correct {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+        }
+        input.blank-input:disabled {
+            background-color: #e9ecef !important;
+            color: #6c757d;
+            border-color: #ced4da !important;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        textarea.full-input {
+            width: 100%;
+            max-width: 700px;
+            padding: 10px 14px;
+            font-size: 1rem;
+            border: 1px solid #cfb87c;
+            border-radius: 14px;
+            background: #fffef9;
+            resize: vertical;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+            line-height: 1.5;
+            font-family: inherit;
+        }
+        textarea.full-input:focus {
+            outline: none;
+            border-color: #2c5f2d;
+            box-shadow: 0 0 0 2px rgba(44, 95, 45, 0.18);
+        }
+        textarea.full-input.correct {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+        }
+        table.conj-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            table-layout: fixed;
+        }
+        .conj-table th,
+        .conj-table td {
+            border: 1px solid #d9ccb0;
+            padding: 10px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .conj-table th {
+            background: #f6f1e6;
+            font-weight: 700;
+        }
+        .conj-table td.person {
+            background: #fff7ea;
+            font-weight: 600;
+            width: 18%;
+        }
+        .conj-table td.form {
+            width: 32%;
+        }
+        .conj-table input {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            border-radius: 12px;
+            text-align: center;
+        }
+        #result {
+            background: #f4f1e1;
+            border-radius: 20px;
+            padding: 14px 18px;
+            margin-top: 18px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.82rem;
+            color: #5e5e52;
+        }
+        @media (max-width: 760px) {
+            .conj-table td.person {
+                width: auto;
+            }
+            input.blank-input {
+                width: 88px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="title-block">
+        <h1>📘 演習 1-10</h1>
+        <p>例文・完全不規則動詞（点過去）</p>
+    </div>
+
+    <div class="meta-box">
+        🔹 <strong>第1問</strong>：日本語からスペイン語へ全文を記述。<br>
+        🔹 <strong>第2問</strong>：完全不規則動詞（1, 2）の点過去活用（3×2表）。不定詞は表示せず、日本語の意味のみ表示。<br><br>
+        🎯 <strong>出題モード</strong>：上部のメニューから「Full（全問）」と「Random（抜粋）」を切り替えられます。<br>
+        ✍️ <strong>判定基準</strong>：大文字・小文字は区別しません。ただしアクセント記号や「¿?」などの特殊記号は<strong>完全一致</strong>が必要です。<br>
+        （※正しい答えを入力すると、その場で空欄が<span style="color:#28a745;font-weight:700;">緑色</span>に変わります。）
+    </div>
+
+    <div class="controls">
+        <label for="modeSelect">🎯 出題モード:</label>
+        <select id="modeSelect" onchange="generateQuiz()">
+            <option value="full">Full (例文全9問 + 動詞全14問)</option>
+            <option value="random">Random (例文3問 + 動詞5問)</option>
+        </select>
+
+        <button onclick="generateQuiz()">✨ 問題生成 (シャッフル)</button>
+        <button onclick="gradeQuiz()" class="secondary">📝 総合採点</button>
+        <button onclick="toggleAnswers()" id="toggleBtn">🔎 答え表示</button>
+        <button onclick="resetHistory()" class="danger">🗑 履歴リセット</button>
+
+        <label for="timeLimit">⏱️ 制限時間:</label>
+        <select id="timeLimit">
+            <option value="0">制限なし</option>
+            <option value="180">3分</option>
+            <option value="300">5分</option>
+            <option value="480">8分</option>
+            <option value="600">10分</option>
+        </select>
+        <div id="timer-area">⏳ 残り <span id="timeDisplay">--:--</span></div>
+    </div>
+
+    <form id="quizForm"></form>
+    <div id="result"></div>
+    <div class="footer">📗 大文字・小文字は区別しませんが、アクセント記号や「¿?」は厳密に判定されます。</div>
+
+    <script>
+        // 文字列の正規化（大文字小文字を区別しない・連続スペースを1つに・対話ダッシュをハイフンに統一）
+        function normalizeStr(str) {
+            if (!str) return '';
+            return str.trim().toLowerCase()
+                .replace(/[—–]/g, '-') // em dash, en dash を通常のハイフンとして許容
+                .replace(/\s+/g, ' ');
+        }
+
+        function strictCompare(userStr, answerStr) {
+            if (!userStr || !answerStr) return false;
+            return normalizeStr(userStr) === normalizeStr(answerStr);
+        }
+
+        function shuffleArray(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function speakText(text) {
+            if (!text) return;
+            window.speechSynthesis.cancel();
+            // 音声読み上げ時に「----」は飛ばす
+            const cleanText = text.replace(/----/g, ''); 
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.88;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        let currentQuestions = [];
+        let showAnswersFlag = false;
+        let timerInterval = null;
+        let timeLeft = 0;
+        let scoreHistory = JSON.parse(localStorage.getItem('spanish_exam_1_10_history') || '[]');
+
+        // ========== データ定義 ==========
+
+        // 第1問：例文（日本語→スペイン語） 9つ
+        const exampleSentences = [
+            { jp: 'もう行くの？', es: '¿Ya te vas?' },
+            { jp: '— ううん、まだもう少し残るよ。', es: '— No, todavía me quedo un rato más.' },
+            { jp: 'お腹が空いて死にそうだ。', es: 'Me muero de hambre.' },
+            { jp: 'ヘススはいつも自分の運の悪さを愚痴っている（嘆いている）。', es: 'Jesús siempre se queja de su mala suerte.' },
+            { jp: '誰もあえて彼（彼女）に本当のことを言おうとしない。', es: 'Nadie se atreve a decirle la verdad.' },
+            { jp: 'この市ではあらゆる種類の先住民の民芸品が売られている。', es: 'En esta feria se vende artesanía indígena de toda clase.' },
+            { jp: 'ここでは交通規則が守られていない。', es: 'Aquí no se respetan las reglas de tránsito.' },
+            { jp: 'マドリードからバルセロナまで電車でどれくらい時間がかかりますか？', es: '¿Cuánto tiempo se tarda de Madrid a Barcelona en tren?' },
+            { jp: 'この町は住み心地が良い。', es: 'En esta ciudad se vive bien.' }
+        ];
+
+        // 第2問：完全不規則動詞（点過去） 14個
+        const irregularVerbs = {
+            saber: { jp: '知る', forms: ['supe', 'supiste', 'supo', 'supimos', 'supisteis', 'supieron'] },
+            andar: { jp: '歩く', forms: ['anduve', 'anduviste', 'anduvo', 'anduvimos', 'anduvisteis', 'anduvieron'] },
+            estar: { jp: '〜である、〜がある', forms: ['estuve', 'estuviste', 'estuvo', 'estuvimos', 'estuvisteis', 'estuvieron'] },
+            haber: { jp: '〜がある', forms: ['----', '----', 'hubo', '----', '----', '----'] },
+            poder: { jp: '〜できる', forms: ['pude', 'pudiste', 'pudo', 'pudimos', 'pudisteis', 'pudieron'] },
+            tener: { jp: '持つ', forms: ['tuve', 'tuviste', 'tuvo', 'tuvimos', 'tuvisteis', 'tuvieron'] },
+            hacer: { jp: 'する、作る', forms: ['hice', 'hiciste', 'hizo', 'hicimos', 'hicisteis', 'hicieron'] },
+            querer: { jp: '欲する', forms: ['quise', 'quisiste', 'quiso', 'quisimos', 'quisisteis', 'quisieron'] },
+            venir: { jp: '来る', forms: ['vine', 'viniste', 'vino', 'vinimos', 'vinisteis', 'vinieron'] },
+            poner: { jp: '置く', forms: ['puse', 'pusiste', 'puso', 'pusimos', 'pusisteis', 'pusieron'] },
+            traer: { jp: '持ってくる', forms: ['traje', 'trajiste', 'trajo', 'trajimos', 'trajisteis', 'trajeron'] },
+            decir: { jp: '言う', forms: ['dije', 'dijiste', 'dijo', 'dijimos', 'dijisteis', 'dijeron'] },
+            producir: { jp: '生産する', forms: ['produje', 'produjiste', 'produjo', 'produjimos', 'produjisteis', 'produjeron'] },
+            conducir: { jp: '運転する', forms: ['conduje', 'condujiste', 'condujo', 'condujimos', 'condujisteis', 'condujeron'] }
+        };
+
+        // ========== タイマー ==========
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            const limitSec = parseInt(document.getElementById('timeLimit').value, 10);
+            const timerDiv = document.getElementById('timer-area');
+            if (limitSec === 0) {
+                timerDiv.style.display = 'none';
+                return;
+            }
+            timeLeft = limitSec;
+            timerDiv.style.display = 'block';
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 1) {
+                    clearInterval(timerInterval);
+                    timerDiv.style.display = 'none';
+                    alert('⏰ 制限時間終了！自動採点します。');
+                    gradeQuiz();
+                } else {
+                    timeLeft--;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function toggleAnswers() {
+            showAnswersFlag = !showAnswersFlag;
+            document.querySelectorAll('.answer-hint').forEach(el => {
+                el.style.display = showAnswersFlag ? 'inline' : 'none';
+            });
+            document.getElementById('toggleBtn').innerText = showAnswersFlag ? '🔒 答え非表示' : '🔎 答え表示';
+        }
+
+        function resetHistory() {
+            scoreHistory = [];
+            localStorage.setItem('spanish_exam_1_10_history', JSON.stringify(scoreHistory));
+            document.getElementById('result').innerHTML = '<p>📊 スコア履歴をリセットしました。</p>';
+        }
+
+        // ========== リアルタイム正誤判定 ==========
+        function checkSingleInput(inputEl, answerStr) {
+            if (!inputEl || !answerStr || answerStr === '----') return;
+            if (strictCompare(inputEl.value, answerStr)) {
+                inputEl.classList.add('correct');
+            } else {
+                inputEl.classList.remove('correct');
+            }
+        }
+
+        function checkTextarea(textareaEl, answerStr) {
+            if (!textareaEl || !answerStr) return;
+            if (strictCompare(textareaEl.value, answerStr)) {
+                textareaEl.classList.add('correct');
+            } else {
+                textareaEl.classList.remove('correct');
+            }
+        }
+
+        // ========== 第1問：全文記述問題作成 ==========
+        function buildFullSentenceQuestion(sentenceData, qIndex) {
+            const q = document.createElement('div');
+            q.className = 'question';
+            q.innerHTML = `
+            <div class="question-text">${qIndex + 1}. <span class="jp-hint">📖 ${sentenceData.jp}</span></div>
+            <textarea class="full-input" id="q1_${qIndex}" rows="2" placeholder="スペイン語で全文を入力してください" autocomplete="off"></textarea>
+          `;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'audio-btn';
+            btn.textContent = '🔊';
+            btn.style.marginTop = '6px';
+            btn.onclick = () => speakText(sentenceData.es);
+            q.appendChild(btn);
+
+            const hint = document.createElement('span');
+            hint.className = 'answer-hint';
+            hint.textContent = `→ ${sentenceData.es}`;
+            hint.style.display = showAnswersFlag ? 'inline' : 'none';
+            q.appendChild(hint);
+
+            setTimeout(() => {
+                const textarea = document.getElementById(`q1_${qIndex}`);
+                if (textarea) {
+                    textarea.addEventListener('blur', () => checkTextarea(textarea, sentenceData.es));
+                    textarea.addEventListener('input', () => {
+                        if (strictCompare(textarea.value, sentenceData.es)) {
+                            textarea.classList.add('correct');
+                        } else {
+                            textarea.classList.remove('correct');
+                        }
+                    });
+                }
+            }, 0);
+
+            return {
+                node: q,
+                id: `q1_${qIndex}`,
+                answer: sentenceData.es,
+                type: 'q1',
+                jp: sentenceData.jp
+            };
+        }
+
+        // ========== 第2問：活用表作成 ==========
+        function buildConjugationTable(verbKey, verbData, qType, qIndex) {
+            const forms = verbData.forms;
+            const q = document.createElement('div');
+            q.className = 'question';
+            q.innerHTML =
+                `<div class="question-text">${qIndex + 1}. <span class="jp-hint">📖 ${verbData.jp}</span></div>`;
+
+            const table = document.createElement('table');
+            table.className = 'conj-table';
+            
+            // haberのような入力不可(----)マスを処理
+            let inputs = [];
+            let ids = [];
+            for (let i = 0; i < 6; i++) {
+                let id = `${qType}_${qIndex}_${i}`;
+                ids.push(id);
+                if (forms[i] === '----') {
+                    inputs.push(`<input class="blank-input correct" id="${id}" type="text" value="----" disabled>`);
+                } else {
+                    inputs.push(`<input class="blank-input" id="${id}" type="text" autocomplete="off">`);
+                }
+            }
+
+            table.innerHTML = `
+            <thead><tr><th>人称</th><th>活用</th><th>人称</th><th>活用</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="person">yo</td>
+                <td class="form">${inputs[0]}</td>
+                <td class="person">nosotros</td>
+                <td class="form">${inputs[3]}</td>
+              </tr>
+              <tr>
+                <td class="person">tú</td>
+                <td class="form">${inputs[1]}</td>
+                <td class="person">vosotros</td>
+                <td class="form">${inputs[4]}</td>
+              </tr>
+              <tr>
+                <td class="person">él / ella / usted</td>
+                <td class="form">${inputs[2]}</td>
+                <td class="person">ellos / ellas / ustedes</td>
+                <td class="form">${inputs[5]}</td>
+              </tr>
+            </tbody>
+          `;
+            q.appendChild(table);
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'audio-btn';
+            btn.textContent = '🔊';
+            btn.onclick = () => speakText(forms.join(' '));
+            q.appendChild(btn);
+
+            const hint = document.createElement('span');
+            hint.className = 'answer-hint';
+            hint.textContent = `→ ${forms.join(' / ')}`;
+            q.appendChild(hint);
+
+            setTimeout(() => {
+                ids.forEach((id, idx) => {
+                    if (forms[idx] !== '----') {
+                        const inputEl = document.getElementById(id);
+                        if (inputEl) {
+                            inputEl.addEventListener('input', () => checkSingleInput(inputEl, forms[idx]));
+                        }
+                    }
+                });
+            }, 0);
+
+            return {
+                node: q,
+                ids: ids,
+                answers: forms,
+                verbKey: verbKey,
+                type: qType,
+                jp: verbData.jp
+            };
+        }
+
+        // ========== メイン問題生成 ==========
+        function generateQuiz() {
+            if (timerInterval) clearInterval(timerInterval);
+            currentQuestions = [];
+            const form = document.getElementById('quizForm');
+            form.innerHTML = '';
+            document.getElementById('result').innerHTML = '';
+
+            const mode = document.getElementById('modeSelect').value;
+            let selectedSentences = [];
+            let selectedVerbs = [];
+
+            if (mode === 'full') {
+                selectedSentences = shuffleArray(exampleSentences);
+                selectedVerbs = shuffleArray(Object.keys(irregularVerbs));
+            } else {
+                selectedSentences = shuffleArray(exampleSentences).slice(0, 3);
+                selectedVerbs = shuffleArray(Object.keys(irregularVerbs)).slice(0, 5);
+            }
+
+            // ---- 第1問：例文 ----
+            const sec1 = document.createElement('div');
+            sec1.className = 'section';
+            sec1.innerHTML = `
+            <h3>第1問：日本語からスペイン語へ（全文記述）</h3>
+            <div class="note">日本語を見てスペイン語の全文を入力してください。<br>大文字・小文字は区別しませんが、アクセント記号・¿?は完全一致が必要です。（※対話ダッシュ「—」は通常のハイフン「-」でも正解になります）</div>
+          `;
+            selectedSentences.forEach((sent, idx) => {
+                const built = buildFullSentenceQuestion(sent, idx);
+                sec1.appendChild(built.node);
+                currentQuestions.push(built);
+            });
+            form.appendChild(sec1);
+
+            // ---- 第2問：完全不規則動詞 ----
+            const sec2 = document.createElement('div');
+            sec2.className = 'section';
+            sec2.innerHTML = `
+            <h3>第2問：完全不規則動詞（1, 2）の点過去活用（3×2 表）</h3>
+            <div class="note">各動詞について6人称を埋めてください。大文字・小文字は区別しませんが、アクセント記号は厳密に判定されます。</div>
+          `;
+            selectedVerbs.forEach((verbKey, idx) => {
+                const built = buildConjugationTable(verbKey, irregularVerbs[verbKey], 'q2', idx);
+                sec2.appendChild(built.node);
+                currentQuestions.push(built);
+            });
+            form.appendChild(sec2);
+
+            if (showAnswersFlag) {
+                document.querySelectorAll('.answer-hint').forEach(el => el.style.display = 'inline');
+            }
+
+            startTimer();
+        }
+
+        // ========== 総合採点 ==========
+        function gradeQuiz() {
+            if (timerInterval) clearInterval(timerInterval);
+            let correctCount = 0;
+            let totalCount = 0;
+            let html = '<h3>📋 採点結果</h3><ul style="list-style:none; padding-left:0;">';
+
+            currentQuestions.forEach((q, idx) => {
+                totalCount++;
+                let ok = true;
+                let userAnswers = [];
+                let correctAnswers = [];
+
+                if (q.type === 'q2') {
+                    for (let i = 0; i < q.ids.length; i++) {
+                        const isPlaceholder = q.answers[i] === '----';
+                        const el = document.getElementById(q.ids[i]);
+                        const userVal = el ? el.value : '';
+
+                        if (isPlaceholder) {
+                            userAnswers.push('----');
+                            correctAnswers.push('----');
+                            // placeholder は自動正解扱い
+                        } else {
+                            userAnswers.push(userVal || '(空白)');
+                            correctAnswers.push(q.answers[i]);
+                            if (!strictCompare(userVal, q.answers[i])) ok = false;
+                            
+                            if (el) {
+                                if (strictCompare(userVal, q.answers[i])) {
+                                    el.classList.add('correct');
+                                } else {
+                                    el.classList.remove('correct');
+                                }
+                            }
+                        }
+                    }
+                } else if (q.type === 'q1') {
+                    const el = document.getElementById(q.id);
+                    const userVal = el ? el.value : '';
+                    userAnswers.push(userVal || '(空白)');
+                    correctAnswers.push(q.answer);
+                    if (!strictCompare(userVal, q.answer)) ok = false;
+                    
+                    if (el) {
+                        if (strictCompare(userVal, q.answer)) {
+                            el.classList.add('correct');
+                        } else {
+                            el.classList.remove('correct');
+                        }
+                    }
+                }
+
+                if (ok) correctCount++;
+                html += `<li>${ok ? '✅' : '❌'} <strong>問${idx + 1}</strong> (${q.jp || q.verbKey || ''})<br>
+              <span style="font-size:0.92rem;">入力: ${Array.isArray(userAnswers) ? userAnswers.join(' / ') : userAnswers}<br>
+              正解: ${Array.isArray(correctAnswers) ? correctAnswers.join(' / ') : correctAnswers}</span></li><br>`;
+            });
+
+            const percent = totalCount ? Math.round(correctCount / totalCount * 100) : 0;
+            html +=
+                `</ul><p style="font-size:1.2rem;">🎯 ${correctCount} / ${totalCount} 正解 (${percent}%)</p>`;
+            scoreHistory.push(percent);
+            if (scoreHistory.length > 8) scoreHistory.shift();
+            localStorage.setItem('spanish_exam_1_10_history', JSON.stringify(scoreHistory));
+            const avg = scoreHistory.length ? Math.round(scoreHistory.reduce((a, b) => a + b, 0) / scoreHistory.length) : 0;
+            html += `<p>📈 直近${scoreHistory.length}回の平均点: ${avg}%</p>`;
+            document.getElementById('result').innerHTML = html;
+        }
+
+        window.generateQuiz = generateQuiz;
+        window.gradeQuiz = gradeQuiz;
+        window.toggleAnswers = toggleAnswers;
+        window.resetHistory = resetHistory;
+        window.speakText = speakText;
+
+        window.onload = () => {
+            // 初期状態はFullモードで生成
+            generateQuiz();
+        };
+    </script>
+</body>
+</html>
