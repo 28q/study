@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>対訳ビューア</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background: #f7f7f7;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* 左右カラム */
+    .column {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 2rem 2.5rem;
+      background: #ffffff;
+      line-height: 1.8;
+      font-size: 1rem;
+      color: #1e1e1e;
+      scroll-behavior: smooth;
+    }
+
+    .column.left {
+      background: #fcfcfc;
+      border-right: 1px solid #ddd;
+    }
+
+    .column.right {
+      background: #fafafa;
+    }
+
+    /* 各段落 */
+    .para {
+      margin-bottom: 1.8rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+      cursor: default;
+    }
+
+    .para:hover {
+      background-color: #fff3e0;
+      box-shadow: 0 0 0 2px #ffb74d inset;
+    }
+
+    /* ハイライト（オレンジ） */
+    .para.highlight {
+      background-color: #ffcc80 !important;
+      box-shadow: 0 0 0 3px #ef6c00 inset !important;
+      border-radius: 6px;
+    }
+
+    /* 段落番号（デバッグ用にもなるが、なくても良い） */
+    .para .label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #999;
+      margin-right: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* スクロールバーを少し細く */
+    .column::-webkit-scrollbar {
+      width: 8px;
+    }
+    .column::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+    .column::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+    .column::-webkit-scrollbar-thumb:hover {
+      background: #aaa;
+    }
+
+    /* レスポンシブ：小さな画面では縦に積む */
+    @media (max-width: 768px) {
+      .app {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+      }
+      .column {
+        height: 50vh;
+        flex: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 1.2rem 1.5rem;
+      }
+      .column.right {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <!-- 左カラム：英文 -->
+    <div class="column left" id="leftCol">
+      <div class="para" data-index="0">
+        <span class="label">EN</span>
+        Walter Pitts was used to being bullied. He’d been born into a tough family in Prohibition-era Detroit, where his father, a boilermaker, had no trouble raising his fists to get his way. The neighborhood boys weren’t much better. One afternoon in 1935, they chased him through the streets until he ducked into the local library to hide. The library was familiar ground, where he had taught himself Greek, Latin, logic, and mathematics—better than home, where his father insisted he drop out of school and go to work. Outside, the world was messy. Inside, it all made sense.
+      </div>
+      <div class="para" data-index="1">
+        <span class="label">EN</span>
+        Not wanting to risk another run-in that night, Pitts stayed hidden until the library closed for the evening. Alone, he wandered through the stacks of books until he came across Principia Mathematica, a three-volume tome written by Bertrand Russell and Alfred Whitehead between 1910 and 1913, which attempted to reduce all of mathematics to pure logic. Pitts sat down and began to read. For three days he remained in the library until he had read each volume cover to cover—nearly 2,000 pages in all—and had identified several mistakes. Deciding that Bertrand Russell himself needed to know about these, the boy drafted a letter to Russell detailing the errors. Not only did Russell write back, he was so impressed that he invited Pitts to study with him as a graduate student at Cambridge University in England. Pitts couldn’t oblige him, though—he was only 12 years old. But three years later, when he heard that Russell would be visiting the University of Chicago, the 15-year-old ran away from home and headed for Illinois. He never saw his family again.
+      </div>
+      <div class="para" data-index="2">
+        <span class="label">EN</span>
+        In 1923, the year that Walter Pitts was born, a 25-year-old Warren McCulloch was also digesting the Principia. But that is where the similarities ended—McCulloch could not have come from a more different world. Born into a well-to-do East Coast family of lawyers, doctors, theologians, and engineers, McCulloch attended a private boys’ academy in New Jersey, then studied mathematics at Haverford College in Pennsylvania, then philosophy and psychology at Yale. In 1923 he was at Columbia, where he was studying “experimental aesthetics” and was about to earn his medical degree in neurophysiology. But McCulloch was a philosopher at heart. He wanted to know what it means to know. Freud had just published The Ego and the Id, and psychoanalysis was all the rage. McCulloch didn’t buy it—he felt certain that somehow the mysterious workings and failings of the mind were rooted in the purely mechanical firings of neurons in the brain.
+      </div>
+      <div class="para" data-index="3">
+        <span class="label">EN</span>
+        Though they started at opposite ends of the socioeconomic spectrum, McCulloch and Pitts were destined to live, work, and die together. Along the way, they would create the first mechanistic theory of the mind, the first computational approach to neuroscience, the logical design of modern computers, and the pillars of artificial intelligence. But this is more than a story about a fruitful research collaboration. It is also about the bonds of friendship, the fragility of the mind, and the limits of logic’s ability to redeem a messy and imperfect world.
+      </div>
+      <div class="para" data-index="4">
+        <span class="label">EN</span>
+        Standing face to face, they were an unlikely pair. McCulloch, 42 years old when he met Pitts, was a confident, gray-eyed, wild-bearded, chain-smoking philosopher-poet who lived on whiskey and ice cream and never went to bed before 4:00 a.m. Pitts, 18, was small and shy, with a long forehead that prematurely aged him, and a squat, ducklike, bespectacled face. McCulloch was a respected scientist. Pitts was a homeless runaway.
+      </div>
+      <div class="para" data-index="5">
+        <span class="label">EN</span>
+        He’d been hanging around the University of Chicago, working a menial job and sneaking into Russell’s lectures, where he met a young medical student named Jerome Lettvin. It was Lettvin who introduced the two men. The moment they spoke, they realized they shared a hero in common: Gottfried Leibniz. The 17th-century philosopher had attempted to create an alphabet of human thought, each letter of which represented a concept and could be combined and manipulated according to a set of logical rules to compute all knowledge—a vision that promised to transform the imperfect outside world into the rational sanctuary of a library.
+      </div>
+      <div class="para" data-index="6">
+        <span class="label">EN</span>
+        McCulloch explained to Pitts that he was trying to model the brain with a Leibnizian logical calculus. He had been inspired by the Principia, in which Russell and Whitehead tried to show that all of mathematics could be built from the ground up using basic, indisputable logic. Their building block was the proposition—the simplest possible statement, either true or false. From there, they employed the fundamental operations of logic, like the conjunction (“and”), disjunction (“or”), and negation (“not”), to link propositions into increasingly complicated networks. From these simple propositions, they derived the full complexity of modern mathematics.
+      </div>
+      <div class="para" data-index="7">
+        <span class="label">EN</span>
+        Which got McCulloch thinking about neurons. He knew that each of the brain’s nerve cells only fires after a minimum threshold has been reached: enough of its neighboring nerve cells must send signals across the neuron’s synapses before it will fire off its own electrical spike. It occurred to McCulloch that this setup was binary—either the neuron fires or it doesn’t. A neuron’s signal, he realized, is a proposition, and neurons seemed to work like logic gates, taking in multiple inputs and producing a single output. By varying a neuron’s firing threshold, it could be made to perform “and,” “or,” and “not” functions.
+      </div>
+      <div class="para" data-index="8">
+        <span class="label">EN</span>
+        Fresh from reading a new paper by a British mathematician named Alan Turing which proved the possibility of a machine that could compute any function (so long as it was possible to do so in a finite number of steps), McCulloch became convinced that the brain was just such a machine—one which uses logic encoded in neural networks to compute. Neurons, he thought, could be linked together by the rules of logic to build more complex chains of thought, in the same way that the Principia linked chains of propositions to build complex mathematics.
+      </div>
+      <div class="para" data-index="9">
+        <span class="label">EN</span>
+        As McCulloch explained his project, Pitts understood it immediately, and knew exactly which mathematical tools could be used. McCulloch, enchanted, invited the teen to live with him and his family in Hinsdale, a rural suburb on the outskirts of Chicago. The Hinsdale household was a bustling, free-spirited bohemia. Chicago intellectuals and literary types constantly dropped by the house to discuss poetry, psychology, and radical politics while Spanish Civil War and union songs blared from the phonograph. But late at night, when McCulloch’s wife, Rook, and the three children went to bed, McCulloch and Pitts alone would pour the whiskey, hunker down, and attempt to build a computational brain from the neuron up.
+      </div>
+    </div>
+
+    <!-- 右カラム：和訳 -->
+    <div class="column right" id="rightCol">
+      <div class="para" data-index="0">
+        <span class="label">JA</span>
+        ウォルター・ピッツはいじめられることに慣れていた。彼は禁酒法時代のデトロイトの荒っぽい家庭に生まれた。ボイラー職人の父親は、自分の思い通りにするために拳を振るうことをためらわなかった。近所の少年たちも似たようなものだった。1935年のある午後、彼らはピッツを追いかけまわし、彼は隠れるために地元の図書館に逃げ込んだ。図書館は慣れ親しんだ場所だった。そこで彼はギリシャ語、ラテン語、論理学、数学を独学で学んでいた。学校をやめて働けと言う父親のいる家よりも、図書館の方がよほど居心地がよかった。外の世界は混乱していたが、図書館の中ではすべてが理にかなっていた。
+      </div>
+      <div class="para" data-index="1">
+        <span class="label">JA</span>
+        その夜、再びいざこざに遭う危険を冒したくなかったピッツは、図書館が閉まるまで隠れていた。一人になった彼は書架の間を歩き回り、バートランド・ラッセルとアルフレッド・ホワイトヘッドが1910年から1913年にかけて著した全3巻の大著『プリンキピア・マテマティカ』を見つけた。それは数学のすべてを純粋な論理学に還元しようと試みた書物だった。ピッツは座り込んで読み始めた。彼は3日間図書館に留まり、全巻を最初から最後まで、合計約2000ページを読み通し、いくつかの誤りを発見した。バートランド・ラッセル本人にこれを知らせるべきだと考えた少年は、誤りを詳述した手紙をラッセルに送った。ラッセルは返事を書いただけでなく、たいそう感銘を受け、ピッツをケンブリッジ大学の大学院生として迎えたいと誘った。しかし、ピッツはその申し出に応じることができなかった。まだ12歳だったのだ。だが3年後、ラッセルがシカゴ大学を訪れると聞いた15歳のピッツは家出をし、イリノイへと向かった。彼が家族に会うことは二度となかった。
+      </div>
+      <div class="para" data-index="2">
+        <span class="label">JA</span>
+        ウォルター・ピッツが生まれた1923年、25歳のウォーレン・マカロックもまた『プリンキピア』を読みふけっていた。しかし、二人の共通点はそこまでだった。マカロックはピッツとはまったく対照的な世界の出身だった。弁護士、医者、神学者、技術者を輩出した東海岸の裕福な家庭に生まれ、ニュージャージーの私立男子校に通い、ペンシルベニアのハバフォード大学で数学を学び、その後イェール大学で哲学と心理学を修めた。1923年当時、彼はコロンビア大学で「実験美学」を研究しており、まもなく神経生理学の医学博士号を取得するところだった。しかし、マカロックは根っからの哲学者だった。彼は「知るとはどういうことか」を知りたかった。フロイトが『自我とエス』を発表したばかりで、精神分析が大流行していた。マカロックはそれを信じなかった。彼は、心の不可解な働きや欠陥は、何らかの形で脳内のニューロンの純粋に機械的な発火に根ざしているに違いないと確信していた。
+      </div>
+      <div class="para" data-index="3">
+        <span class="label">JA</span>
+        社会経済的な両極端から出発したマカロックとピッツだったが、二人は共に生き、働き、そして生涯を終える運命にあった。その過程で、彼らは最初の心の機械論、神経科学への最初の計算論的アプローチ、現代のコンピュータの論理設計、そして人工知能の礎を築くことになる。しかし、これは実りある研究協力の物語以上のものである。それは友情の絆、心のもろさ、そして混乱し不完全な世界を救済しようとする論理の能力の限界についての物語でもある。
+      </div>
+      <div class="para" data-index="4">
+        <span class="label">JA</span>
+        向かい合って立つ二人は、似つかわしくない組み合わせだった。ピッツと出会った当時42歳だったマカロックは、自信に満ち、灰色の目をした、髭をじゃんじゃんに生やし、たばこをチェーンスモーキングする哲学者風の詩人で、ウイスキーとアイスクリームを常とし、午前4時に寝ることは決してなかった。18歳のピッツは小柄で内気、長い額が彼を実年齢より老けて見せ、ずんぐりとしたアヒルのような、眼鏡をかけた顔をしていた。マカロックは尊敬される科学者だった。ピッツはホームレスの家出少年だった。
+      </div>
+      <div class="para" data-index="5">
+        <span class="label">JA</span>
+        彼はシカゴ大学をうろつき、単純労働をしながらラッセルの講義に潜り込んでいた。そこでジェローム・レトヴィンという名の若い医学生と出会った。二人を引き合わせたのはレトヴィンだった。言葉を交わした瞬間、彼らは共通の英雄、ゴットフリート・ライプニッツの存在に気づいた。17世紀の哲学者ライプニッツは、人間の思考のアルファベットを作ろうと試みていた。その各文字は概念を表し、論理規則に従って組み合わせ操作することで、あらゆる知識を計算できるという構想だった。それは、不完全な外界を図書館のような理性的な聖域に変えると約束するビジョンだった。
+      </div>
+      <div class="para" data-index="6">
+        <span class="label">JA</span>
+        マカロックはピッツに、自分がライプニッツ的な論理演算を用いて脳をモデル化しようとしていると説明した。彼が触発されたのは『プリンキピア』であり、ラッセルとホワイトヘッドはそこで、数学のすべてが基本的で議論の余地のない論理から一から構築できることを示そうとした。彼らの構成要素は命題、つまり真か偽のどちらかである最も単純な文だった。そこから、彼らは連言（「かつ」）、選言（「または」）、否定（「でない」）といった論理の基本操作を用いて、命題をますます複雑なネットワークへと結びつけていった。これらの単純な命題から、彼らは現代数学の完全な複雑性を導き出した。
+      </div>
+      <div class="para" data-index="7">
+        <span class="label">JA</span>
+        このことがマカロックにニューロンについて考えさせた。彼は、脳の各神経細胞が発火するのは、最小の閾値に達した後だということを知っていた。つまり、十分な数の隣接する神経細胞がニューロンのシナプスを越えて信号を送り、それが自身の電気的スパイクを発射する。マカロックは、この仕組みが二進法的であることに気づいた。ニューロンは発火するか、しないかである。彼は、ニューロンの信号は命題であり、ニューロンは論理ゲートのように働き、複数の入力を受け取って単一の出力を生み出すように見えると理解した。ニューロンの発火閾値を変えることで、「かつ」「または」「でない」の機能を実行させることができるのだ。
+      </div>
+      <div class="para" data-index="8">
+        <span class="label">JA</span>
+        有限のステップ数で可能であるならば、あらゆる関数を計算できる機械の可能性を証明した、アラン・チューリングというイギリスの数学者による新しい論文を読んだばかりのマカロックは、脳こそがまさにそのような機械、つまり論理を使って計算するニューラルネットワークに符号化された機械であると確信するようになった。彼は、『プリンキピア』が命題の連鎖を結びつけて複雑な数学を構築したのと同じように、ニューロンを論理の規則によって結びつけ、より複雑な思考の連鎖を構築できると考えた。
+      </div>
+      <div class="para" data-index="9">
+        <span class="label">JA</span>
+        マカロックが自分の計画を説明すると、ピッツは即座にそれを理解し、どの数学的道具が使えるかを正確に知っていた。魅了されたマカロックは、この十代の少年をシカゴ郊外の田舎町ヒンズデールにある自宅に住まないかと誘った。ヒンズデールの家は、活気にあふれ自由奔放なボヘミアン的空間だった。シカゴの知識人や文学者たちが絶えず家に立ち寄り、詩や心理学、過激な政治について議論し、スペイン内戦や労働組合の歌が蓄音機から鳴り響いた。しかし、深夜になりマカロックの妻ルークと3人の子供たちが寝静まると、マカロックとピッツだけがウイスキーを注ぎ、腰を据えて、ニューロンから計算する脳を構築しようと試みるのだった。
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const leftCol = document.getElementById('leftCol');
+      const rightCol = document.getElementById('rightCol');
+
+      // ---------- スクロール同期 ----------
+      let isSyncing = false;
+
+      function syncScroll(source, target) {
+        if (isSyncing) return;
+        isSyncing = true;
+        target.scrollTop = source.scrollTop;
+        // 念のため次のフレームでフラグを戻す（スクロールイベントが連続で発生しても大丈夫なように）
+        requestAnimationFrame(() => {
+          isSyncing = false;
+        });
+      }
+
+      leftCol.addEventListener('scroll', function() {
+        syncScroll(leftCol, rightCol);
+      });
+
+      rightCol.addEventListener('scroll', function() {
+        syncScroll(rightCol, leftCol);
+      });
+
+      // ---------- ホバーハイライト（左の英文にホバーで左右対応箇所をハイライト） ----------
+      const leftParas = leftCol.querySelectorAll('.para');
+      const rightParas = rightCol.querySelectorAll('.para');
+
+      // インデックスを data-index から取得（既に設定済み）
+      // マウスオーバー／リーブの処理
+      leftParas.forEach((leftPara) => {
+        const index = parseInt(leftPara.dataset.index, 10);
+        if (isNaN(index)) return;
+
+        const rightPara = rightParas[index];
+        if (!rightPara) return;
+
+        // マウスが左の段落に入ったら左右両方にハイライト
+        leftPara.addEventListener('mouseenter', function() {
+          // 全てのハイライトを一度クリア
+          leftParas.forEach(p => p.classList.remove('highlight'));
+          rightParas.forEach(p => p.classList.remove('highlight'));
+
+          leftPara.classList.add('highlight');
+          if (rightPara) {
+            rightPara.classList.add('highlight');
+          }
+        });
+
+        // マウスが左の段落から離れたらハイライトを外す
+        leftPara.addEventListener('mouseleave', function() {
+          leftPara.classList.remove('highlight');
+          if (rightPara) {
+            rightPara.classList.remove('highlight');
+          }
+        });
+      });
+
+      // オプション：右側の段落にホバーしたときも、左側をハイライトしたい場合は以下のコードを追加
+      // ただし要件には「左画面の英文をポインタで指しているとき」とあるので、左→右の一方方向のみ実装。
+      // 必要に応じてコメントを外す。
+      /*
+      rightParas.forEach((rightPara) => {
+        const index = parseInt(rightPara.dataset.index, 10);
+        if (isNaN(index)) return;
+        const leftPara = leftParas[index];
+        if (!leftPara) return;
+
+        rightPara.addEventListener('mouseenter', function() {
+          leftParas.forEach(p => p.classList.remove('highlight'));
+          rightParas.forEach(p => p.classList.remove('highlight'));
+          rightPara.classList.add('highlight');
+          if (leftPara) leftPara.classList.add('highlight');
+        });
+
+        rightPara.addEventListener('mouseleave', function() {
+          rightPara.classList.remove('highlight');
+          if (leftPara) leftPara.classList.remove('highlight');
+        });
+      });
+      */
+
+      // カラムからマウスが出たときにハイライトを全て消す（オプション）
+      // 左カラム全体のマウスリーブ
+      leftCol.addEventListener('mouseleave', function() {
+        leftParas.forEach(p => p.classList.remove('highlight'));
+        rightParas.forEach(p => p.classList.remove('highlight'));
+      });
+
+      // 右カラム全体のマウスリーブ（もし右側ホバーを実装した場合に備えて）
+      rightCol.addEventListener('mouseleave', function() {
+        // 左カラムにマウスが入っていない場合にのみ消す？
+        // 簡易的に、右カラムから出ても左のハイライトは維持する（左側にマウスがあるかもしれないので）
+        // ここでは何もしない
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
