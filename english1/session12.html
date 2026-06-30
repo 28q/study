@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>対訳ビューア - Session 12</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background: #f7f7f7;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .column {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 2rem 2.5rem;
+      background: #ffffff;
+      line-height: 1.8;
+      font-size: 1rem;
+      color: #1e1e1e;
+      scroll-behavior: smooth;
+    }
+
+    .column.left {
+      background: #fcfcfc;
+      border-right: 1px solid #ddd;
+    }
+
+    .column.right {
+      background: #fafafa;
+    }
+
+    .para {
+      margin-bottom: 1.8rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+      cursor: default;
+    }
+
+    .para:hover {
+      background-color: #fff3e0;
+      box-shadow: 0 0 0 2px #ffb74d inset;
+    }
+
+    .para.highlight {
+      background-color: #ffcc80 !important;
+      box-shadow: 0 0 0 3px #ef6c00 inset !important;
+      border-radius: 6px;
+    }
+
+    .para .label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #999;
+      margin-right: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .column::-webkit-scrollbar {
+      width: 8px;
+    }
+    .column::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+    .column::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+    .column::-webkit-scrollbar-thumb:hover {
+      background: #aaa;
+    }
+
+    @media (max-width: 768px) {
+      .app {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+      }
+      .column {
+        height: 50vh;
+        flex: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 1.2rem 1.5rem;
+      }
+      .column.right {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- 左カラム：英文 -->
+    <div class="column left" id="leftCol">
+      <div class="para" data-index="0">
+        <span class="label">EN</span>
+        Session 12<br />
+        The Man Who Tried to Redeem the World with Logic<br />
+        Part II<br />
+        Amanda Gefter
+      </div>
+      <div class="para" data-index="1">
+        <span class="label">EN</span>
+        Before Pitts’s arrival, McCulloch had hit a wall: there was nothing stopping chains of neurons from twisting themselves into loops, so that the output of the last neuron in a chain became the input of the first—a neural network chasing its tail. McCulloch had no idea how to model that mathematically. From the point of view of logic, a loop smells a lot like paradox: the consequent becomes the antecedent, the effect becomes the cause. McCulloch had been labeling each link in the chain with a time stamp, so that if the first neuron fired at time t, the next one fired at t + 1, and so on. But when the chains circled back, t + 1 suddenly came before t.
+      </div>
+      <div class="para" data-index="2">
+        <span class="label">EN</span>
+        Pitts knew how to tackle the problem. He used special mathematics, which deals with numbers that circle back around on themselves like the hours of a clock. He showed McCulloch that the paradox of time t + 1 coming before time t wasn’t a paradox at all, because in his calculations “before” and “after” lost their meaning. Time was removed from the equation altogether. If one were to see a lightning bolt flash on the sky, the eyes would send a signal to the brain, shuffling it through a chain of neurons. Starting with any given neuron in the chain, you could retrace the signal’s steps and figure out just how long ago lightning struck. Unless, that is, the chain is a loop. In that case, the information encoding the lightning bolt just spins in circles, endlessly. It bears no connection to the time at which the lightning actually occurred. It becomes, as McCulloch put it, “an idea wrenched out of time.” In other words, a memory.
+      </div>
+      <div class="para" data-index="3">
+        <span class="label">EN</span>
+        By the time Pitts finished calculating, he and McCulloch had on their hands a mechanistic model of the mind, the first application of computation to the brain, and the first argument that the brain, at bottom, is an information processor. By stringing simple binary neurons into chains and loops, they had shown that the brain could implement every possible logical operation and compute anything that could be computed by one of Turing’s hypothetical machines. Thanks to those ouroboric loops, they had also found a way for the brain to abstract a piece of information, hang on to it, and abstract it yet again, creating rich, elaborate hierarchies of lingering ideas in a process we call “thinking.”
+      </div>
+      <div class="para" data-index="4">
+        <span class="label">EN</span>
+        McCulloch and Pitts wrote up their findings in a now-seminal paper, “A Logical Calculus of Ideas Immanent in Nervous Activity,” published in the Bulletin of Mathematical Biophysics. Their model was vastly oversimplified for a biological brain, but it succeeded at showing a proof of principle. Thought, they said, need not be shrouded in Freudian mysticism or engaged in struggles between ego and id. “For the first time in the history of science,” McCulloch announced to a group of philosophy students, “we know how we know.”
+      </div>
+      <div class="para" data-index="5">
+        <span class="label">EN</span>
+        Pitts had found in McCulloch everything he had needed—acceptance, friendship, his intellectual other half, the father he never had. Although he had only lived in Hinsdale for a short time, the runaway would refer to McCulloch’s house as home for the rest of his life. For his part, McCulloch was just as enamored. In Pitts he had found a kindred spirit, his “bootlegged collaborator,” and a mind with the technical prowess to bring McCulloch’s half-formed notions to life. As he put it in a letter of reference about Pitts, “Would I had him with me always.”
+      </div>
+      <div class="para" data-index="6">
+        <span class="label">EN</span>
+        Pitts was soon to make a similar impression on one of the towering intellectual figures of the 20th century, the mathematician, philosopher, and founder of cybernetics, Norbert Wiener. In 1943 Lettvin brought Pitts into Wiener’s office at the Massachusetts Institute of Technology. Wiener didn’t introduce himself or make small talk. He simply walked Pitts over to a blackboard where he was working out a mathematical proof. As Wiener worked, Pitts chimed in with questions and suggestions. According to Lettvin, by the time they reached the second blackboard, it was clear that Wiener had found his new right-hand man. Wiener would later write that Pitts was “without question the strongest young scientist whom I have ever met . . . I should be extremely astonished if he does not prove to be one of the two or three most important scientists of his generation, not merely in America but in the world at large.”
+      </div>
+      <div class="para" data-index="7">
+        <span class="label">EN</span>
+        So impressed was Wiener that he promised Pitts a PhD in mathematics at MIT, despite the fact that he had never graduated from high school—something that the strict rules at the University of Chicago prohibited. It was an offer Pitts couldn’t refuse. By the fall of 1943 Pitts had moved into a Cambridge apartment, was enrolled as a special student at MIT, and was studying under one of the most influential scientists in the world. It was quite a long way from blue-collar Detroit.
+      </div>
+      <div class="para" data-index="8">
+        <span class="label">EN</span>
+        Wiener wanted Pitts to make his model of the brain more realistic. Despite the leaps Pitts and McCulloch had made, their work had made barely a ripple among brain scientists—in part because the symbolic logic they’d employed was hard to decipher, but also because their stark and oversimplified model didn’t capture the full messiness of the biological brain. Wiener, however, understood the implications of what they’d done, and knew that a more realistic model would be game-changing. He also realized that it ought to be possible for Pitts’s neural networks to be implemented in manmade machines, ushering in his dream of a cybernetic revolution. Wiener figured that if Pitts was going to make a realistic model of the brain’s 100 billion interconnected neurons, he was going to need statistics on his side. And statistics and probability theory were Wiener’s area of expertise. After all, it had been Wiener who discovered a precise mathematical definition of information: the higher the probability, the higher the entropy and the lower the information content.
+      </div>
+      <div class="para" data-index="9">
+        <span class="label">EN</span>
+        As Pitts began his work at MIT, he realized that although genetics must encode for gross neural features, there was no way our genes could predetermine the trillions of synaptic connections in the brain—the amount of information it would require was untenable. It must be the case, he figured, that we all start out with essentially random neural networks—highly probable states containing negligible information (a thesis that continues to be debated to the present day). He suspected that by altering the thresholds of neurons over time, randomness could give way to order and information could emerge. He set out to model the process using statistical mechanics. Wiener excitedly cheered him on, because he knew if such a model were embodied in a machine, that machine could learn.
+      </div>
+      <div class="para" data-index="10">
+        <span class="label">EN</span>
+        “I now understand at once some seven-eighths of what Wiener says, which I am told is something of an achievement,” Pitts wrote in a letter to McCulloch in December of 1943, some three months after he’d arrived. His work with Wiener was “to constitute the first adequate discussion of statistical mechanics, understood in the most general possible sense, so that it includes for example the problem of deriving the psychological, or statistical, laws of behavior from the microscopic laws of neurophysiology . . . Doesn’t it sound fine?”
+      </div>
+    </div>
+
+    <!-- 右カラム：和訳 -->
+    <div class="column right" id="rightCol">
+      <div class="para" data-index="0">
+        <span class="label">JA</span>
+        Session 12<br />
+        The Man Who Tried to Redeem the World with Logic Part II<br />
+        アマンダ・ゲフター
+      </div>
+      <div class="para" data-index="1">
+        <span class="label">JA</span>
+        ピッツが来る前、マカロックは壁にぶつかっていた。ニューロンの連鎖が自分自身に巻きついてループになるのを止めるものが何もなかったのだ。そのため連鎖の最後のニューロンの出力が最初のニューロンの入力になり、神経ネットワークが自分の尾を追いかけるようになってしまった。マカロックには、それを数学的にモデル化する方法がまったくなかった。論理の観点から見ると、ループはパラドックスとよく似ている。結果が前提になり、効果が原因になる。マカロックは連鎖の一つ一つのつながりにタイムスタンプをつけていたので、最初のニューロンが時刻 t に発火すれば、次のニューロンは t + 1 に発火する、といった具合だった。しかし連鎖が輪になると、突然 t + 1 が t より前に来てしまうのだった。
+      </div>
+      <div class="para" data-index="2">
+        <span class="label">JA</span>
+        ピッツはこの問題に取り組む方法を知っていた。彼は時計の針のように自分自身に戻ってくる数を扱う特別な数学を用いた。そして、t + 1 が時刻 t より前に来るというパラドックスはまったくパラドックスではないことをマカロックに示した。なぜなら、彼の計算では「前」と「後」が意味を失うからだった。時間は方程式から完全に取り除かれた。稲妻が空に光るのを見たとすると、目は脳に信号を送り、ニューロンの連鎖を通してその信号を送り届ける。連鎖内のあるニューロンから始めて信号の経路をたどれば、ちょうどどれくらい前に稲妻が光ったのかを割り出すことができる。ただし、その連鎖がループになっていなければの話だが。その場合、稲妻を符号化した情報はただ円を描いてぐるぐると無限に回り続ける。それは稲妻が実際に起きた時間とは何のつながりも持たない。それは、マカロックが言ったように、「時間から引きちぎられた観念」になる。言い換えれば、記憶だ。
+      </div>
+      <div class="para" data-index="3">
+        <span class="label">JA</span>
+        ピッツが計算を終える頃には、彼とマカロックの手には、心の機械論的モデル、脳への最初の計算論的応用、そして脳がつまるところ情報処理装置であるという最初の論拠があった。単純な二値のニューロンを連鎖やループに結びつけることによって、彼らは脳があらゆる可能な論理演算を実行でき、チューリングの仮想機械で計算できるものは何でも計算できることを示した。あのウロボロスのようなループのおかげで、彼らはまた、脳が情報のかけらを抽象化し、それをつかんでおき、さらに再び抽象化し、「思考」と呼ばれる過程の中で、滞留する観念の豊かで入り組んだ階層構造を作り出す方法も見出したのだった。
+      </div>
+      <div class="para" data-index="4">
+        <span class="label">JA</span>
+        マカロックとピッツは、自分たちの発見を『数理生物物理学報』に発表された、今では草分け的な論文「神経活動に内在する観念の論理演算」にまとめた。彼らのモデルは生物学的な脳にしては極度に単純化されすぎていたが、原理の証明を示すことには成功した。思考は、フロイト的神秘主義に覆われたり、自我とエスの間の葛藤に巻き込まれたりする必要はない、と彼らは言った。「科学の歴史上初めて、われわれはどうやって知るのかを知った」と、マカロックは哲学の学生たちの集まりに向かって宣言した。
+      </div>
+      <div class="para" data-index="5">
+        <span class="label">JA</span>
+        ピッツはマカロックの中に、自分が必要としていたものすべて——受容、友情、知的なもう一人の自分、得ることのできなかった父親——を見出していた。ほんの短い期間しかヒンズデールに住まなかったにもかかわらず、この家出少年は生涯にわたってマカロックの家をわが家と呼ぶことになる。マカロックの方も同じく夢中だった。彼はピッツの中に、気の合う魂、自分の「非合法な協力者」、そしてマカロックの未完成の着想に命を吹き込む技術的力量を持った頭脳を見出した。ピッツについての推薦状の中で彼が述べたように、「彼がいつも私と共にいてくれたらと思う」。
+      </div>
+      <div class="para" data-index="6">
+        <span class="label">JA</span>
+        ピッツはまもなく、20世紀の傑出した知的巨人の一人であり、数学者、哲学者、そしてサイバネティクスの創始者であるノーバート・ウィーナーにも同様の印象を与えることになる。1943年、レトヴィンはピッツをマサチューセッツ工科大学のウィーナーの研究室に連れて行った。ウィーナーは自己紹介も世間話もしなかった。ただピッツを、自分が数学の証明を解いている黒板のところへ連れて行った。ウィーナーが作業する間、ピッツは質問や提案を口にした。レトヴィンによると、彼らが二枚目の黒板に達する頃には、ウィーナーが新たな右腕を見つけたことは明らかだった。後にウィーナーは、ピッツは「疑いなく、私がこれまでに会った中で最も優秀な若手科学者である……もし彼が、アメリカだけでなく世界中で、自分の世代の二、三の最も重要な科学者の一人にならないとしたら、私は極めて驚くだろう」と書いている。
+      </div>
+      <div class="para" data-index="7">
+        <span class="label">JA</span>
+        ウィーナーはいたく感銘を受け、高校を卒業したことがないにもかかわらず——シカゴ大学の厳格な規則では許されないことだったが——ピッツにMITでの数学の博士号を約束した。それはピッツが断れない申し出だった。1943年の秋までに、ピッツはケンブリッジのアパートに引っ越し、MITに特別学生として在籍し、世界で最も影響力のある科学者の一人のもとで学んでいた。それはブルーカラーのデトロイトからはるかに遠い道のりだった。
+      </div>
+      <div class="para" data-index="8">
+        <span class="label">JA</span>
+        ウィーナーはピッツに、脳のモデルをもっと現実的なものにしてほしいと思っていた。ピッツとマカロックが成し遂げた飛躍にもかかわらず、彼らの研究は脳科学者の間ではほとんど波紋を呼んでいなかった。一つには、彼らが用いた記号論理学が解読しにくかったからであり、また、彼らの厳格で過度に単純化されたモデルが生物学的な脳の完全な複雑さを捉えていなかったからでもある。しかしウィーナーは、彼らがやったことの持つ意味を理解しており、より現実的なモデルが状況を一変させるだろうと知っていた。また彼は、ピッツの神経ネットワークを人工の機械に実装することが可能であるはずで、そうすれば自分のサイバネティクス革命の夢が到来するだろうとも気づいていた。ウィーナーは、ピッツが脳の1000億もの相互接続されたニューロンの現実的なモデルを作るつもりなら、統計学を味方につける必要があると考えた。そして統計学と確率論はウィーナーの専門分野だった。何しろ、情報の正確な数学的定義を発見したのはウィーナーだったのだ。確率が高ければ高いほど、エントロピーは高くなり、情報量は少なくなる。
+      </div>
+      <div class="para" data-index="9">
+        <span class="label">JA</span>
+        MITで研究を始めたピッツは、遺伝学が脳の大まかな特徴を符号化しているに違いないとはいえ、遺伝子が脳内の何兆ものシナプス結合をあらかじめ決定することは不可能だと悟った——それに必要とされる情報量は到底容認できるものではなかったのだ。彼は、私たちは皆、本質的にランダムな神経ネットワーク——無視できるほどの情報しか含まない、確率の非常に高い状態——から出発するに違いないと考えた（このテーゼは現在に至るまで議論され続けている）。彼は、時間をかけてニューロンの閾値を変えていくことで、ランダムさが秩序に道を譲り、情報が出現しうるのではないかと考えた。彼は統計力学を使ってその過程をモデル化することに取りかかった。ウィーナーは興奮して彼を応援した。なぜなら、もしそのようなモデルが機械に組み込まれれば、その機械は学習できると知っていたからだ。
+      </div>
+      <div class="para" data-index="10">
+        <span class="label">JA</span>
+        「今ではウィーナーの言うことのおよそ八分の七はすぐに理解できる。それはちょっとした達成だと聞かされている」と、ピッツは到着から約三か月後の1943年12月にマカロックに宛てた手紙に書いた。ウィーナーとの研究は「統計力学の最初の適切な議論を構成するものになるだろう。それは可能な限り最も一般的な意味で理解され、例えば、神経生理学の微視的法則から行動の心理学的、あるいは統計的法則を導き出す問題を含む……素晴らしいと思わないか？」
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const leftCol = document.getElementById('leftCol');
+      const rightCol = document.getElementById('rightCol');
+
+      let isSyncing = false;
+
+      function syncScroll(source, target) {
+        if (isSyncing) return;
+        isSyncing = true;
+        target.scrollTop = source.scrollTop;
+        requestAnimationFrame(() => {
+          isSyncing = false;
+        });
+      }
+
+      leftCol.addEventListener('scroll', function() {
+        syncScroll(leftCol, rightCol);
+      });
+
+      rightCol.addEventListener('scroll', function() {
+        syncScroll(rightCol, leftCol);
+      });
+
+      const leftParas = leftCol.querySelectorAll('.para');
+      const rightParas = rightCol.querySelectorAll('.para');
+
+      leftParas.forEach((leftPara) => {
+        const index = parseInt(leftPara.dataset.index, 10);
+        if (isNaN(index)) return;
+
+        const rightPara = rightParas[index];
+        if (!rightPara) return;
+
+        leftPara.addEventListener('mouseenter', function() {
+          leftParas.forEach(p => p.classList.remove('highlight'));
+          rightParas.forEach(p => p.classList.remove('highlight'));
+
+          leftPara.classList.add('highlight');
+          if (rightPara) {
+            rightPara.classList.add('highlight');
+          }
+        });
+
+        leftPara.addEventListener('mouseleave', function() {
+          leftPara.classList.remove('highlight');
+          if (rightPara) {
+            rightPara.classList.remove('highlight');
+          }
+        });
+      });
+
+      leftCol.addEventListener('mouseleave', function() {
+        leftParas.forEach(p => p.classList.remove('highlight'));
+        rightParas.forEach(p => p.classList.remove('highlight'));
+      });
+    })();
+  </script>
+</body>
+</html>
