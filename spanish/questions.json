@@ -1,0 +1,409 @@
+[
+  // ===== abrir =====
+  { "verb": "abrir", "tense": "点過去", "jp": "（例）昨日、窓を開けた。", "sentence": "Ayer ( _____ ) la ventana.", "answer": "abrí" },
+  { "verb": "abrir", "tense": "線過去", "jp": "（例）毎朝、店を開けていた。", "sentence": "Cada mañana ( _____ ) la tienda.", "answer": "abría" },
+  { "verb": "abrir", "tense": "現在完了", "jp": "（例）もうプレゼントを開けた。", "sentence": "Ya ( _____ ) el regalo.", "answer": "he abierto" },
+  { "verb": "abrir", "tense": "過去完了", "jp": "（例）私が着いた時には、もうドアを開けていた。", "sentence": "Cuando llegué, ya ( _____ ) la puerta.", "answer": "había abierto" },
+
+  // ===== acostarse =====
+  { "verb": "acostarse", "tense": "点過去", "jp": "（例）昨日、早く寝た。", "sentence": "Ayer ( _____ ) temprano.", "answer": "me acosté" },
+  { "verb": "acostarse", "tense": "線過去", "jp": "（例）いつも10時に寝ていた。", "sentence": "Siempre ( _____ ) a las diez.", "answer": "me acostaba" },
+  { "verb": "acostarse", "tense": "現在完了", "jp": "（例）もう寝た。", "sentence": "Ya ( _____ ).", "answer": "me he acostado" },
+  { "verb": "acostarse", "tense": "過去完了", "jp": "（例）君が着いた時には、もう寝ていた。", "sentence": "Ya ( _____ ) cuando llegaste.", "answer": "me había acostado" },
+
+  // ===== andar =====
+  { "verb": "andar", "tense": "点過去", "jp": "（例）昨日、公園を歩いた。", "sentence": "Ayer ( _____ ) por el parque.", "answer": "anduve" },
+  { "verb": "andar", "tense": "線過去", "jp": "（例）子供の頃、よく歩いた。", "sentence": "De niño, ( _____ ) mucho.", "answer": "andaba" },
+  { "verb": "andar", "tense": "現在完了", "jp": "（例）今日は10キロ歩いた。", "sentence": "Hoy ( _____ ) diez kilómetros.", "answer": "he andado" },
+  { "verb": "andar", "tense": "過去完了", "jp": "（例）疲れた時には、もうかなり歩いていた。", "sentence": "Ya ( _____ ) bastante cuando me cansé.", "answer": "había andado" },
+
+  // ===== apetecer =====
+  { "verb": "apetecer", "tense": "点過去", "jp": "（例）昨日、アイスが食べたくなった。", "sentence": "Ayer ( _____ ) un helado.", "answer": "me apeteció" },
+  { "verb": "apetecer", "tense": "線過去", "jp": "（例）昔はいつも朝にコーヒーが飲みたかった。", "sentence": "Siempre ( _____ ) café por la mañana.", "answer": "me apetecía" },
+  { "verb": "apetecer", "tense": "現在完了", "jp": "（例）もう外出したい気分だ。", "sentence": "Ya ( _____ ) salir.", "answer": "me ha apetecido" },
+  { "verb": "apetecer", "tense": "過去完了", "jp": "（例）彼が着いた時には、もう休みたくなっていた。", "sentence": "Cuando llegó, ya ( _____ ) descansar.", "answer": "me había apetecido" },
+
+  // ===== aprender =====
+  { "verb": "aprender", "tense": "点過去", "jp": "（例）昨日、その課を学んだ。", "sentence": "Ayer ( _____ ) la lección.", "answer": "aprendí" },
+  { "verb": "aprender", "tense": "線過去", "jp": "（例）いつも早く覚えた。", "sentence": "Siempre ( _____ ) rápido.", "answer": "aprendía" },
+  { "verb": "aprender", "tense": "現在完了", "jp": "（例）もう真実を知った。", "sentence": "Ya ( _____ ) la verdad.", "answer": "he aprendido" },
+  { "verb": "aprender", "tense": "過去完了", "jp": "（例）彼が来た時には、もうすべてを学んでいた。", "sentence": "Cuando llegó, ya ( _____ ) todo.", "answer": "había aprendido" },
+
+  // ===== ayudarse =====
+  { "verb": "ayudarse", "tense": "点過去", "jp": "（例）昨日、マニュアルで助けた（自分を）。", "sentence": "Ayer ( _____ ) con un manual.", "answer": "me ayudé" },
+  { "verb": "ayudarse", "tense": "線過去", "jp": "（例）いつもインターネットで助けていた。", "sentence": "Siempre ( _____ ) de internet.", "answer": "me ayudaba" },
+  { "verb": "ayudarse", "tense": "現在完了", "jp": "（例）もう十分助けた。", "sentence": "Ya ( _____ ) suficiente.", "answer": "me he ayudado" },
+  { "verb": "ayudarse", "tense": "過去完了", "jp": "（例）君が着いた時には、もう助けていた。", "sentence": "Ya ( _____ ) cuando llegaste.", "answer": "me había ayudado" },
+
+  // ===== beber =====
+  { "verb": "beber", "tense": "点過去", "jp": "（例）昨日、水を飲んだ。", "sentence": "Ayer ( _____ ) agua.", "answer": "bebí" },
+  { "verb": "beber", "tense": "線過去", "jp": "（例）いつもコーヒーを飲んでいた。", "sentence": "Siempre ( _____ ) café.", "answer": "bebía" },
+  { "verb": "beber", "tense": "現在完了", "jp": "（例）もう十分飲んだ。", "sentence": "Ya ( _____ ) bastante.", "answer": "he bebido" },
+  { "verb": "beber", "tense": "過去完了", "jp": "（例）私が着いた時には、もう全部飲んでいた。", "sentence": "Cuando llegué, ya ( _____ ) todo.", "answer": "había bebido" },
+
+  // ===== buscar =====
+  { "verb": "buscar", "tense": "点過去", "jp": "（例）昨日、鍵を探した。", "sentence": "Ayer ( _____ ) las llaves.", "answer": "busqué" },
+  { "verb": "buscar", "tense": "線過去", "jp": "（例）いつも答えを探していた。", "sentence": "Siempre ( _____ ) respuestas.", "answer": "buscaba" },
+  { "verb": "buscar", "tense": "現在完了", "jp": "（例）もうあちこち探した。", "sentence": "Ya ( _____ ) por todas partes.", "answer": "he buscado" },
+  { "verb": "buscar", "tense": "過去完了", "jp": "（例）彼が来た時には、もう書類を探していた。", "sentence": "Cuando llegó, ya ( _____ ) el documento.", "answer": "había buscado" },
+
+  // ===== haber =====
+  { "verb": "haber", "tense": "点過去", "jp": "（例）昨日、パーティーがあった。", "sentence": "Ayer ( _____ ) una fiesta.", "answer": "hubo" },
+  { "verb": "haber", "tense": "線過去", "jp": "（例）いつも人がたくさんいた。", "sentence": "Siempre ( _____ ) mucha gente.", "answer": "había" },
+  { "verb": "haber", "tense": "現在完了", "jp": "（例）もう問題が起きた。", "sentence": "Ya ( _____ ) problemas.", "answer": "ha habido" },
+  { "verb": "haber", "tense": "過去完了", "jp": "（例）私が着いた時には、すでに事故が起きていた。", "sentence": "Cuando llegué, ya ( _____ ) un accidente.", "answer": "había habido" },
+
+  // ===== caber =====
+  { "verb": "caber", "tense": "点過去", "jp": "（例）昨日、車に入らなかった。", "sentence": "Ayer no ( _____ ) en el coche.", "answer": "cupe" },
+  { "verb": "caber", "tense": "線過去", "jp": "（例）以前はこの席に入らなかった。", "sentence": "Antes no ( _____ ) en este asiento.", "answer": "cabía" },
+  { "verb": "caber", "tense": "現在完了", "jp": "（例）一度もこの箱に入ったことがない。", "sentence": "Nunca ( _____ ) en esa caja.", "answer": "he cabido" },
+  { "verb": "caber", "tense": "過去完了", "jp": "（例）試した時には、もう入らなかった。", "sentence": "Cuando lo intenté, ya no ( _____ ) más.", "answer": "había cabido" },
+
+  // ===== caer =====
+  { "verb": "caer", "tense": "点過去", "jp": "（例）昨日、自転車から落ちた。", "sentence": "Ayer ( _____ ) de la bicicleta.", "answer": "caí" },
+  { "verb": "caer", "tense": "線過去", "jp": "（例）いつも同じ罠に引っかかっていた。", "sentence": "Siempre ( _____ ) en la misma trampa.", "answer": "caía" },
+  { "verb": "caer", "tense": "現在完了", "jp": "（例）もう気がついた。", "sentence": "Ya ( _____ ) en la cuenta.", "answer": "he caído" },
+  { "verb": "caer", "tense": "過去完了", "jp": "（例）気づいた時には、もう間違いに陥っていた。", "sentence": "Cuando me di cuenta, ya ( _____ ) en el error.", "answer": "había caído" },
+
+  // ===== comer =====
+  { "verb": "comer", "tense": "点過去", "jp": "（例）昨日、ピザを食べた。", "sentence": "Ayer ( _____ ) pizza.", "answer": "comí" },
+  { "verb": "comer", "tense": "線過去", "jp": "（例）いつも1時に食べていた。", "sentence": "Siempre ( _____ ) a la una.", "answer": "comía" },
+  { "verb": "comer", "tense": "現在完了", "jp": "（例）もう食べた。", "sentence": "Ya ( _____ ).", "answer": "he comido" },
+  { "verb": "comer", "tense": "過去完了", "jp": "（例）君が着いた時には、もう食べていた。", "sentence": "Cuando llegaste, ya ( _____ ).", "answer": "había comido" },
+
+  // ===== concluir =====
+  { "verb": "concluir", "tense": "点過去", "jp": "（例）昨日、報告書をまとめた。", "sentence": "Ayer ( _____ ) el informe.", "answer": "concluí" },
+  { "verb": "concluir", "tense": "線過去", "jp": "（例）いつも仕事を時間通りに終えていた。", "sentence": "Siempre ( _____ ) mis tareas a tiempo.", "answer": "concluía" },
+  { "verb": "concluir", "tense": "現在完了", "jp": "（例）もうプロジェクトを終えた。", "sentence": "Ya ( _____ ) el proyecto.", "answer": "he concluido" },
+  { "verb": "concluir", "tense": "過去完了", "jp": "（例）私が去った時には、もう会議を終えていた。", "sentence": "Cuando me fui, ya ( _____ ) la reunión.", "answer": "había concluido" },
+
+  // ===== conducir =====
+  { "verb": "conducir", "tense": "点過去", "jp": "（例）昨日、海岸まで運転した。", "sentence": "Ayer ( _____ ) hasta la playa.", "answer": "conduje" },
+  { "verb": "conducir", "tense": "線過去", "jp": "（例）以前は毎日運転していた。", "sentence": "Antes ( _____ ) todos los días.", "answer": "conducía" },
+  { "verb": "conducir", "tense": "現在完了", "jp": "（例）一度もトラックを運転したことがない。", "sentence": "Nunca ( _____ ) un camión.", "answer": "he conducido" },
+  { "verb": "conducir", "tense": "過去完了", "jp": "（例）止められた時には、もう何時間も運転していた。", "sentence": "Cuando me detuvieron, ya ( _____ ) muchas horas.", "answer": "había conducido" },
+
+  // ===== conocer =====
+  { "verb": "conocer", "tense": "点過去", "jp": "（例）昨日、彼の母に会った。", "sentence": "Ayer ( _____ ) a su madre.", "answer": "conocí" },
+  { "verb": "conocer", "tense": "線過去", "jp": "（例）あのバーではいつも新しい人に会っていた。", "sentence": "Siempre ( _____ ) gente nueva en ese bar.", "answer": "conocía" },
+  { "verb": "conocer", "tense": "現在完了", "jp": "（例）今日、特別な人に会った。", "sentence": "Hoy ( _____ ) a alguien especial.", "answer": "he conocido" },
+  { "verb": "conocer", "tense": "過去完了", "jp": "（例）一昨日にはもう彼に会っていた。", "sentence": "Antes de ayer, ya lo ( _____ ).", "answer": "había conocido" },
+
+  // ===== construir =====
+  { "verb": "construir", "tense": "点過去", "jp": "（例）昨日、模型を作った。", "sentence": "Ayer ( _____ ) una maqueta.", "answer": "construí" },
+  { "verb": "construir", "tense": "線過去", "jp": "（例）子どもの頃、砂の城を作っていた。", "sentence": "De niño ( _____ ) castillos de arena.", "answer": "construía" },
+  { "verb": "construir", "tense": "現在完了", "jp": "（例）もう家具を組み立てた。", "sentence": "Ya ( _____ ) el mueble.", "answer": "he construido" },
+  { "verb": "construir", "tense": "過去完了", "jp": "（例）彼らが着いた時には、もう家を建てていた。", "sentence": "Cuando llegaron, ya ( _____ ) la casa.", "answer": "había construido" },
+
+  // ===== contar =====
+  { "verb": "contar", "tense": "点過去", "jp": "（例）昨日、君に秘密を話した。", "sentence": "Ayer te ( _____ ) un secreto.", "answer": "conté" },
+  { "verb": "contar", "tense": "線過去", "jp": "（例）いつも私に話を聞かせてくれた。", "sentence": "Siempre me ( _____ ) historias.", "answer": "contaba" },
+  { "verb": "contar", "tense": "現在完了", "jp": "（例）もうすべて話した。", "sentence": "Ya te lo ( _____ ) todo.", "answer": "he contado" },
+  { "verb": "contar", "tense": "過去完了", "jp": "（例）彼が入って来た時には、もう話していた。", "sentence": "Cuando entró, ya lo ( _____ ).", "answer": "había contado" },
+
+  // ===== decir =====
+  { "verb": "decir", "tense": "点過去", "jp": "（例）昨日、君に真実を言った。", "sentence": "Ayer te ( _____ ) la verdad.", "answer": "dije" },
+  { "verb": "decir", "tense": "線過去", "jp": "（例）いつも同じことを言っていた。", "sentence": "Siempre ( _____ ) lo mismo.", "answer": "decía" },
+  { "verb": "decir", "tense": "現在完了", "jp": "（例）もう「はい」と言った。", "sentence": "Ya ( _____ ) que sí.", "answer": "he dicho" },
+  { "verb": "decir", "tense": "過去完了", "jp": "（例）出かける前にもう言ってあった。", "sentence": "Antes de irme, ya lo ( _____ ).", "answer": "había dicho" },
+
+  // ===== descubrir =====
+  { "verb": "descubrir", "tense": "点過去", "jp": "（例）昨日、宝を見つけた。", "sentence": "Ayer ( _____ ) un tesoro.", "answer": "descubrí" },
+  { "verb": "descubrir", "tense": "線過去", "jp": "（例）いつも新しいことを発見していた。", "sentence": "Siempre ( _____ ) cosas nuevas.", "answer": "descubría" },
+  { "verb": "descubrir", "tense": "現在完了", "jp": "（例）何か信じられないものを発見した！", "sentence": "¡ ( _____ ) algo increíble!", "answer": "he descubierto" },
+  { "verb": "descubrir", "tense": "過去完了", "jp": "（例）私が着いた時には、もうそれを発見していた。", "sentence": "Cuando llegué, ya lo ( _____ ).", "answer": "había descubierto" },
+
+  // ===== doler =====
+  { "verb": "doler", "tense": "点過去", "jp": "（例）昨日、頭が痛かった。", "sentence": "Ayer me ( _____ ) la cabeza.", "answer": "dolió" },
+  { "verb": "doler", "tense": "線過去", "jp": "（例）いつも走った後に背中が痛んでいた。", "sentence": "Siempre me ( _____ ) la espalda.", "answer": "dolía" },
+  { "verb": "doler", "tense": "現在完了", "jp": "（例）こんなに痛かったことは一度もない。", "sentence": "Nunca me ( _____ ) tanto.", "answer": "ha dolido" },
+  { "verb": "doler", "tense": "過去完了", "jp": "（例）医者に行った時には、もう一週間痛んでいた。", "sentence": "Cuando fui al médico, ya me ( _____ ) por una semana.", "answer": "había dolido" },
+
+  // ===== dormir =====
+  { "verb": "dormir", "tense": "点過去", "jp": "（例）昨日、8時間寝た。", "sentence": "Ayer ( _____ ) ocho horas.", "answer": "dormí" },
+  { "verb": "dormir", "tense": "線過去", "jp": "（例）以前はもっと短く寝ていた。", "sentence": "Antes ( _____ ) menos.", "answer": "dormía" },
+  { "verb": "dormir", "tense": "現在完了", "jp": "（例）今日はよく眠れなかった。", "sentence": "Hoy no ( _____ ) bien.", "answer": "he dormido" },
+  { "verb": "dormir", "tense": "過去完了", "jp": "（例）目覚ましが鳴った時には、もう十分寝ていた。", "sentence": "Cuando sonó el despertador, ya ( _____ ) suficiente.", "answer": "había dormido" },
+
+  // ===== ducharse =====
+  { "verb": "ducharse", "tense": "点過去", "jp": "（例）昨日、水のシャワーを浴びた。", "sentence": "Ayer ( _____ ) con agua fría.", "answer": "me duché" },
+  { "verb": "ducharse", "tense": "線過去", "jp": "（例）いつも朝にシャワーを浴びていた。", "sentence": "Siempre ( _____ ) por la mañana.", "answer": "me duchaba" },
+  { "verb": "ducharse", "tense": "現在完了", "jp": "（例）もうシャワーを浴びた。", "sentence": "Ya ( _____ ).", "answer": "me he duchado" },
+  { "verb": "ducharse", "tense": "過去完了", "jp": "（例）君が着いた時には、もうシャワーを浴びていた。", "sentence": "Cuando llegaste, ya ( _____ ).", "answer": "me había duchado" },
+
+  // ===== encantar =====
+  { "verb": "encantar", "tense": "点過去", "jp": "（例）昨日、その映画がとても気に入った。", "sentence": "Ayer me ( _____ ) la película.", "answer": "encantó" },
+  { "verb": "encantar", "tense": "線過去", "jp": "（例）子どもの頃、チョコレートが大好きだった。", "sentence": "De niño me ( _____ ) el chocolate.", "answer": "encantaba" },
+  { "verb": "encantar", "tense": "現在完了", "jp": "（例）こんなに街が気に入ったことはない。", "sentence": "Nunca me ( _____ ) tanto una ciudad.", "answer": "ha encantado" },
+  { "verb": "encantar", "tense": "過去完了", "jp": "（例）彼に会う前から、彼の音楽が大好きだった。", "sentence": "Antes de conocerlo, ya me ( _____ ) su música.", "answer": "había encantado" },
+
+  // ===== encontrar =====
+  { "verb": "encontrar", "tense": "点過去", "jp": "（例）昨日、鍵を見つけた。", "sentence": "Ayer ( _____ ) mis llaves.", "answer": "encontré" },
+  { "verb": "encontrar", "tense": "線過去", "jp": "（例）いつもソファで小銭を見つけていた。", "sentence": "Siempre ( _____ ) monedas en el sofá.", "answer": "encontraba" },
+  { "verb": "encontrar", "tense": "現在完了", "jp": "（例）もう解決策を見つけた。", "sentence": "Ya ( _____ ) la solución.", "answer": "he encontrado" },
+  { "verb": "encontrar", "tense": "過去完了", "jp": "（例）君が電話してきた時には、もう見つけていた。", "sentence": "Cuando me llamaste, ya lo ( _____ ).", "answer": "había encontrado" },
+
+  // ===== escuchar =====
+  { "verb": "escuchar", "tense": "点過去", "jp": "（例）昨日、音楽を聴いた。", "sentence": "Ayer ( _____ ) música.", "answer": "escuché" },
+  { "verb": "escuchar", "tense": "線過去", "jp": "（例）いつもラジオを聴いていた。", "sentence": "Siempre ( _____ ) la radio.", "answer": "escuchaba" },
+  { "verb": "escuchar", "tense": "現在完了", "jp": "（例）もうその歌を聴いた。", "sentence": "Ya ( _____ ) esa canción.", "answer": "he escuchado" },
+  { "verb": "escuchar", "tense": "過去完了", "jp": "（例）彼が来た時には、もうニュースを聴いていた。", "sentence": "Cuando llegó, ya ( _____ ) las noticias.", "answer": "había escuchado" },
+
+  // ===== estar =====
+  { "verb": "estar", "tense": "点過去", "jp": "（例）昨日、家にいた。", "sentence": "Ayer ( _____ ) en casa.", "answer": "estuve" },
+  { "verb": "estar", "tense": "線過去", "jp": "（例）子どもの頃はいつも機嫌がよかった。", "sentence": "Cuando eras niño, siempre ( _____ ) contento.", "answer": "estaba" },
+  { "verb": "estar", "tense": "現在完了", "jp": "（例）一度も中国に行ったことがない。", "sentence": "Nunca ( _____ ) en China.", "answer": "he estado" },
+  { "verb": "estar", "tense": "過去完了", "jp": "（例）引っ越す前にもう何度かここに来ていた。", "sentence": "Antes de mudarme, ya ( _____ ) aquí varias veces.", "answer": "había estado" },
+
+  // ===== estudiar =====
+  { "verb": "estudiar", "tense": "点過去", "jp": "（例）昨日、スペイン語を勉強した。", "sentence": "Ayer ( _____ ) español.", "answer": "estudié" },
+  { "verb": "estudiar", "tense": "線過去", "jp": "（例）いつも夜に勉強していた。", "sentence": "Siempre ( _____ ) de noche.", "answer": "estudiaba" },
+  { "verb": "estudiar", "tense": "現在完了", "jp": "（例）もうそのテーマを勉強した。", "sentence": "Ya ( _____ ) el tema.", "answer": "he estudiado" },
+  { "verb": "estudiar", "tense": "過去完了", "jp": "（例）試験が始まった時には、もうすべて勉強していた。", "sentence": "Cuando empezó el examen, ya ( _____ ) todo.", "answer": "había estudiado" },
+
+  // ===== gustar =====
+  { "verb": "gustar", "tense": "点過去", "jp": "（例）昨日、その料理が気に入った。", "sentence": "Ayer me ( _____ ) la comida.", "answer": "gustó" },
+  { "verb": "gustar", "tense": "線過去", "jp": "（例）以前はコーヒーが好きではなかった。", "sentence": "Antes no me ( _____ ) el café.", "answer": "gustaba" },
+  { "verb": "gustar", "tense": "現在完了", "jp": "（例）こんなに本が好きになったことはない。", "sentence": "Nunca me ( _____ ) tanto un libro.", "answer": "ha gustado" },
+  { "verb": "gustar", "tense": "過去完了", "jp": "（例）試す前から、そのアイデアは気に入っていた。", "sentence": "Antes de probarlo, ya me ( _____ ) la idea.", "answer": "había gustado" },
+
+  // ===== hacer =====
+  { "verb": "hacer", "tense": "点過去", "jp": "（例）昨日、宿題をした。", "sentence": "Ayer ( _____ ) la tarea.", "answer": "hice" },
+  { "verb": "hacer", "tense": "線過去", "jp": "（例）以前は毎日運動していた。", "sentence": "Antes ( _____ ) ejercicio todos los días.", "answer": "hacía" },
+  { "verb": "hacer", "tense": "現在完了", "jp": "（例）もう予約をした。", "sentence": "Ya ( _____ ) la reserva.", "answer": "he hecho" },
+  { "verb": "hacer", "tense": "過去完了", "jp": "（例）私が着いた時には、もう夕食を作っていた。", "sentence": "Cuando llegué, ya ( _____ ) la cena.", "answer": "había hecho" },
+
+  // ===== hablar =====
+  { "verb": "hablar", "tense": "点過去", "jp": "（例）昨日、彼と話した。", "sentence": "Ayer ( _____ ) con él.", "answer": "hablé" },
+  { "verb": "hablar", "tense": "線過去", "jp": "（例）いつもたくさん話していた。", "sentence": "Siempre ( _____ ) mucho.", "answer": "hablaba" },
+  { "verb": "hablar", "tense": "現在完了", "jp": "（例）もう上司と話した。", "sentence": "Ya ( _____ ) con el jefe.", "answer": "he hablado" },
+  { "verb": "hablar", "tense": "過去完了", "jp": "（例）私が知った時には、もう彼女と話していた。", "sentence": "Cuando me enteré, ya ( _____ ) con ella.", "answer": "había hablado" },
+
+  // ===== importar =====
+  { "verb": "importar", "tense": "点過去", "jp": "（例）昨日は彼の言ったことはどうでもよかった。", "sentence": "Ayer no me ( _____ ) lo que dijo.", "answer": "importó" },
+  { "verb": "importar", "tense": "線過去", "jp": "（例）以前はお金のことは気にしていなかった。", "sentence": "Antes no me ( _____ ) el dinero.", "answer": "importaba" },
+  { "verb": "importar", "tense": "現在完了", "jp": "（例）彼の意見は一度も気になったことがない。", "sentence": "Nunca me ( _____ ) su opinión.", "answer": "ha importado" },
+  { "verb": "importar", "tense": "過去完了", "jp": "（例）決断した時には、もうどうでもよくなっていた。", "sentence": "Cuando tomé la decisión, ya no me ( _____ ).", "answer": "había importado" },
+
+  // ===== interesar =====
+  { "verb": "interesar", "tense": "点過去", "jp": "（例）昨日、そのドキュメンタリーに興味がわいた。", "sentence": "Ayer me ( _____ ) ese documental.", "answer": "interesó" },
+  { "verb": "interesar", "tense": "線過去", "jp": "（例）子どもの頃はいつも科学に興味があった。", "sentence": "Siempre me ( _____ ) la ciencia.", "answer": "interesaba" },
+  { "verb": "interesar", "tense": "現在完了", "jp": "（例）政治には一度も興味を持ったことがない。", "sentence": "Nunca me ( _____ ) la política.", "answer": "ha interesado" },
+  { "verb": "interesar", "tense": "過去完了", "jp": "（例）講演の前から、そのテーマに興味を持っていた。", "sentence": "Antes de la conferencia, ya me ( _____ ) el tema.", "answer": "había interesado" },
+
+  // ===== invertir =====
+  { "verb": "invertir", "tense": "点過去", "jp": "（例）昨日、株に投資した。", "sentence": "Ayer ( _____ ) dinero en acciones.", "answer": "invertí" },
+  { "verb": "invertir", "tense": "線過去", "jp": "（例）以前はそのプロジェクトに多くの時間を費やしていた。", "sentence": "Antes ( _____ ) mucho tiempo en ese proyecto.", "answer": "invertía" },
+  { "verb": "invertir", "tense": "現在完了", "jp": "（例）もう十分投資した。", "sentence": "Ya ( _____ ) suficiente.", "answer": "he invertido" },
+  { "verb": "invertir", "tense": "過去完了", "jp": "（例）気がついた時には、もう投資しすぎていた。", "sentence": "Cuando me di cuenta, ya ( _____ ) demasiado.", "answer": "había invertido" },
+
+  // ===== invitar =====
+  { "verb": "invitar", "tense": "点過去", "jp": "（例）昨日、マリアを招待した。", "sentence": "Ayer ( _____ ) a María.", "answer": "invité" },
+  { "verb": "invitar", "tense": "線過去", "jp": "（例）いつも友達を招待していた。", "sentence": "Siempre ( _____ ) a sus amigos.", "answer": "invitaba" },
+  { "verb": "invitar", "tense": "現在完了", "jp": "（例）もう全員を招待した。", "sentence": "Ya ( _____ ) a todos.", "answer": "he invitado" },
+  { "verb": "invitar", "tense": "過去完了", "jp": "（例）君が着いた時には、もう他の人たちを招待していた。", "sentence": "Cuando llegaste, ya ( _____ ) a los demás.", "answer": "había invitado" },
+
+  // ===== ir =====
+  { "verb": "ir", "tense": "点過去", "jp": "（例）昨日、映画館に行った。", "sentence": "Ayer ( _____ ) al cine.", "answer": "fui" },
+  { "verb": "ir", "tense": "線過去", "jp": "（例）子どもの頃、同じ学校に通っていた。", "sentence": "De niño ( _____ ) a la misma escuela.", "answer": "iba" },
+  { "verb": "ir", "tense": "現在完了", "jp": "（例）もうそのレストランに行ったことがある。", "sentence": "Ya ( _____ ) a ese restaurante.", "answer": "he ido" },
+  { "verb": "ir", "tense": "過去完了", "jp": "（例）私が着いた時には、もう家に帰っていた。", "sentence": "Cuando llegué, ya ( _____ ) a casa.", "answer": "había ido" },
+
+  // ===== jugar =====
+  { "verb": "jugar", "tense": "点過去", "jp": "（例）昨日、サッカーをした。", "sentence": "Ayer ( _____ ) al fútbol.", "answer": "jugué" },
+  { "verb": "jugar", "tense": "線過去", "jp": "（例）小さい頃、公園で遊んでいた。", "sentence": "De pequeño ( _____ ) en el parque.", "answer": "jugaba" },
+  { "verb": "jugar", "tense": "現在完了", "jp": "（例）一度もテニスをしたことがない。", "sentence": "Nunca ( _____ ) al tenis.", "answer": "he jugado" },
+  { "verb": "jugar", "tense": "過去完了", "jp": "（例）雨が降り始めた時には、もう十分遊んでいた。", "sentence": "Cuando empezó a llover, ya ( _____ ) suficiente.", "answer": "había jugado" },
+
+  // ===== lavarse =====
+  { "verb": "lavarse", "tense": "点過去", "jp": "（例）昨日、手を洗った。", "sentence": "Ayer ( _____ ) las manos.", "answer": "me lavé" },
+  { "verb": "lavarse", "tense": "線過去", "jp": "（例）いつも冷水で顔を洗っていた。", "sentence": "Siempre ( _____ ) la cara con agua fría.", "answer": "me lavaba" },
+  { "verb": "lavarse", "tense": "現在完了", "jp": "（例）もう歯を磨いた。", "sentence": "Ya ( _____ ) los dientes.", "answer": "me he lavado" },
+  { "verb": "lavarse", "tense": "過去完了", "jp": "（例）気がついた時には、もう洗っていた。", "sentence": "Cuando me di cuenta, ya ( _____ ).", "answer": "me había lavado" },
+
+  // ===== leer =====
+  { "verb": "leer", "tense": "点過去", "jp": "（例）昨日、本を読んだ。", "sentence": "Ayer ( _____ ) un libro.", "answer": "leí" },
+  { "verb": "leer", "tense": "線過去", "jp": "（例）いつも寝る前に読書していた。", "sentence": "Siempre ( _____ ) antes de dormir.", "answer": "leía" },
+  { "verb": "leer", "tense": "現在完了", "jp": "（例）もうその記事を読んだ。", "sentence": "Ya ( _____ ) ese artículo.", "answer": "he leído" },
+  { "verb": "leer", "tense": "過去完了", "jp": "（例）君が勧めてくれた時には、もう読んでいた。", "sentence": "Cuando me lo recomendaste, ya lo ( _____ ).", "answer": "había leído" },
+
+  // ===== levantarse =====
+  { "verb": "levantarse", "tense": "点過去", "jp": "（例）昨日、6時に起きた。", "sentence": "Ayer ( _____ ) a las seis.", "answer": "me levanté" },
+  { "verb": "levantarse", "tense": "線過去", "jp": "（例）以前はとても早く起きていた。", "sentence": "Antes ( _____ ) muy temprano.", "answer": "me levantaba" },
+  { "verb": "levantarse", "tense": "現在完了", "jp": "（例）今日、頭痛で目が覚めた。", "sentence": "Hoy ( _____ ) con dolor de cabeza.", "answer": "me he levantado" },
+  { "verb": "levantarse", "tense": "過去完了", "jp": "（例）目覚ましが鳴った時には、もう起きていた。", "sentence": "Cuando sonó el despertador, ya ( _____ ).", "answer": "me había levantado" },
+
+  // ===== llamarse =====
+  { "verb": "llamarse", "tense": "点過去", "jp": "（例）昨日、自分を勇敢だと呼んだ。", "sentence": "Ayer ( _____ ) valiente.", "answer": "me llamé" },
+  { "verb": "llamarse", "tense": "線過去", "jp": "（例）いつも同じように名乗っていた。", "sentence": "Siempre ( _____ ) de la misma manera.", "answer": "me llamaba" },
+  { "verb": "llamarse", "tense": "現在完了", "jp": "（例）一度もそんなふうに名乗ったことがない。", "sentence": "Nunca ( _____ ) así.", "answer": "me he llamado" },
+  { "verb": "llamarse", "tense": "過去完了", "jp": "（例）気づいた時には、もう別の名前で名乗っていた。", "sentence": "Cuando me di cuenta, ya ( _____ ) de otra forma.", "answer": "me había llamado" },
+
+  // ===== mirarse =====
+  { "verb": "mirarse", "tense": "点過去", "jp": "（例）昨日、鏡で自分を見た。", "sentence": "Ayer ( _____ ) en el espejo.", "answer": "me miré" },
+  { "verb": "mirarse", "tense": "線過去", "jp": "（例）いつも食べる前に手を見ていた。", "sentence": "Siempre ( _____ ) las manos antes de comer.", "answer": "me miraba" },
+  { "verb": "mirarse", "tense": "現在完了", "jp": "（例）もう足を見た。", "sentence": "Ya ( _____ ) los pies.", "answer": "me he mirado" },
+  { "verb": "mirarse", "tense": "過去完了", "jp": "（例）彼が入って来た時には、もう鏡で自分を見ていた。", "sentence": "Cuando entró, ya ( _____ ) en el espejo.", "answer": "me había mirado" },
+
+  // ===== oír =====
+  { "verb": "oír", "tense": "点過去", "jp": "（例）昨日、物音を聞いた。", "sentence": "Ayer ( _____ ) un ruido.", "answer": "oí" },
+  { "verb": "oír", "tense": "線過去", "jp": "（例）いつもクラシック音楽を聞いていた。", "sentence": "Siempre ( _____ ) música clásica.", "answer": "oía" },
+  { "verb": "oír", "tense": "現在完了", "jp": "（例）もうその歌を聞いた。", "sentence": "Ya ( _____ ) esa canción.", "answer": "he oído" },
+  { "verb": "oír", "tense": "過去完了", "jp": "（例）私が着いた時には、もう知らせを聞いていた。", "sentence": "Cuando llegué, ya ( _____ ) la noticia.", "answer": "había oído" },
+
+  // ===== parecer =====
+  { "verb": "parecer", "tense": "点過去", "jp": "（例）昨日、それは良い考えに思えた。", "sentence": "Ayer me ( _____ ) buena idea.", "answer": "pareció" },
+  { "verb": "parecer", "tense": "線過去", "jp": "（例）いつも変に思えていた。", "sentence": "Siempre me ( _____ ) extraño.", "answer": "parecía" },
+  { "verb": "parecer", "tense": "現在完了", "jp": "（例）こんなに簡単に思えたことは一度もない。", "sentence": "Nunca me ( _____ ) tan fácil.", "answer": "ha parecido" },
+  { "verb": "parecer", "tense": "過去完了", "jp": "（例）何かおかしいとずっと思っていた。", "sentence": "Ya me ( _____ ) que algo andaba mal.", "answer": "había parecido" },
+
+  // ===== pasear =====
+  { "verb": "pasear", "tense": "点過去", "jp": "（例）昨日、公園を散歩した。", "sentence": "Ayer ( _____ ) por el parque.", "answer": "paseé" },
+  { "verb": "pasear", "tense": "線過去", "jp": "（例）いつも夕食後に散歩していた。", "sentence": "Siempre ( _____ ) después de cenar.", "answer": "paseaba" },
+  { "verb": "pasear", "tense": "現在完了", "jp": "（例）今日はたくさん散歩した。", "sentence": "Hoy ( _____ ) mucho.", "answer": "he paseado" },
+  { "verb": "pasear", "tense": "過去完了", "jp": "（例）雨が降り始めた時には、もう十分散歩していた。", "sentence": "Cuando empezó a llover, ya ( _____ ) suficiente.", "answer": "había paseado" },
+
+  // ===== pedir =====
+  { "verb": "pedir", "tense": "点過去", "jp": "（例）昨日、ピザを注文した。", "sentence": "Ayer ( _____ ) una pizza.", "answer": "pedí" },
+  { "verb": "pedir", "tense": "線過去", "jp": "（例）いつも同じものを頼んでいた。", "sentence": "Siempre ( _____ ) lo mismo.", "answer": "pedía" },
+  { "verb": "pedir", "tense": "現在完了", "jp": "（例）もう会計を頼んだ。", "sentence": "Ya ( _____ ) la cuenta.", "answer": "he pedido" },
+  { "verb": "pedir", "tense": "過去完了", "jp": "（例）気がついた時には、もう頼みすぎていた。", "sentence": "Cuando me di cuenta, ya ( _____ ) demasiado.", "answer": "había pedido" },
+
+  // ===== pensar =====
+  { "verb": "pensar", "tense": "点過去", "jp": "（例）昨日、君のことを考えた。", "sentence": "Ayer ( _____ ) en ti.", "answer": "pensé" },
+  { "verb": "pensar", "tense": "線過去", "jp": "（例）いつも遅いと思っていた。", "sentence": "Siempre ( _____ ) que era tarde.", "answer": "pensaba" },
+  { "verb": "pensar", "tense": "現在完了", "jp": "（例）もう解決策を考えた。", "sentence": "Ya ( _____ ) una solución.", "answer": "he pensado" },
+  { "verb": "pensar", "tense": "過去完了", "jp": "（例）話す前にもうよく考えていた。", "sentence": "Antes de hablar, ya lo ( _____ ) bien.", "answer": "había pensado" },
+
+  // ===== poder =====
+  { "verb": "poder", "tense": "点過去", "jp": "（例）昨日、眠れなかった。", "sentence": "Ayer no ( _____ ) dormir.", "answer": "pude" },
+  { "verb": "poder", "tense": "線過去", "jp": "（例）子どもの頃は速く走れた。", "sentence": "De niño ( _____ ) correr rápido.", "answer": "podía" },
+  { "verb": "poder", "tense": "現在完了", "jp": "（例）一度もそれを理解できたことがない。", "sentence": "Nunca ( _____ ) entenderlo.", "answer": "he podido" },
+  { "verb": "poder", "tense": "過去完了", "jp": "（例）君が助けてくれた時には、もう一人でできていた。", "sentence": "Cuando me ayudaste, ya ( _____ ) hacerlo solo.", "answer": "había podido" },
+
+  // ===== poner =====
+  { "verb": "poner", "tense": "点過去", "jp": "（例）昨日、食卓の用意をした。", "sentence": "Ayer ( _____ ) la mesa.", "answer": "puse" },
+  { "verb": "poner", "tense": "線過去", "jp": "（例）いつもパーティーで音楽をかけていた。", "sentence": "Siempre ( _____ ) música en la fiesta.", "answer": "ponía" },
+  { "verb": "poner", "tense": "現在完了", "jp": "（例）もうアラームをセットした。", "sentence": "Ya ( _____ ) la alarma.", "answer": "he puesto" },
+  { "verb": "poner", "tense": "過去完了", "jp": "（例）私が着いた時には、もう料理を出していた。", "sentence": "Cuando llegué, ya ( _____ ) la comida.", "answer": "había puesto" },
+
+  // ===== ponerse =====
+  { "verb": "ponerse", "tense": "点過去", "jp": "（例）昨日、病気になった。", "sentence": "Ayer ( _____ ) enfermo.", "answer": "me puse" },
+  { "verb": "ponerse", "tense": "線過去", "jp": "（例）いつも試験の前に緊張していた。", "sentence": "Siempre ( _____ ) nervioso antes de un examen.", "answer": "me ponía" },
+  { "verb": "ponerse", "tense": "現在完了", "jp": "（例）その知らせを聞いてとても嬉しくなった。", "sentence": "Me ( _____ ) muy contento con la noticia.", "answer": "he puesto" },
+  { "verb": "ponerse", "tense": "過去完了", "jp": "（例）彼が来た時には、もう悲しくなっていた。", "sentence": "Cuando llegó, ya me ( _____ ) triste.", "answer": "había puesto" },
+
+  // ===== producir =====
+  { "verb": "producir", "tense": "点過去", "jp": "（例）昨日、報告書を作成した。", "sentence": "Ayer ( _____ ) un informe.", "answer": "produje" },
+  { "verb": "producir", "tense": "線過去", "jp": "（例）以前はごみをあまり出さなかった。", "sentence": "Antes ( _____ ) menos basura.", "answer": "producía" },
+  { "verb": "producir", "tense": "現在完了", "jp": "（例）もういくつか短編映画を制作した。", "sentence": "Ya ( _____ ) varios cortometrajes.", "answer": "he producido" },
+  { "verb": "producir", "tense": "過去完了", "jp": "（例）工場が閉まった時には、もう十分生産していた。", "sentence": "Cuando cerró la fábrica, ya ( _____ ) suficiente.", "answer": "había producido" },
+
+  // ===== querer =====
+  { "verb": "querer", "tense": "点過去", "jp": "（例）昨日、映画に行きたかった。", "sentence": "Ayer ( _____ ) ir al cine.", "answer": "quise" },
+  { "verb": "querer", "tense": "線過去", "jp": "（例）いつも旅をしたいと思っていた。", "sentence": "Siempre ( _____ ) viajar.", "answer": "quería" },
+  { "verb": "querer", "tense": "現在完了", "jp": "（例）ずっと君を愛してきた。", "sentence": "Siempre te ( _____ ).", "answer": "he querido" },
+  { "verb": "querer", "tense": "過去完了", "jp": "（例）君に会う前は、誰もこんなふうに愛したことがなかった。", "sentence": "Antes de conocerte, nunca ( _____ ) a nadie así.", "answer": "había querido" },
+
+  // ===== quitar =====
+  { "verb": "quitar", "tense": "点過去", "jp": "（例）昨日、ほこりを取った。", "sentence": "Ayer ( _____ ) el polvo.", "answer": "quité" },
+  { "verb": "quitar", "tense": "線過去", "jp": "（例）いつも食後にテーブルを片付けていた。", "sentence": "Siempre ( _____ ) la mesa después de comer.", "answer": "quitaba" },
+  { "verb": "quitar", "tense": "現在完了", "jp": "（例）もうしみを取り除いた。", "sentence": "Ya ( _____ ) las manchas.", "answer": "he quitado" },
+  { "verb": "quitar", "tense": "過去完了", "jp": "（例）彼が戻った時には、もう古い家具を処分していた。", "sentence": "Cuando volvió, ya ( _____ ) los muebles viejos.", "answer": "había quitado" },
+
+  // ===== recomendar =====
+  { "verb": "recomendar", "tense": "点過去", "jp": "（例）昨日、君にそのレストランを勧めた。", "sentence": "Ayer te ( _____ ) ese restaurante.", "answer": "recomendé" },
+  { "verb": "recomendar", "tense": "線過去", "jp": "（例）いつも良い本を勧めてくれた。", "sentence": "Siempre me ( _____ ) buenos libros.", "answer": "recomendaba" },
+  { "verb": "recomendar", "tense": "現在完了", "jp": "（例）もう何人かの友達に勧めた。", "sentence": "Ya le ( _____ ) a varios amigos.", "answer": "he recomendado" },
+  { "verb": "recomendar", "tense": "過去完了", "jp": "（例）君の旅行の前にもう勧めてあった。", "sentence": "Antes de tu viaje, ya te lo ( _____ ).", "answer": "había recomendado" },
+
+  // ===== repetir =====
+  { "verb": "repetir", "tense": "点過去", "jp": "（例）昨日、練習問題を繰り返した。", "sentence": "Ayer ( _____ ) el ejercicio.", "answer": "repetí" },
+  { "verb": "repetir", "tense": "線過去", "jp": "（例）いつも同じことを繰り返していた。", "sentence": "Siempre ( _____ ) lo mismo.", "answer": "repetía" },
+  { "verb": "repetir", "tense": "現在完了", "jp": "（例）もう3回繰り返した。", "sentence": "Ya lo ( _____ ) tres veces.", "answer": "he repetido" },
+  { "verb": "repetir", "tense": "過去完了", "jp": "（例）飽きた時には、もう十分繰り返していた。", "sentence": "Cuando me cansé, ya lo ( _____ ) suficiente.", "answer": "había repetido" },
+
+  // ===== saber =====
+  { "verb": "saber", "tense": "点過去", "jp": "（例）昨日、真実を知った。", "sentence": "Ayer ( _____ ) la verdad.", "answer": "supe" },
+  { "verb": "saber", "tense": "線過去", "jp": "（例）君が戻ってくることをずっと知っていた。", "sentence": "Siempre ( _____ ) que volverías.", "answer": "sabía" },
+  { "verb": "saber", "tense": "現在完了", "jp": "（例）そのことについて一度も知ったことがない。", "sentence": "Nunca ( _____ ) nada de eso.", "answer": "he sabido" },
+  { "verb": "saber", "tense": "過去完了", "jp": "（例）君が言った時にはもう知っていた。", "sentence": "Cuando me lo dijiste, ya lo ( _____ ).", "answer": "había sabido" },
+
+  // ===== salir =====
+  { "verb": "salir", "tense": "点過去", "jp": "（例）昨日、早く仕事から出た。", "sentence": "Ayer ( _____ ) temprano del trabajo.", "answer": "salí" },
+  { "verb": "salir", "tense": "線過去", "jp": "（例）以前はよく夜に出かけていた。", "sentence": "Antes ( _____ ) mucho por la noche.", "answer": "salía" },
+  { "verb": "salir", "tense": "現在完了", "jp": "（例）今週は一度も家から出ていない。", "sentence": "Esta semana no ( _____ ) de casa.", "answer": "he salido" },
+  { "verb": "salir", "tense": "過去完了", "jp": "（例）君が着いた時には、もう出かけていた。", "sentence": "Cuando llegaste, ya ( _____ ).", "answer": "había salido" },
+
+  // ===== saludar =====
+  { "verb": "saludar", "tense": "点過去", "jp": "（例）昨日、隣人にあいさつした。", "sentence": "Ayer ( _____ ) a mi vecino.", "answer": "saludé" },
+  { "verb": "saludar", "tense": "線過去", "jp": "（例）いつも入るときにあいさつしていた。", "sentence": "Siempre ( _____ ) al entrar.", "answer": "saludaba" },
+  { "verb": "saludar", "tense": "現在完了", "jp": "（例）まだ彼にあいさつしていない。", "sentence": "Todavía no lo ( _____ ).", "answer": "he saludado" },
+  { "verb": "saludar", "tense": "過去完了", "jp": "（例）私を見た時には、もう全員にあいさつしていた。", "sentence": "Cuando me vio, ya ( _____ ) a todos.", "answer": "había saludado" },
+
+  // ===== seguir =====
+  { "verb": "seguir", "tense": "点過去", "jp": "（例）昨日、遅くまで働き続けた。", "sentence": "Ayer ( _____ ) trabajando hasta tarde.", "answer": "seguí" },
+  { "verb": "seguir", "tense": "線過去", "jp": "（例）いつも指示に従っていた。", "sentence": "Siempre ( _____ ) las instrucciones.", "answer": "seguía" },
+  { "verb": "seguir", "tense": "現在完了", "jp": "（例）もう君の助言に従った。", "sentence": "Ya ( _____ ) tu consejo.", "answer": "he seguido" },
+  { "verb": "seguir", "tense": "過去完了", "jp": "（例）考えを変えた時には、もう計画に従っていた。", "sentence": "Cuando cambié de opinión, ya ( _____ ) el plan.", "answer": "había seguido" },
+
+  // ===== sentir =====
+  { "verb": "sentir", "tense": "点過去", "jp": "（例）昨日、寒気を感じた。", "sentence": "Ayer ( _____ ) frío.", "answer": "sentí" },
+  { "verb": "sentir", "tense": "線過去", "jp": "（例）いつも自分の国への郷愁を感じていた。", "sentence": "Siempre ( _____ ) nostalgia por mi país.", "answer": "sentía" },
+  { "verb": "sentir", "tense": "現在完了", "jp": "（例）こんなことは一度も感じたことがない。", "sentence": "Nunca ( _____ ) algo así.", "answer": "he sentido" },
+  { "verb": "sentir", "tense": "過去完了", "jp": "（例）見る前から、その存在を感じていた。", "sentence": "Antes de verlo, ya ( _____ ) su presencia.", "answer": "había sentido" },
+
+  // ===== ser =====
+  { "verb": "ser", "tense": "点過去", "jp": "（例）昨日、私は学生だった（その日はそうだった）。", "sentence": "Ayer ( _____ ) estudiante en esta escuela.", "answer": "fui" },
+  { "verb": "ser", "tense": "線過去", "jp": "（例）以前はもっと恥ずかしがり屋だった。", "sentence": "Antes ( _____ ) más tímido.", "answer": "era" },
+  { "verb": "ser", "tense": "現在完了", "jp": "（例）ずっと君の友達だった。", "sentence": "Siempre ( _____ ) tu amigo.", "answer": "he sido" },
+  { "verb": "ser", "tense": "過去完了", "jp": "（例）医者になる前は看護師だった。", "sentence": "Antes de ser médico, ( _____ ) enfermero.", "answer": "había sido" },
+
+  // ===== servir =====
+  { "verb": "servir", "tense": "点過去", "jp": "（例）昨日、夕食を出した。", "sentence": "Ayer ( _____ ) la cena.", "answer": "serví" },
+  { "verb": "servir", "tense": "線過去", "jp": "（例）以前はレストランで給仕していた。", "sentence": "Antes ( _____ ) en un restaurante.", "answer": "servía" },
+  { "verb": "servir", "tense": "現在完了", "jp": "（例）もう食事を出した。", "sentence": "Ya ( _____ ) la comida.", "answer": "he servido" },
+  { "verb": "servir", "tense": "過去完了", "jp": "（例）客が着いた時には、もう前菜を出していた。", "sentence": "Cuando llegaron los invitados, ya ( _____ ) los entrantes.", "answer": "había servido" },
+
+  // ===== tener =====
+  { "verb": "tener", "tense": "点過去", "jp": "（例）昨日、アイデアが浮かんだ。", "sentence": "Ayer ( _____ ) una idea.", "answer": "tuve" },
+  { "verb": "tener", "tense": "線過去", "jp": "（例）子どもの頃、犬を飼っていた。", "sentence": "De pequeño ( _____ ) un perro.", "answer": "tenía" },
+  { "verb": "tener", "tense": "現在完了", "jp": "（例）こんなにたくさん仕事があったことはない。", "sentence": "Nunca ( _____ ) tanto trabajo.", "answer": "he tenido" },
+  { "verb": "tener", "tense": "過去完了", "jp": "（例）引っ越す前から、問題を抱えていた。", "sentence": "Antes de mudarme, ya ( _____ ) problemas.", "answer": "había tenido" },
+
+  // ===== trabajar =====
+  { "verb": "trabajar", "tense": "点過去", "jp": "（例）昨日、たくさん働いた。", "sentence": "Ayer ( _____ ) mucho.", "answer": "trabajé" },
+  { "verb": "trabajar", "tense": "線過去", "jp": "（例）いつもそのオフィスで働いていた。", "sentence": "Siempre ( _____ ) en esa oficina.", "answer": "trabajaba" },
+  { "verb": "trabajar", "tense": "現在完了", "jp": "（例）もう十分働いた。", "sentence": "Ya ( _____ ) bastante.", "answer": "he trabajado" },
+  { "verb": "trabajar", "tense": "過去完了", "jp": "（例）辞めた時には、もう10年そこで働いていた。", "sentence": "Cuando renuncié, ya ( _____ ) allí diez años.", "answer": "había trabajado" },
+
+  // ===== traer =====
+  { "verb": "traer", "tense": "点過去", "jp": "（例）昨日、デザートを持ってきた。", "sentence": "Ayer ( _____ ) el postre.", "answer": "traje" },
+  { "verb": "traer", "tense": "線過去", "jp": "（例）いつも母に花を持ってきていた。", "sentence": "Siempre ( _____ ) flores para su madre.", "answer": "traía" },
+  { "verb": "traer", "tense": "現在完了", "jp": "（例）もう書類を持ってきた。", "sentence": "Ya ( _____ ) los documentos.", "answer": "he traído" },
+  { "verb": "traer", "tense": "過去完了", "jp": "（例）気づいた時には、もう必要なものを持ってきていた。", "sentence": "Cuando me di cuenta, ya ( _____ ) lo necesario.", "answer": "había traído" },
+
+  // ===== venir =====
+  { "verb": "venir", "tense": "点過去", "jp": "（例）昨日、歩いて来た。", "sentence": "Ayer ( _____ ) a pie.", "answer": "vine" },
+  { "verb": "venir", "tense": "線過去", "jp": "（例）いつもバスで来ていた。", "sentence": "Siempre ( _____ ) en autobús.", "answer": "venía" },
+  { "verb": "venir", "tense": "現在完了", "jp": "（例）もう前に来たことがある。", "sentence": "Ya ( _____ ) antes.", "answer": "he venido" },
+  { "verb": "venir", "tense": "過去完了", "jp": "（例）君が着いた時には、私はもう店から戻っていた。", "sentence": "Cuando llegaste, ya ( _____ ) de la tienda.", "answer": "había venido" },
+
+  // ===== ver =====
+  { "verb": "ver", "tense": "点過去", "jp": "（例）昨日、映画を観た。", "sentence": "Ayer ( _____ ) una película.", "answer": "vi" },
+  { "verb": "ver", "tense": "線過去", "jp": "（例）いつも夜にテレビを観ていた。", "sentence": "Siempre ( _____ ) la tele por la noche.", "answer": "veía" },
+  { "verb": "ver", "tense": "現在完了", "jp": "（例）もうそのドキュメンタリーを観た。", "sentence": "Ya ( _____ ) ese documental.", "answer": "he visto" },
+  { "verb": "ver", "tense": "過去完了", "jp": "（例）君が勧めてくれた時には、もう観ていた。", "sentence": "Cuando me lo recomendaste, ya lo ( _____ ).", "answer": "había visto" },
+
+  // ===== viajar =====
+  { "verb": "viajar", "tense": "点過去", "jp": "（例）昨日、マドリードへ旅行した。", "sentence": "Ayer ( _____ ) a Madrid.", "answer": "viajé" },
+  { "verb": "viajar", "tense": "線過去", "jp": "（例）いつも電車で旅行していた。", "sentence": "Siempre ( _____ ) en tren.", "answer": "viajaba" },
+  { "verb": "viajar", "tense": "現在完了", "jp": "（例）もうたくさん旅行してきた。", "sentence": "Ya ( _____ ) mucho.", "answer": "he viajado" },
+  { "verb": "viajar", "tense": "過去完了", "jp": "（例）君に会う前にもうヨーロッパを旅行していた。", "sentence": "Antes de conocerte, ya ( _____ ) por Europa.", "answer": "había viajado" },
+
+  // ===== vivir =====
+  { "verb": "vivir", "tense": "点過去", "jp": "（例）昨日、信じられない体験をした。", "sentence": "Ayer ( _____ ) una experiencia increíble.", "answer": "viví" },
+  { "verb": "vivir", "tense": "線過去", "jp": "（例）いつも田舎に住んでいた。", "sentence": "Siempre ( _____ ) en el campo.", "answer": "vivía" },
+  { "verb": "vivir", "tense": "現在完了", "jp": "（例）もう3か国に住んだことがある。", "sentence": "Ya ( _____ ) en tres países.", "answer": "he vivido" },
+  { "verb": "vivir", "tense": "過去完了", "jp": "（例）引っ越す前にもそこに住んでいた。", "sentence": "Antes de mudarme, ya ( _____ ) allí.", "answer": "había vivido" }
+]
