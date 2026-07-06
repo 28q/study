@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💪 スペイン語動詞クイズ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #1e2a3a, #0f1722);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(4px);
+            border-radius: 48px 48px 32px 32px;
+            padding: 20px 16px 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* ヘッダー */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 6px 14px 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .lives {
+            display: flex;
+            gap: 6px;
+            font-size: 28px;
+            line-height: 1;
+        }
+        .lives span {
+            filter: drop-shadow(0 0 6px rgba(255, 80, 80, 0.5));
+            transition: 0.2s;
+        }
+        .lives .lost {
+            opacity: 0.2;
+            filter: grayscale(1);
+        }
+        .score-box {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 6px 16px;
+            border-radius: 40px;
+            color: #ffd966;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .high-score {
+            font-size: 14px;
+            color: #aab;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* 問題エリア */
+        .question-area {
+            text-align: center;
+            padding: 18px 6px 8px;
+        }
+        .japanese {
+            font-size: 32px;
+            font-weight: 700;
+            color: #f0f4ff;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            min-height: 4rem;
+            word-break: break-word;
+        }
+        .hint {
+            font-size: 14px;
+            color: #8e9db0;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        /* タイマー */
+        .timer-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0 8px;
+        }
+        .timer-bar {
+            flex: 1;
+            height: 6px;
+            background: #2a3a4e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .timer-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #f9d976, #f39c12);
+            border-radius: 10px;
+            transition: width 0.3s linear;
+        }
+        .timer-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #d4e0f0;
+            min-width: 44px;
+            text-align: right;
+        }
+
+        /* 入力表示 */
+        .input-display {
+            background: #0d1624;
+            border-radius: 18px;
+            padding: 14px 20px;
+            margin: 12px 0 8px;
+            border: 2px solid #2e405a;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.6);
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #e8f0fe;
+            letter-spacing: 2px;
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.15s;
+            word-break: break-all;
+        }
+        .input-display.correct {
+            border-color: #2ecc71;
+            background: #0f2a1a;
+        }
+        .input-display.wrong {
+            border-color: #e74c3c;
+            background: #2a1418;
+        }
+        .input-display.reveal {
+            border-color: #f1c40f;
+            background: #1f2a12;
+            color: #f1c40f;
+        }
+
+        /* キーボード (QWERTY) */
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 6px;
+            margin: 16px 0 8px;
+        }
+        .key {
+            background: #253544;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 0;
+            font-size: 22px;
+            font-weight: 600;
+            color: #eef4ff;
+            box-shadow: 0 4px 0 #0e1722, 0 2px 8px rgba(0,0,0,0.3);
+            transition: 0.06s linear;
+            cursor: pointer;
+            touch-action: manipulation;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .key:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0e1722;
+        }
+        .key-fn {
+            background: #3d4e64;
+            font-size: 18px;
+        }
+        .key-submit {
+            background: #2d7d46;
+            box-shadow: 0 4px 0 #1a4a2c;
+            font-weight: 700;
+            color: #fff;
+        }
+        .key-submit:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #1a4a2c;
+        }
+        .key-clear {
+            background: #8a3a3a;
+            box-shadow: 0 4px 0 #4f2121;
+        }
+        .key-clear:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #4f2121;
+        }
+
+        /* 次の問題へボタン */
+        .next-btn-wrap {
+            margin: 10px 0 4px;
+        }
+        .btn {
+            padding: 14px 8px;
+            border: none;
+            border-radius: 40px;
+            font-size: 18px;
+            font-weight: 700;
+            background: #2e405a;
+            color: #dce6f0;
+            box-shadow: 0 6px 0 #15202b, 0 4px 12px rgba(0,0,0,0.3);
+            transition: 0.06s linear;
+            cursor: pointer;
+            touch-action: manipulation;
+            text-align: center;
+            width: 100%;
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #15202b;
+        }
+        .btn-gold {
+            background: #b8860b;
+            box-shadow: 0 6px 0 #6b4f0a;
+            color: #fff8e0;
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #15202b;
+            pointer-events: none;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        /* ゲームオーバー / クリア */
+        .overlay {
+            text-align: center;
+            padding: 30px 10px 20px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 40px;
+            margin-top: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .overlay h2 {
+            font-size: 34px;
+            color: #ffd966;
+            margin: 0 0 8px;
+        }
+        .overlay p {
+            color: #ccd8e8;
+            font-size: 18px;
+            margin: 6px 0;
+        }
+        .overlay .final-score {
+            font-size: 48px;
+            font-weight: 800;
+            color: #f0f4ff;
+            margin: 10px 0;
+        }
+        .small-text {
+            font-size: 14px;
+            color: #8e9db0;
+        }
+        #messageArea {
+            text-align: center;
+            min-height: 24px;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 420px) {
+            .key {
+                font-size: 18px;
+                padding: 10px 0;
+            }
+            .japanese {
+                font-size: 26px;
+            }
+            .input-display {
+                font-size: 24px;
+                min-height: 60px;
+                padding: 10px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <!-- ヘッダー -->
+    <div class="header">
+        <div class="lives" id="livesDisplay">
+            <span>❤️</span><span>❤️</span><span>❤️</span>
+        </div>
+        <div class="score-box" id="scoreDisplay">0</div>
+        <div class="high-score" id="highScoreDisplay">🏆 0</div>
+    </div>
+
+    <!-- メインゲーム -->
+    <div id="gameArea">
+        <div class="question-area">
+            <div class="japanese" id="japaneseText">開く</div>
+            <div class="hint">動詞の原形を入力してください</div>
+        </div>
+
+        <div class="timer-wrap">
+            <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+            <div class="timer-text" id="timerText">20</div>
+        </div>
+
+        <div class="input-display" id="inputDisplay">_</div>
+
+        <!-- QWERTYキーボード (JSで生成) -->
+        <div class="keyboard" id="keyboard"></div>
+
+        <!-- 不正解時の次へボタン -->
+        <div class="next-btn-wrap" id="nextWrap">
+            <button class="btn btn-gold" id="nextBtn">▶ 次へ進む</button>
+        </div>
+        <div id="messageArea" class="small-text"></div>
+    </div>
+
+    <!-- ゲームオーバー / クリア -->
+    <div id="overlayArea" class="hidden overlay">
+        <h2 id="overlayTitle">💀 ゲームオーバー</h2>
+        <div class="final-score" id="finalScore">0</div>
+        <p id="overlayDetail">正解数</p>
+        <p id="overlayHigh">🏆 ハイスコア: 0</p>
+        <button class="btn btn-gold" id="restartBtn" style="margin-top:18px; padding: 16px 32px; font-size:22px;">🔄 最初からやり直す</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ----- 問題データ (和訳をユニークに統合済み) -----
+        const rawData = [
+            { j: "開く", s: "abrir" },
+            { j: "横になる", s: "acostarse" },
+            { j: "歩く", s: "andar" },
+            { j: "～したい気がする", s: "apetecer" },
+            { j: "学ぶ", s: "aprender" },
+            { j: "助け合う", s: "ayudarse" },
+            { j: "飲む", s: "beber" },
+            { j: "探す", s: "buscar" },
+            { j: "ある", s: "haber" },
+            { j: "入る", s: "caber" },
+            { j: "落ちる", s: "caer" },
+            { j: "食べる", s: "comer" },
+            { j: "結論する", s: "concluir" },
+            { j: "運転する", s: "conducir" },
+            { j: "知っている", s: "conocer" },
+            { j: "建設する", s: "construir" },
+            { j: "数える", s: "contar" },
+            { j: "言う", s: "decir" },
+            { j: "発見する", s: "descubrir" },
+            { j: "痛む", s: "doler" },
+            { j: "眠る", s: "dormir" },
+            { j: "シャワーを浴びる", s: "ducharse" },
+            { j: "大好きである", s: "encantar" },
+            { j: "見つける", s: "encontrar" },
+            { j: "聴く", s: "escuchar" },
+            { j: "いる", s: "estar" },
+            { j: "勉強する", s: "estudiar" },
+            { j: "好む", s: "gustar" },
+            { j: "する", s: "hacer" },
+            { j: "話す", s: "hablar" },
+            { j: "重要である", s: "importar" },
+            { j: "興味がある", s: "interesar" },
+            { j: "投資する", s: "invertir" },
+            { j: "招待する", s: "invitar" },
+            { j: "行く", s: "ir" },
+            { j: "遊ぶ", s: "jugar" },
+            { j: "洗う", s: "lavarse" },
+            { j: "読む", s: "leer" },
+            { j: "起きる", s: "levantarse" },
+            { j: "名前である", s: "llamarse" },
+            { j: "見る (再帰)", s: "mirarse" },
+            { j: "聞く", s: "oír" },
+            { j: "～のように見える", s: "parecer" },
+            { j: "散歩する", s: "pasear" },
+            { j: "頼む", s: "pedir" },
+            { j: "考える", s: "pensar" },
+            { j: "できる", s: "poder" },
+            { j: "置く", s: "poner" },
+            { j: "身につける", s: "ponerse" },
+            { j: "生産する", s: "producir" },
+            { j: "欲しい", s: "querer" },
+            { j: "取り除く", s: "quitar" },
+            { j: "勧める", s: "recomendar" },
+            { j: "繰り返す", s: "repetir" },
+            { j: "知る", s: "saber" },
+            { j: "出る", s: "salir" },
+            { j: "挨拶する", s: "saludar" },
+            { j: "続ける", s: "seguir" },
+            { j: "感じる", s: "sentir" },
+            { j: "である", s: "ser" },
+            { j: "役立つ", s: "servir" },
+            { j: "持っている", s: "tener" },
+            { j: "働く", s: "trabajar" },
+            { j: "持ってくる", s: "traer" },
+            { j: "来る", s: "venir" },
+            { j: "見る", s: "ver" },
+            { j: "旅行する", s: "viajar" },
+            { j: "住む", s: "vivir" }
+        ];
+
+        // 念のため重複排除 (万が一に備えて)
+        const uniqueMap = new Map();
+        rawData.forEach(item => {
+            if (!uniqueMap.has(item.j)) {
+                uniqueMap.set(item.j, item.s);
+            }
+        });
+        const allQuestions = Array.from(uniqueMap, ([japanese, spanish]) => ({
+            japanese,
+            spanish: spanish.toLowerCase()
+        }));
+
+        // ----- ゲーム状態 -----
+        let questions = [];
+        let currentIndex = 0;
+        let lives = 3;
+        let score = 0;
+        let highScore = parseInt(localStorage.getItem('spanishVerbHighScore')) || 0;
+        let timer = 20;
+        let timerInterval = null;
+        let isWaitingForNext = false;
+        let isGameOver = false;
+        let isFinished = false;
+        let currentInput = '';
+
+        // DOM refs
+        const livesDisplay = document.getElementById('livesDisplay');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const highScoreDisplay = document.getElementById('highScoreDisplay');
+        const japaneseText = document.getElementById('japaneseText');
+        const inputDisplay = document.getElementById('inputDisplay');
+        const timerFill = document.getElementById('timerFill');
+        const timerText = document.getElementById('timerText');
+        const messageArea = document.getElementById('messageArea');
+        const keyboard = document.getElementById('keyboard');
+        const nextBtn = document.getElementById('nextBtn');
+        const nextWrap = document.getElementById('nextWrap');
+        const gameArea = document.getElementById('gameArea');
+        const overlayArea = document.getElementById('overlayArea');
+        const overlayTitle = document.getElementById('overlayTitle');
+        const finalScore = document.getElementById('finalScore');
+        const overlayDetail = document.getElementById('overlayDetail');
+        const overlayHigh = document.getElementById('overlayHigh');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // ----- QWERTYキーボード生成 -----
+        function buildKeyboard() {
+            keyboard.innerHTML = '';
+            const rows = [
+                ['q','w','e','r','t','y','u','i','o','p'],
+                ['a','s','d','f','g','h','j','k','l', '⌫'],
+                ['z','x','c','v','b','n','m','ñ', '⌫⌫', 'GO!']
+            ];
+
+            rows.forEach(row => {
+                row.forEach(label => {
+                    const key = document.createElement('button');
+                    key.className = 'key';
+                    if (label === '⌫' || label === '⌫⌫') {
+                        key.classList.add('key-fn');
+                    }
+                    if (label === '⌫⌫') {
+                        key.classList.add('key-clear');
+                    }
+                    if (label === 'GO!') {
+                        key.classList.add('key-submit');
+                    }
+                    key.textContent = label;
+
+                    key.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (label === '⌫') handleBackspace();
+                        else if (label === '⌫⌫') handleClearAll();
+                        else if (label === 'GO!') handleSubmit();
+                        else handleCharInput(label);
+                    });
+
+                    keyboard.appendChild(key);
+                });
+            });
+        }
+        buildKeyboard();
+
+        // ----- ヘルパー -----
+        function updateLives() {
+            const hearts = livesDisplay.querySelectorAll('span');
+            hearts.forEach((el, i) => {
+                if (i < lives) el.className = '';
+                else el.className = 'lost';
+            });
+        }
+
+        function updateScore() {
+            scoreDisplay.textContent = score;
+        }
+
+        function updateHighScore() {
+            highScoreDisplay.textContent = '🏆 ' + highScore;
+        }
+
+        function updateTimerDisplay() {
+            timerText.textContent = Math.ceil(timer);
+            const pct = Math.max(0, (timer / 20) * 100);
+            timerFill.style.width = pct + '%';
+            timerFill.style.background = timer < 5 ? '#e74c3c' : 'linear-gradient(90deg, #f9d976, #f39c12)';
+        }
+
+        function showMessage(msg, isGood = true) {
+            messageArea.textContent = msg;
+            messageArea.style.color = isGood ? '#aaddaa' : '#f7a8a8';
+        }
+
+        function clearMessage() {
+            messageArea.textContent = '';
+        }
+
+        function updateInputDisplay() {
+            inputDisplay.textContent = currentInput || '_';
+            inputDisplay.className = 'input-display';
+        }
+
+        // ----- タイマー -----
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function startTimer() {
+            stopTimer();
+            timer = 20;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timer -= 0.3;
+                if (timer < 0) timer = 0;
+                updateTimerDisplay();
+                if (timer <= 0) {
+                    stopTimer();
+                    if (!isWaitingForNext && !isGameOver && !isFinished) {
+                        handleTimeOut();
+                    }
+                }
+            }, 300);
+        }
+
+        // ----- 問題表示 -----
+        function loadQuestion() {
+            if (isGameOver || isFinished) return;
+            if (currentIndex >= questions.length) {
+                finishGame(true);
+                return;
+            }
+            const q = questions[currentIndex];
+            japaneseText.textContent = q.japanese;
+            currentInput = '';
+            updateInputDisplay();
+            clearMessage();
+            inputDisplay.className = 'input-display';
+            isWaitingForNext = false;
+            nextWrap.classList.add('hidden');
+            startTimer();
+        }
+
+        // ----- 入力処理 -----
+        function handleCharInput(ch) {
+            if (isWaitingForNext || isGameOver || isFinished) return;
+            if (currentInput.length < 30) {
+                currentInput += ch;
+                updateInputDisplay();
+            }
+        }
+
+        function handleBackspace() {
+            if (isWaitingForNext || isGameOver || isFinished) return;
+            currentInput = currentInput.slice(0, -1);
+            updateInputDisplay();
+        }
+
+        function handleClearAll() {
+            if (isWaitingForNext || isGameOver || isFinished) return;
+            currentInput = '';
+            updateInputDisplay();
+        }
+
+        // ----- 正誤判定 -----
+        function checkAnswer() {
+            const q = questions[currentIndex];
+            return currentInput.trim().toLowerCase() === q.spanish;
+        }
+
+        function handleSubmit() {
+            if (isWaitingForNext || isGameOver || isFinished) return;
+            if (currentInput.trim() === '') {
+                showMessage('入力が空です', false);
+                return;
+            }
+            stopTimer();
+            const ok = checkAnswer();
+            if (ok) {
+                score++;
+                updateScore();
+                inputDisplay.className = 'input-display correct';
+                showMessage('✅ 正解！', true);
+                setTimeout(() => {
+                    if (!isGameOver && !isFinished) {
+                        currentIndex++;
+                        loadQuestion();
+                    }
+                }, 400);
+            } else {
+                handleWrongAnswer();
+            }
+        }
+
+        function handleTimeOut() {
+            if (isWaitingForNext || isGameOver || isFinished) return;
+            showMessage('⏰ 時間切れ！', false);
+            handleWrongAnswer();
+        }
+
+        function handleWrongAnswer() {
+            if (isWaitingForNext || isGameOver || isFinished) return;
+            stopTimer();
+            const q = questions[currentIndex];
+            inputDisplay.textContent = q.spanish;
+            inputDisplay.className = 'input-display reveal';
+            lives--;
+            updateLives();
+            showMessage(`❌ 正解は「${q.spanish}」`, false);
+
+            if (lives <= 0) {
+                isGameOver = true;
+                finishGame(false);
+                return;
+            }
+
+            isWaitingForNext = true;
+            nextWrap.classList.remove('hidden');
+            nextBtn.onclick = function() {
+                if (isGameOver || isFinished) return;
+                currentIndex++;
+                loadQuestion();
+                nextWrap.classList.add('hidden');
+            };
+        }
+
+        // ----- ゲーム終了 -----
+        function finishGame(cleared) {
+            stopTimer();
+            gameArea.classList.add('hidden');
+            overlayArea.classList.remove('hidden');
+            if (cleared) {
+                overlayTitle.textContent = '🎉 全問クリア！';
+                overlayTitle.style.color = '#ffd966';
+                finalScore.textContent = score + ' / ' + questions.length;
+                overlayDetail.textContent = '素晴らしい！全問正解しました！';
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('spanishVerbHighScore', String(highScore));
+                }
+            } else {
+                overlayTitle.textContent = '💀 ゲームオーバー';
+                overlayTitle.style.color = '#e74c3c';
+                finalScore.textContent = score;
+                overlayDetail.textContent = `正解数: ${score} / ${questions.length}`;
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('spanishVerbHighScore', String(highScore));
+                }
+            }
+            overlayHigh.textContent = '🏆 ハイスコア: ' + highScore;
+            updateHighScore();
+        }
+
+        // ----- リスタート -----
+        function restartGame() {
+            stopTimer();
+            questions = shuffleArray([...allQuestions]);
+            currentIndex = 0;
+            lives = 3;
+            score = 0;
+            isGameOver = false;
+            isFinished = false;
+            isWaitingForNext = false;
+            currentInput = '';
+            updateLives();
+            updateScore();
+            updateHighScore();
+            gameArea.classList.remove('hidden');
+            overlayArea.classList.add('hidden');
+            nextWrap.classList.add('hidden');
+            clearMessage();
+            loadQuestion();
+        }
+
+        // ----- ユーティリティ -----
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // ----- 物理キーボード対応 (補助) -----
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSubmit();
+            } else if (e.key === 'Backspace') {
+                e.preventDefault();
+                handleBackspace();
+            } else if (e.key.length === 1 && /[a-zA-Zñ]/.test(e.key)) {
+                if (!e.isComposing) {
+                    handleCharInput(e.key.toLowerCase());
+                }
+            }
+        });
+
+        // ----- 初期化 -----
+        highScore = parseInt(localStorage.getItem('spanishVerbHighScore')) || 0;
+        updateHighScore();
+        questions = shuffleArray([...allQuestions]);
+        lives = 3;
+        score = 0;
+        updateLives();
+        updateScore();
+        loadQuestion();
+
+        // タブ非表示でタイマー一時停止
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopTimer();
+            } else {
+                if (!isGameOver && !isFinished && !isWaitingForNext && timer > 0) {
+                    startTimer();
+                }
+            }
+        });
+
+        // リスタートボタン
+        restartBtn.addEventListener('click', restartGame);
+    })();
+</script>
+</body>
+</html>
