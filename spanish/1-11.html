@@ -368,7 +368,8 @@
             const mode = document.getElementById('modeSelect').value;
             let selected = [];
             if (mode === 'full') {
-                selected = questionBank.map((q, idx) => ({ ...q, idx }));
+                const shuffled = shuffleArray(questionBank);
+                selected = shuffled.map((q, idx) => ({ ...q, idx }));
             } else {
                 const shuffled = shuffleArray(questionBank);
                 selected = shuffled.slice(0, 15).map((q, idx) => ({ ...q, idx }));
