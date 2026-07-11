@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ser・Estar・Haber 使い分けドリル (15問ランダム)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fef5e9;
+            font-family: 'Segoe UI', 'Noto Sans JP', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 24px 20px;
+            color: #2d3e2b;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            background: #c4412c;
+            color: white;
+            display: inline-block;
+            padding: 6px 28px;
+            border-radius: 40px;
+            font-size: 1.6rem;
+            margin: 0 0 12px 0;
+            letter-spacing: 1px;
+        }
+
+        .subhead {
+            color: #8b5a2b;
+            font-size: 1.05rem;
+            margin-top: -4px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            padding: 20px 24px;
+            margin-bottom: 30px;
+            border: 1px solid #ffe0bc;
+        }
+
+        .question-item {
+            background: #fef6ed;
+            border-radius: 20px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 20px;
+            border-left: 6px solid #e67e22;
+        }
+
+        .q-number {
+            font-weight: 700;
+            color: #a23b1c;
+            min-width: 40px;
+            font-size: 1rem;
+        }
+
+        .q-sentence {
+            flex: 2;
+            min-width: 200px;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            background: #fff7e8;
+            padding: 5px 12px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+        }
+
+        .q-input {
+            padding: 8px 14px;
+            border-radius: 60px;
+            border: 1px solid #dbb87a;
+            width: 160px;
+            text-align: center;
+            background: white;
+            font-size: 1rem;
+            font-family: monospace;
+        }
+
+        .q-feedback {
+            font-size: 0.85rem;
+            font-weight: 500;
+            min-width: 100px;
+        }
+
+        .q-feedback.correct {
+            color: #2e7d32;
+        }
+
+        .q-feedback.wrong {
+            color: #c0392b;
+        }
+
+        .flex-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            background: #d64b2c;
+            color: white;
+            border: none;
+            padding: 8px 26px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+
+        button.secondary {
+            background: #f39c12;
+        }
+
+        button.outline {
+            background: white;
+            color: #c0392b;
+            border: 1px solid #c4412c;
+        }
+
+        button.small {
+            padding: 5px 16px;
+            font-size: 0.8rem;
+        }
+
+        button:hover {
+            opacity: 0.85;
+            transform: scale(0.97);
+        }
+
+        .global-feedback {
+            background: #eaf7ea;
+            padding: 14px 20px;
+            border-radius: 24px;
+            margin-top: 20px;
+            border-left: 5px solid #2e7d32;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .global-feedback.wrong {
+            background: #ffefed;
+            border-left-color: #c0392b;
+        }
+
+        .global-feedback.show {
+            display: block;
+        }
+
+        .stats {
+            font-size: 0.9rem;
+            color: #7a5d3a;
+            margin-top: 8px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #a5682c;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 700px) {
+            .question-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .q-sentence {
+                font-size: 1rem;
+            }
+            .q-input {
+                width: 100%;
+            }
+            .q-feedback {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📘 Ser · Estar · Haber</h1>
+    <div class="subhead">使い分け &amp; 現在形活用 — ランダム15問</div>
+
+    <div class="card">
+        <div id="questionsContainer"></div>
+
+        <div class="flex-btns">
+            <button id="checkBtn">✅ 解答をチェック</button>
+            <button id="showAnswersBtn" class="secondary">📖 正解を表示</button>
+            <button id="newQuestionsBtn" class="outline">🔄 新しい問題を生成</button>
+        </div>
+
+        <div id="globalFeedback" class="global-feedback"></div>
+        <div id="stats" class="stats"></div>
+    </div>
+
+    <footer>※ アクセント記号は無視して判定します（例: está → esta で正解）</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 問題プール
+    // --------------------------------------------------------------
+    const questionPool = [
+        // ---------- ser ----------
+        { sentence: "Antonio ____ español.", correct: "es", verb: "ser", person: "él" },
+        { sentence: "La camiseta ____ de algodón.", correct: "es", verb: "ser", person: "ella" },
+        { sentence: "Yo ____ estudiante.", correct: "soy", verb: "ser", person: "yo" },
+        { sentence: "Tú ____ inteligente.", correct: "eres", verb: "ser", person: "tú" },
+        { sentence: "Nosotros ____ amigos.", correct: "somos", verb: "ser", person: "nosotros" },
+        { sentence: "Vosotros ____ españoles.", correct: "sois", verb: "ser", person: "vosotros" },
+        { sentence: "Ellos ____ altos.", correct: "son", verb: "ser", person: "ellos" },
+        { sentence: "María ____ enfermera.", correct: "es", verb: "ser", person: "ella" },
+        { sentence: "Mis padres ____ de Madrid.", correct: "son", verb: "ser", person: "ellos" },
+        { sentence: "El libro ____ interesante.", correct: "es", verb: "ser", person: "él" },
+        { sentence: "Nosotras ____ francesas.", correct: "somos", verb: "ser", person: "nosotros" },
+        { sentence: "Tú ____ muy simpático.", correct: "eres", verb: "ser", person: "tú" },
+
+        // ---------- estar ----------
+        { sentence: "La sopa ya ____ fría.", correct: "está", verb: "estar", person: "ella" },
+        { sentence: "Luis y Alicia ahora ____ en Madrid.", correct: "están", verb: "estar", person: "ellos" },
+        { sentence: "Vosotros ____ un poco ocupados.", correct: "estáis", verb: "estar", person: "vosotros" },
+        { sentence: "Carmen y yo ____ en la cafetería.", correct: "estamos", verb: "estar", person: "nosotros" },
+        { sentence: "Mis padres no ____ en casa ahora.", correct: "están", verb: "estar", person: "ellos" },
+        { sentence: "Yo ____ cansado.", correct: "estoy", verb: "estar", person: "yo" },
+        { sentence: "Tú ____ en casa.", correct: "estás", verb: "estar", person: "tú" },
+        { sentence: "Ella ____ feliz.", correct: "está", verb: "estar", person: "ella" },
+        { sentence: "Nosotros ____ en el parque.", correct: "estamos", verb: "estar", person: "nosotros" },
+        { sentence: "Ellos ____ contentos.", correct: "están", verb: "estar", person: "ellos" },
+        { sentence: "El profesor ____ en la clase.", correct: "está", verb: "estar", person: "él" },
+        { sentence: "Vosotras ____ en la biblioteca.", correct: "estáis", verb: "estar", person: "vosotros" },
+
+        // ---------- haber (hay) ----------
+        { sentence: "En el parque ____ muchos niños.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "¿____ una estación cerca de aquí?", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "____ un libro en la mesa.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "____ muchos estudiantes en la clase.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "____ dos coches en el garaje.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "____ una fiesta esta noche.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "____ problemas con el sistema.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "En la nevera ____ leche.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "____ muchas personas en la plaza.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "En mi casa ____ tres habitaciones.", correct: "hay", verb: "haber", person: "él" },
+        { sentence: "____ un gato en el jardín.", correct: "hay", verb: "haber", person: "él" }
+    ];
+
+    // --------------------------------------------------------------
+    // ユーティリティ
+    // --------------------------------------------------------------
+    function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function normalize(str) {
+        return str.trim().toLowerCase()
+            .replace(/[áàâä]/g, 'a')
+            .replace(/[éèêë]/g, 'e')
+            .replace(/[íìîï]/g, 'i')
+            .replace(/[óòôö]/g, 'o')
+            .replace(/[úùûü]/g, 'u')
+            .replace(/ñ/g, 'n')
+            .replace(/[¿¡]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    // --------------------------------------------------------------
+    // 問題選択ロジック (各動詞から5問ずつ、人称バランスを考慮)
+    // --------------------------------------------------------------
+    function selectQuestions() {
+        const serPool = questionPool.filter(q => q.verb === "ser");
+        const estarPool = questionPool.filter(q => q.verb === "estar");
+        const haberPool = questionPool.filter(q => q.verb === "haber");
+
+        // 各動詞から5問をなるべく異なる人称から選ぶ
+        function pickBalanced(pool, count) {
+            // 人称ごとにグループ化
+            const groups = {};
+            pool.forEach(q => {
+                if (!groups[q.person]) groups[q.person] = [];
+                groups[q.person].push(q);
+            });
+            const persons = Object.keys(groups);
+            let selected = [];
+            // 各人称から1つずつ取っていく (巡回)
+            let round = 0;
+            while (selected.length < count) {
+                const person = persons[round % persons.length];
+                const group = groups[person];
+                if (group.length > 0) {
+                    const idx = Math.floor(Math.random() * group.length);
+                    selected.push(group.splice(idx, 1)[0]);
+                } else {
+                    // その人称に問題がなくなったら除外
+                    persons.splice(round % persons.length, 1);
+                    if (persons.length === 0) break;
+                    continue;
+                }
+                round++;
+                // 無限ループ防止
+                if (round > 100) break;
+            }
+            // それでも足りなければ残りをランダムに補充
+            while (selected.length < count) {
+                const remaining = pool.filter(q => !selected.includes(q));
+                if (remaining.length === 0) break;
+                const rand = remaining[Math.floor(Math.random() * remaining.length)];
+                selected.push(rand);
+            }
+            return shuffle(selected);
+        }
+
+        const serSelected = pickBalanced(serPool, 5);
+        const estarSelected = pickBalanced(estarPool, 5);
+        const haberSelected = pickBalanced(haberPool, 5);
+
+        let combined = [...serSelected, ...estarSelected, ...haberSelected];
+        return shuffle(combined);
+    }
+
+    // --------------------------------------------------------------
+    // レンダリング
+    // --------------------------------------------------------------
+    let currentQuestions = [];
+    const container = document.getElementById('questionsContainer');
+    const globalFeedback = document.getElementById('globalFeedback');
+    const stats = document.getElementById('stats');
+
+    function renderQuestions(questions) {
+        container.innerHTML = '';
+        questions.forEach((q, idx) => {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.dataset.idx = idx;
+
+            const numSpan = document.createElement('span');
+            numSpan.className = 'q-number';
+            numSpan.textContent = `${idx + 1}.`;
+
+            const sentSpan = document.createElement('span');
+            sentSpan.className = 'q-sentence';
+            sentSpan.textContent = q.sentence;
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'q-input';
+            input.placeholder = '動詞を入力';
+            input.dataset.idx = idx;
+
+            const fbSpan = document.createElement('span');
+            fbSpan.className = 'q-feedback';
+            fbSpan.id = `fb_${idx}`;
+
+            div.appendChild(numSpan);
+            div.appendChild(sentSpan);
+            div.appendChild(input);
+            div.appendChild(fbSpan);
+            container.appendChild(div);
+        });
+
+        // グローバルフィードバックを非表示
+        globalFeedback.className = 'global-feedback';
+        globalFeedback.textContent = '';
+        stats.textContent = '';
+    }
+
+    function generateNewQuestions() {
+        currentQuestions = selectQuestions();
+        renderQuestions(currentQuestions);
+        // 入力欄をクリア
+        document.querySelectorAll('.q-input').forEach(inp => inp.value = '');
+        // フィードバックをクリア
+        document.querySelectorAll('.q-feedback').forEach(el => {
+            el.textContent = '';
+            el.className = 'q-feedback';
+        });
+        globalFeedback.className = 'global-feedback';
+        globalFeedback.textContent = '';
+        stats.textContent = `${currentQuestions.length} 問 (Ser: ${currentQuestions.filter(q => q.verb === 'ser').length}, Estar: ${currentQuestions.filter(q => q.verb === 'estar').length}, Haber: ${currentQuestions.filter(q => q.verb === 'haber').length})`;
+    }
+
+    // --------------------------------------------------------------
+    // チェック機能
+    // --------------------------------------------------------------
+    function checkAnswers() {
+        let correctCount = 0;
+        let allCorrect = true;
+        const inputs = document.querySelectorAll('.q-input');
+        inputs.forEach((inp, idx) => {
+            const q = currentQuestions[idx];
+            if (!q) return;
+            const user = normalize(inp.value);
+            const expected = normalize(q.correct);
+            const fb = document.getElementById(`fb_${idx}`);
+            if (user === expected) {
+                fb.textContent = '✅ 正解！';
+                fb.className = 'q-feedback correct';
+                correctCount++;
+            } else {
+                fb.textContent = `❌ 正解: ${q.correct}`;
+                fb.className = 'q-feedback wrong';
+                allCorrect = false;
+            }
+        });
+
+        const total = currentQuestions.length;
+        const msg = `${correctCount}/${total} 正解`;
+        stats.textContent = msg;
+
+        globalFeedback.className = 'global-feedback show';
+        if (allCorrect && total > 0) {
+            globalFeedback.textContent = '🎉 ¡Perfecto! すべて正解です！';
+            globalFeedback.className = 'global-feedback show';
+        } else {
+            globalFeedback.textContent = `📝 ${correctCount}/${total} 正解。間違った問題は上記を確認してください。`;
+            globalFeedback.className = 'global-feedback show wrong';
+        }
+    }
+
+    // --------------------------------------------------------------
+    // 正解表示
+    // --------------------------------------------------------------
+    function showAnswers() {
+        const inputs = document.querySelectorAll('.q-input');
+        inputs.forEach((inp, idx) => {
+            const q = currentQuestions[idx];
+            if (!q) return;
+            inp.value = q.correct;
+            const fb = document.getElementById(`fb_${idx}`);
+            fb.textContent = `📖 正解: ${q.correct}`;
+            fb.className = 'q-feedback correct';
+        });
+        // 自動チェックもしておく
+        checkAnswers();
+    }
+
+    // --------------------------------------------------------------
+    // イベント
+    // --------------------------------------------------------------
+    document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+    document.getElementById('showAnswersBtn').addEventListener('click', showAnswers);
+    document.getElementById('newQuestionsBtn').addEventListener('click', generateNewQuestions);
+
+    // --------------------------------------------------------------
+    // 初期表示
+    // --------------------------------------------------------------
+    generateNewQuestions();
+</script>
+</body>
+</html>
