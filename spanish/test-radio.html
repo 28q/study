@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎧 スペイン語リスニングラジオ（全会話統合版）</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fb;
+            padding: 30px 20px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            padding: 30px 28px 40px;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        h1 small {
+            font-size: 15px;
+            font-weight: 400;
+            color: #64748b;
+            margin-left: 8px;
+        }
+
+        .header-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #e9edf4;
+            padding-bottom: 18px;
+            margin-bottom: 28px;
+            gap: 12px;
+        }
+
+        .radio-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+            background: #f1f4f9;
+            padding: 8px 18px 8px 14px;
+            border-radius: 60px;
+        }
+        .radio-controls button {
+            background: #0f172a;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            padding: 6px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            line-height: 1.4;
+            border: 1.5px solid transparent;
+        }
+        .radio-controls button:hover {
+            background: #1e293b;
+        }
+        .radio-controls button:active {
+            transform: scale(0.96);
+        }
+        .radio-controls button.secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        .radio-controls button.secondary:hover {
+            background: #cbd5e1;
+        }
+        .radio-controls label {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .radio-controls input[type="range"] {
+            width: 90px;
+            accent-color: #0f172a;
+        }
+        .radio-controls .speed-val {
+            font-weight: 700;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .badge-status {
+            font-size: 13px;
+            background: #eef2f6;
+            padding: 4px 16px;
+            border-radius: 30px;
+            color: #475569;
+            white-space: nowrap;
+        }
+        .badge-status strong {
+            color: #0f172a;
+        }
+
+        /* ===== 会話ブロック ===== */
+        .conv-block {
+            margin-bottom: 32px;
+        }
+        .conv-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            background: #f1f4f9;
+            padding: 8px 18px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-bottom: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== 各センテンスカード ===== */
+        .sentence-card {
+            display: flex;
+            align-items: stretch;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            background: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            overflow: hidden;
+            min-height: 58px;
+        }
+        .sentence-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .sentence-card.playing {
+            background: #f0f7ff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .sentence-card .spanish-col {
+            flex: 0 0 48%;
+            padding: 14px 18px;
+            background: #fafcff;
+            border-right: 1.5px solid #e2e8f0;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #0f172a;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 58px;
+        }
+
+        .sentence-card .japanese-col {
+            flex: 1;
+            padding: 14px 18px;
+            background: #ffffff;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            min-height: 58px;
+        }
+
+        .sentence-card .play-btn {
+            flex-shrink: 0;
+            background: #0f172a;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid transparent;
+        }
+        .sentence-card .play-btn:hover {
+            background: #1e293b;
+            transform: scale(1.05);
+        }
+        .sentence-card .play-btn:active {
+            transform: scale(0.92);
+        }
+        .sentence-card .play-btn.playing-btn {
+            background: #3b82f6;
+        }
+
+        .sentence-card .mod-tag {
+            font-size: 10px;
+            font-weight: 700;
+            color: #94a3b8;
+            background: #f1f4f9;
+            padding: 1px 10px;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        /* ===== レスポンシブ ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 18px 14px;
+            }
+            .sentence-card {
+                flex-direction: column;
+                border-radius: 14px;
+            }
+            .sentence-card .spanish-col {
+                flex: none;
+                border-right: none;
+                border-bottom: 1.5px solid #e2e8f0;
+                padding: 12px 16px;
+                font-size: 14px;
+                background: #f8faff;
+                flex-wrap: wrap;
+            }
+            .sentence-card .japanese-col {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+            .header-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .radio-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+                border-radius: 30px;
+                padding: 8px 14px;
+            }
+            .badge-status {
+                text-align: center;
+            }
+            h1 {
+                font-size: 21px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sentence-card .spanish-col {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .sentence-card .play-btn {
+                align-self: flex-start;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0.4;
+                transform: translateY(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            font-size: 13px;
+            color: #94a3b8;
+            text-align: center;
+            border-top: 1px solid #e9edf4;
+            padding-top: 20px;
+        }
+        .footer-note span {
+            background: #f1f4f9;
+            padding: 2px 10px;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <div class="header-bar">
+            <h1>
+                🎧 スペイン語リスニングラジオ
+                <small>— 全会話を音声で聴く</small>
+            </h1>
+            <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px;">
+                <div class="radio-controls">
+                    <button id="playAllBtn" title="すべて連続再生">▶ ラジオ再生</button>
+                    <button id="stopBtn" class="secondary" title="停止">⏹ 停止</button>
+                    <label>
+                        <span style="font-size:13px;">速度</span>
+                        <input type="range" id="rateSlider" min="0.5" max="2.0" step="0.1" value="1.0" />
+                        <span class="speed-val" id="rateDisplay">1.0</span>
+                    </label>
+                </div>
+                <span class="badge-status" id="statusBadge">全 <strong id="totalCount">0</strong> 文</span>
+            </div>
+        </div>
+
+        <div id="conversationsContainer"></div>
+
+        <div class="footer-note">
+            <span>🔊 各文の ▶ ボタンで単独再生・停止 | ラジオ再生で連続リスニング</span>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  データ統合：最初のHTML（Lección 2〜5）＋ 2番目のHTML（購読2〜5）
+        // ================================================================
+        const conversationData = [{
+            title: '📖 Lección 2 — あいさつ・出身',
+            sentences: [
+                'Ji Sung: Buenos días, Naoki.|おはようございます、ナオキ。',
+                'Naoki: Buenos días.|おはようございます。',
+                'Ji Sung: Oh, mira, allí está mi amiga.|あ、見て、そこに私の友達がいるよ。',
+                'Lupe: ¡Hola!|こんにちは！',
+                'Naoki: Hola, ¿cómo te llamas?|こんにちは、お名前は何ですか？',
+                'Lupe: Me llamo Lupe.|ルペと言います。',
+                'Naoki: Yo me llamo Naoki, mucho gusto.|私はナオキと言います、初めまして。',
+                'Lupe: Encantada.|よろしくお願いします。',
+                'Naoki: ¿De dónde eres, Lupe?|ルペさんはどこ出身ですか？',
+                'Lupe: Soy de Morelos, México. ¿Tú eres de Tokio?|メキシコのモレロス出身です。あなたは東京出身ですか？',
+                'Naoki: No, soy de Fukuoka, pero ahora estoy en Tokio para estudiar.|いいえ、福岡出身ですが、今は勉強のために東京にいます。',
+                'Lupe: Ji Sung, tú eres chino, ¿verdad?|ジソンさん、あなたは中国人ですよね？',
+                'Ji Sung: No, soy coreano, de Seúl.|いいえ、韓国人です、ソウル出身です。'
+            ]
+        }, {
+            title: '🍽️ Lección 3 — メキシコ料理の夕べ',
+            sentences: [
+                'Laura: Hoy Antonio y yo preparamos una comida mexicana en casa.|今日、アントニオと私は家でメキシコ料理を用意します。',
+                'Teresa: ¿Esta noche?|今夜ですか？',
+                'Laura: Sí. ¿Estás libre? A nosotros nos gusta recibir a los amigos en casa.|はい。お暇ですか？私たちは家で友達を迎えるのが好きです。',
+                'Teresa: ¡Qué lástima! Debo esperar a unas amigas chilenas en el aeropuerto.|残念！空港でチリ人の友人たちを待たなければなりません。',
+                'Laura: ¿Por qué no las invitas?|彼女たちを招待してはどうですか？',
+                'Teresa: ¿Invitarlas a ellas?|彼女たちを招待する？',
+                'Laura: Sí. Tal vez a tus amigas chilenas les gustan los tacos y el mole.|ええ。たぶんあなたのチリ人の友達はタコスとモレが好きでしょう。',
+                'Teresa: ¿Qué es el mole?|モレとは何ですか？',
+                'Laura: Es una salsa un poco picante. Lleva chocolate y varios condimentos; lo acompañamos con carne de pollo y arroz.|少しピリッとしたソースです。チョコレートといくつかの香辛料が入っています。鶏肉とご飯と一緒にいただきます。',
+                'Teresa: ¿Chocolate en salsa?|ソースにチョコレート？',
+                'Laura: Sí. A mí me encanta. Seguramente a ti y a tus amigas también les gusta.|はい。私は大好きです。きっとあなたやあなたの友達も気に入るでしょう。',
+                'Teresa: Bueno. Creo que esto es interesante...|なるほど。面白いと思います…',
+                'Laura: Luego cantamos algunas canciones y bebemos tequila.|その後、何曲か歌ってテキーラを飲みましょう。',
+                'Teresa: Me parece perfecto. ¡La comida mexicana me fascina!|完璧だと思います。メキシコ料理に魅了されます！'
+            ]
+        }, {
+            title: '🏔️ Lección 4 — マチュピチュ旅行',
+            sentences: [
+                'Akari: ¡Qué lugar tan bonito! ¿Dónde queda?|なんて綺麗な場所でしょう！どこにありますか？',
+                'Elvira: Ah, ¿no lo sabes? Esta es una fotografía de Machu Picchu, unas ruinas incaicas de Perú.|あ、知らないの？これはペルーのインカ遺跡、マチュピチュの写真よ。',
+                'Akari: ¿Vas a viajar a Perú?|ペルーに旅行に行くの？',
+                'Elvira: Sí. Pienso visitar varias ciudades en agosto, cuando allá es invierno. Quiero conocer Cusco y Machu Picchu, que son Patrimonio de la Humanidad.|そう。8月にいくつかの都市を訪れる予定よ、あちらは冬だから。世界遺産のクスコとマチュピチュに行きたいの。',
+                'Akari: ¿Son sitios muy antiguos?|とても古い場所なの？',
+                'Elvira: Sí. En ambos hay construcciones incaicas y tienen una historia muy interesante.|そう。両方ともインカの建造物があって、とても興味深い歴史があるの。',
+                'Akari: Ya lo creo. Para ser Patrimonio de la Humanidad los lugares deben tener valor histórico o natural.|そうだね。世界遺産になるには、歴史的または自然的価値がなければならないよね。',
+                'Elvira: Machu Picchu es una ciudadela que está en lo alto de una montaña.|マチュピチュは山の上にある城塞都市よ。',
+                'Akari: ¿Es más alta o menos alta que el Monte Fuji?|富士山より高い？それとも低い？',
+                'Elvira: Es menos alta. Para llegar hay que salir desde Cusco en tren, que es la ciudad más turística de Perú.|低いわ。行くにはペルーで一番観光客が多い都市、クスコから列車で出発しなければならないの。',
+                'Akari: ¿Cuántos días vas a estar allí?|何日間そこにいるの？',
+                'Elvira: Solo dos semanas. Voy a aprovechar la estancia para conocer otros lugares cercanos.|たった2週間よ。滞在を利用して近くの他の場所も訪れるつもり。'
+            ]
+        }, {
+            title: '⚽ Lección 5 — サッカーと野球',
+            sentences: [
+                'Rolando: ¿A ti te gusta el fútbol?|あなたはサッカーが好きですか？',
+                'Marco: Sí, he visto algunos partidos de la Liga Española. Me gusta mucho el ambiente de los estadios. ¿Y a ti te agrada el fútbol?|はい、スペインリーグの試合をいくつか見ました。スタジアムの雰囲気がとても好きです。あなたはサッカーがお好きですか？',
+                'Rolando: No mucho. Prefiero el béisbol. Es el deporte más popular de mi país. Sobre todo me gusta cuando está jugando mi equipo preferido, aunque a veces me pongo muy nervioso.|あまり好きではありません。野球の方が好きです。私の国で一番人気のあるスポーツです。特に好きなチームが試合をしている時が好きですが、時々とても緊張します。',
+                'Marco: ¿Has ido a ver algún juego de béisbol en el estadio?|スタジアムに野球の試合を見に行ったことがありますか？',
+                'Rolando: Sí, he visto algunos partidos. Pero últimamente solo los he seguido por la televisión. Me gusta escuchar los comentarios que hacen los narradores.|はい、いくつか試合を見たことがあります。でも最近はテレビでしか観ていません。実況解説者のコメントを聞くのが好きです。',
+                'Marco: El fútbol y el béisbol se han convertido en deportes muy populares, ¿verdad?|サッカーと野球はとても人気のあるスポーツになりましたよね？',
+                'Rolando: Así es; cada día hay más aficionados en todo el mundo.|その通りです。世界中で毎日ファンが増えています。',
+                'Marco: ¿Quieres ver un partido de fútbol en el Santiago Bernabéu? Estoy pensando en ir. Es como un sueño.|サンティアゴ・ベルナベウでサッカーの試合を見たいですか？行こうと思っています。まるで夢のようです。',
+                'Rolando: Hablando de sueños, yo desde hace tiempo sueño con jugar en la Serie del Caribe.|夢と言えば、私はずっとカリビアンシリーズでプレーすることを夢見ています。',
+                'Marco: Soñar es vivir. Nos vemos pronto. Adiós.|夢を見ることは生きることです。また近いうちに。さようなら。'
+            ]
+        }, {
+            title: '🏙️ 購読2 — Dos ciudades españolas',
+            sentences: [
+                'Madrid está en el centro de España.|マドリードはスペインの中心にあります。',
+                'Es la capital del país.|それは国の首都です。',
+                'Hay muchos edificios altos y tiendas bonitas.|たくさんの高い建物と素敵な店があります。',
+                'En Madrid está el Museo del Prado.|マドリードにはプラド美術館があります。',
+                'Es un museo famoso.|それは有名な美術館です。',
+                'También está el estadio Santiago Bernabéu, del equipo Real Madrid.|レアル・マドリードのサンティアゴ・ベルナベウ競技場もあります。',
+                'Es muy grande e impresionante.|それはとても大きくて印象的です。',
+                'Alicante es una ciudad pequeña.|アリカンテは小さな都市です。',
+                'Está al lado del mar Mediterráneo, en el sudeste de España.|地中海のそば、スペイン南東部にあります。',
+                'En Alicante hay numerosas playas y un paseo marítimo agradable.|アリカンテにはたくさんのビーチと楽しい海辺の遊歩道があります。',
+                'También hay un castillo muy antiguo.|とても古い城もあります。',
+                'Es el Castillo de Santa Bárbara.|それはサンタ・バルバラ城です。'
+            ]
+        }, {
+            title: '🌮 購読3 — La comida mexicana',
+            sentences: [
+                'En la cocina mexicana hay muchos platillos deliciosos.|メキシコ料理にはたくさんの美味しい料理があります。',
+                'Los mexicanos usan productos autóctonos como el tomate, el chile, el aguacate y el chocolate para preparar una gran variedad de salsas.|メキシコ人はトマト、チリ、アボカド、チョコレートなどの在来種の食材を使って多種多様なソースを調理します。',
+                'La base de la alimentación de los mexicanos es el maíz.|メキシコ人の食生活の基本はトウモロコシです。',
+                'Las tortillas, los tacos y los tamales son de maíz.|トルティーヤ、タコス、タマレスはトウモロコシで作られています。',
+                'Los mexicanos comen carne de cerdo, res o pollo, casi siempre con salsas y tortillas.|メキシコ人は豚肉、牛肉、鶏肉を、ほとんど常にソースとトルティーヤと一緒に食べます。',
+                'También son muy populares las bebidas alcohólicas como el tequila y el mezcal, o los jugos de frutas naturales.|テキーラやメスカルなどのアルコール飲料や、天然のフルーツジュースも非常に人気があります。',
+                '¡La comida mexicana es riquísima!|メキシコ料理はとても美味しいです！'
+            ]
+        }, {
+            title: '🏛️ 購読4 — Patrimonio de la Humanidad',
+            sentences: [
+                'Son lugares que poseen un gran valor histórico, natural y cultural.|それらは歴史的、自然的、文化的に大きな価値を持つ場所です。',
+                'Hay muchos en todo el mundo.|世界中にたくさんあります。',
+                'Una gran cantidad de personas viaja para conocer y apreciar su belleza.|多くの人々がその美しさを知り鑑賞するために旅行します。',
+                'Cuando visitamos esos lugares debemos atender las recomendaciones y cuidarlos para las futuras generaciones.|それらの場所を訪れる際は、推奨事項に従い、将来の世代のためにそれらを大切にしなければなりません。',
+                'Son muy atractivos aquellos sitios declarados Patrimonio de la Humanidad.|世界遺産に登録された場所は非常に魅力的です。',
+                'Entre los más visitados en América Latina están Teotihuacán, en México; el Parque Nacional Tikal, en Guatemala; el Parque Nacional Canaima, en Venezuela y las Cataratas del Iguazú, que quedan entre Brasil, Paraguay y Argentina.|ラテンアメリカで最も訪れている場所には、メキシコのテオティワカン、グアテマラのティカル国立公園、ベネズエラのカナイマ国立公園、そしてブラジル、パラグアイ、アルゼンチンにまたがるイグアスの滝があります。',
+                'Hay muchos otros en distintos países.|さまざまな国に他にもたくさんあります。',
+                'Todos estos lugares tienen algo especial, algunos son más grandes, otros más antiguos, pero ninguno es menos importante.|これらの場所はすべて特別な何かを持っており、いくつかはより大きく、他はより古いですが、どれも重要でないものはありません。',
+                '¡Vamos a conocerlos!|それらを知りに行きましょう！'
+            ]
+        }, {
+            title: '⚽ 購読5 — Dos deportes populares',
+            sentences: [
+                'El fútbol y el béisbol son los deportes que despiertan más pasiones en el mundo hispano.|サッカーと野球は、ヒスパニック世界で最も情熱をかき立てるスポーツです。',
+                'Al igual que en otros países, el fútbol atrae a grandes masas de espectadores a los estadios y muchos siguen los juegos a través de la radio y la televisión.|他の国々と同様に、サッカーは多くの観客をスタジアムに集め、多くの人がラジオやテレビで試合を追っています。',
+                'En casi todos los países de América Latina, como en España, el fútbol es el rey de los deportes.|スペインと同様に、ラテンアメリカのほぼすべての国で、サッカーはスポーツの王様です。',
+                'Sin embargo, en América también el béisbol es muy popular y hay importantes campeonatos, entre ellos, el de las Grandes Ligas en los Estados Unidos y la Serie del Caribe, donde compiten los equipos campeones de México, Puerto Rico, República Dominicana y Venezuela.|しかし、アメリカ大陸では野球も非常に人気があり、重要な大会があります。その中には、アメリカのメジャーリーグや、メキシコ、プエルトリコ、ドミニカ共和国、ベネズエラのチャンピオンチームが競うカリビアンシリーズがあります。'
+            ]
+        }];
+
+        // ================================================================
+        //  フラット化 & 各文にID付与
+        // ================================================================
+        let allSentences = [];
+        let globalId = 0;
+
+        conversationData.forEach((conv, ci) => {
+            conv.sentences.forEach((raw) => {
+                const parts = raw.split('|');
+                const spanishFull = parts[0].trim();
+                const japanese = parts[1].trim();
+
+                // 内容のみ（話者名除去）— 音声用
+                let spanishContent = spanishFull;
+                const colonIndex = spanishFull.indexOf(': ');
+                if (colonIndex !== -1) {
+                    spanishContent = spanishFull.substring(colonIndex + 2).trim();
+                } else {
+                    const idx = spanishFull.indexOf(':');
+                    if (idx !== -1) {
+                        spanishContent = spanishFull.substring(idx + 1).trim();
+                    }
+                }
+
+                allSentences.push({
+                    id: globalId,
+                    mod: globalId % 2,
+                    spanishFull: spanishFull,
+                    spanishContent: spanishContent,
+                    japanese: japanese,
+                    convIndex: ci,
+                    convTitle: conv.title,
+                });
+                globalId++;
+            });
+        });
+
+        // ================================================================
+        //  DOM 構築
+        // ================================================================
+        const container = document.getElementById('conversationsContainer');
+        const totalCount = document.getElementById('totalCount');
+        const playAllBtn = document.getElementById('playAllBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const rateSlider = document.getElementById('rateSlider');
+        const rateDisplay = document.getElementById('rateDisplay');
+
+        const sentenceElements = new Map(); // id -> { card, playBtn, ... }
+
+        // ---- レンダリング ----
+        function render() {
+            container.innerHTML = '';
+            sentenceElements.clear();
+
+            const grouped = {};
+            allSentences.forEach(s => {
+                if (!grouped[s.convIndex]) grouped[s.convIndex] = [];
+                grouped[s.convIndex].push(s);
+            });
+
+            Object.keys(grouped).forEach((convIdx) => {
+                const conv = grouped[convIdx];
+                const title = conv[0].convTitle;
+
+                const block = document.createElement('div');
+                block.className = 'conv-block';
+
+                const titleEl = document.createElement('div');
+                titleEl.className = 'conv-title';
+                titleEl.textContent = title;
+                block.appendChild(titleEl);
+
+                conv.forEach((s) => {
+                    const card = document.createElement('div');
+                    card.className = 'sentence-card fade-in';
+                    card.dataset.id = s.id;
+
+                    // --- 左：スペイン語 + 再生ボタン ---
+                    const colEs = document.createElement('div');
+                    colEs.className = 'spanish-col';
+
+                    const playBtn = document.createElement('button');
+                    playBtn.className = 'play-btn';
+                    playBtn.textContent = '▶';
+                    playBtn.dataset.id = s.id;
+                    playBtn.setAttribute('aria-label', '再生');
+                    colEs.appendChild(playBtn);
+
+                    const textEs = document.createElement('span');
+                    textEs.className = 'text';
+                    textEs.textContent = s.spanishFull;
+                    colEs.appendChild(textEs);
+
+                    const modTag = document.createElement('span');
+                    modTag.className = 'mod-tag';
+                    modTag.textContent = `mod ${s.mod}`;
+                    colEs.appendChild(modTag);
+
+                    card.appendChild(colEs);
+
+                    // --- 右：日本語 ---
+                    const colJa = document.createElement('div');
+                    colJa.className = 'japanese-col';
+                    const textJa = document.createElement('span');
+                    textJa.className = 'text';
+                    textJa.textContent = s.japanese;
+                    colJa.appendChild(textJa);
+                    card.appendChild(colJa);
+
+                    block.appendChild(card);
+
+                    sentenceElements.set(s.id, {
+                        card,
+                        playBtn,
+                        data: s,
+                        colEs,
+                        colJa,
+                    });
+                });
+
+                container.appendChild(block);
+            });
+
+            totalCount.textContent = allSentences.length;
+            updateAllPlayButtons(false);
+        }
+
+        // ---- ボタン状態更新 ----
+        function updateAllPlayButtons(isPlayingAny) {
+            sentenceElements.forEach((el) => {
+                const btn = el.playBtn;
+                if (isPlayingAny) {
+                    btn.textContent = '⏹';
+                    btn.classList.add('playing-btn');
+                } else {
+                    btn.textContent = '▶';
+                    btn.classList.remove('playing-btn');
+                }
+            });
+        }
+
+        // ---- 現在再生中のハイライト ----
+        let currentPlayingId = null;
+
+        function highlightCard(id) {
+            sentenceElements.forEach((el) => {
+                el.card.classList.toggle('playing', el.data.id === id);
+            });
+        }
+
+        // ================================================================
+        //  音声再生エンジン
+        // ================================================================
+        let isPlaying = false;
+        let queue = [];
+        let currentIndex = -1;
+        let currentUtterance = null;
+        let isStopped = false;
+
+        // 速度
+        let speechRate = 1.0;
+        rateSlider.addEventListener('input', () => {
+            speechRate = parseFloat(rateSlider.value);
+            rateDisplay.textContent = speechRate.toFixed(1);
+        });
+
+        // 指定されたテキストを読み上げる（単発）
+        function speakText(text, callback) {
+            return new Promise((resolve) => {
+                if (isStopped) {
+                    resolve();
+                    return;
+                }
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-ES';
+                utterance.rate = speechRate;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+
+                utterance.onend = () => {
+                    currentUtterance = null;
+                    resolve();
+                };
+                utterance.onerror = (e) => {
+                    console.warn('音声エラー:', e);
+                    currentUtterance = null;
+                    resolve();
+                };
+
+                currentUtterance = utterance;
+                speechSynthesis.speak(utterance);
+            });
+        }
+
+        // キューを再生（連続）
+        async function playQueue() {
+            if (isStopped) return;
+            if (queue.length === 0) {
+                finishPlayback();
+                return;
+            }
+
+            isPlaying = true;
+            playAllBtn.textContent = '⏸ 一時停止';
+            updateAllPlayButtons(true);
+
+            const item = queue.shift();
+            currentIndex = item.index;
+            currentPlayingId = item.id;
+            highlightCard(item.id);
+
+            // 単独再生ボタンも更新（現在再生中は停止ボタンに）
+            sentenceElements.forEach((el) => {
+                if (el.data.id === item.id) {
+                    el.playBtn.textContent = '⏹';
+                    el.playBtn.classList.add('playing-btn');
+                } else {
+                    el.playBtn.textContent = '▶';
+                    el.playBtn.classList.remove('playing-btn');
+                }
+            });
+
+            await speakText(item.text);
+
+            if (isStopped) {
+                finishPlayback();
+                return;
+            }
+
+            // 次のキューへ
+            playQueue();
+        }
+
+        function finishPlayback() {
+            isPlaying = false;
+            currentPlayingId = null;
+            highlightCard(null);
+            playAllBtn.textContent = '▶ ラジオ再生';
+            updateAllPlayButtons(false);
+            sentenceElements.forEach((el) => {
+                el.playBtn.textContent = '▶';
+                el.playBtn.classList.remove('playing-btn');
+            });
+            currentUtterance = null;
+        }
+
+        // ---- 全体再生開始 ----
+        function startAllPlay() {
+            if (isPlaying) {
+                // 一時停止
+                if (currentUtterance) {
+                    speechSynthesis.pause();
+                }
+                playAllBtn.textContent = '▶ 再開';
+                return;
+            }
+
+            // 再開（一時停止中）
+            if (speechSynthesis.paused) {
+                speechSynthesis.resume();
+                playAllBtn.textContent = '⏸ 一時停止';
+                return;
+            }
+
+            // 新規再生
+            if (queue.length === 0) {
+                // キュー作成（全ての文）
+                queue = allSentences.map((s, idx) => ({
+                    id: s.id,
+                    index: idx,
+                    text: s.spanishContent,
+                }));
+                currentIndex = -1;
+                isStopped = false;
+                playQueue();
+            } else {
+                // キューが残っている場合（中断後再開など）
+                isStopped = false;
+                playQueue();
+            }
+        }
+
+        // ---- 停止 ----
+        function stopAll() {
+            isStopped = true;
+            if (currentUtterance) {
+                speechSynthesis.cancel();
+                currentUtterance = null;
+            }
+            queue = [];
+            isPlaying = false;
+            currentPlayingId = null;
+            highlightCard(null);
+            playAllBtn.textContent = '▶ ラジオ再生';
+            updateAllPlayButtons(false);
+            sentenceElements.forEach((el) => {
+                el.playBtn.textContent = '▶';
+                el.playBtn.classList.remove('playing-btn');
+            });
+        }
+
+        // ---- 単独再生（トグル） ----
+        function toggleSingle(id) {
+            if (isPlaying) {
+                // 全体再生中に単独ボタンを押した場合 → 全体を停止して単独再生
+                stopAll();
+            }
+
+            const el = sentenceElements.get(id);
+            if (!el) return;
+
+            // 現在同じ文が再生中なら停止
+            if (currentPlayingId === id && isPlaying) {
+                if (currentUtterance) {
+                    speechSynthesis.cancel();
+                    currentUtterance = null;
+                }
+                isPlaying = false;
+                currentPlayingId = null;
+                highlightCard(null);
+                el.playBtn.textContent = '▶';
+                el.playBtn.classList.remove('playing-btn');
+                return;
+            }
+
+            // 単独再生
+            isStopped = false;
+            isPlaying = true;
+            currentPlayingId = id;
+            highlightCard(id);
+            sentenceElements.forEach((e) => {
+                if (e.data.id === id) {
+                    e.playBtn.textContent = '⏹';
+                    e.playBtn.classList.add('playing-btn');
+                } else {
+                    e.playBtn.textContent = '▶';
+                    e.playBtn.classList.remove('playing-btn');
+                }
+            });
+
+            const text = el.data.spanishContent;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            utterance.rate = speechRate;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            utterance.onend = () => {
+                isPlaying = false;
+                currentPlayingId = null;
+                highlightCard(null);
+                el.playBtn.textContent = '▶';
+                el.playBtn.classList.remove('playing-btn');
+                currentUtterance = null;
+                // ラジオボタンの状態も戻す
+                if (!isStopped) {
+                    playAllBtn.textContent = '▶ ラジオ再生';
+                }
+            };
+            utterance.onerror = () => {
+                isPlaying = false;
+                currentPlayingId = null;
+                highlightCard(null);
+                el.playBtn.textContent = '▶';
+                el.playBtn.classList.remove('playing-btn');
+                currentUtterance = null;
+            };
+
+            currentUtterance = utterance;
+            speechSynthesis.speak(utterance);
+        }
+
+        // ================================================================
+        //  イベント登録
+        // ================================================================
+        playAllBtn.addEventListener('click', startAllPlay);
+
+        stopBtn.addEventListener('click', () => {
+            stopAll();
+        });
+
+        // 各再生ボタンのイベントはレンダリング後にデリゲートで処理
+        container.addEventListener('click', (e) => {
+            const btn = e.target.closest('.play-btn');
+            if (!btn) return;
+            const id = parseInt(btn.dataset.id, 10);
+            if (isNaN(id)) return;
+            toggleSingle(id);
+        });
+
+        // ================================================================
+        //  初期化
+        // ================================================================
+        render();
+        console.log(`🎧 全 ${allSentences.length} 文を読み込みました。`);
+    </script>
+
+</body>
+</html>
