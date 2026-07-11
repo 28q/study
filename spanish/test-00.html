@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スペイン語単語テスト（一覧形式）</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f3f8;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            padding: 32px 28px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a2b4a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        h1 small {
+            font-size: 16px;
+            font-weight: 400;
+            color: #4a6a8b;
+            background: #eef3fa;
+            padding: 4px 18px;
+            border-radius: 40px;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px 24px;
+            padding: 16px 0 20px;
+            border-bottom: 2px solid #e6ecf5;
+            margin-bottom: 24px;
+        }
+        .toolbar .score {
+            font-weight: 600;
+            font-size: 18px;
+            background: #1a2b4a;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 40px;
+        }
+        .toolbar .btn {
+            padding: 10px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 40px;
+            background: #1a2b4a;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .toolbar .btn:hover {
+            background: #2c4270;
+            transform: translateY(-1px);
+        }
+        .toolbar .btn-outline {
+            background: transparent;
+            color: #1a2b4a;
+            border: 2px solid #bcccdb;
+        }
+        .toolbar .btn-outline:hover {
+            background: #eef3fa;
+        }
+        .toolbar .btn-success {
+            background: #2b8c5e;
+        }
+        .toolbar .btn-success:hover {
+            background: #1f7a4e;
+        }
+        .toolbar .btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+            transform: none;
+        }
+
+        /* 単語一覧 */
+        .word-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .word-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: #f9faff;
+            border: 1px solid #e9eff6;
+            transition: background 0.1s;
+        }
+        .word-row:hover {
+            background: #f2f6fe;
+        }
+        .word-row .index {
+            font-weight: 600;
+            color: #8a9bb0;
+            min-width: 40px;
+            font-size: 14px;
+            text-align: right;
+        }
+        .word-row .japanese {
+            font-weight: 600;
+            font-size: 18px;
+            color: #0a1a2e;
+            min-width: 120px;
+            flex: 0 0 auto;
+        }
+        .word-row .input-wrap {
+            flex: 1;
+            min-width: 150px;
+        }
+        .word-row .input-wrap input {
+            width: 100%;
+            padding: 8px 14px;
+            font-size: 17px;
+            border: 2px solid #d0dceb;
+            border-radius: 10px;
+            outline: none;
+            background: white;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .word-row .input-wrap input:focus {
+            border-color: #3b6ea5;
+            box-shadow: 0 0 0 3px rgba(59, 110, 165, 0.12);
+        }
+        .word-row .input-wrap input.correct {
+            border-color: #2b8c5e;
+            background: #f0faf5;
+        }
+        .word-row .input-wrap input.incorrect {
+            border-color: #b13e4b;
+            background: #fef0f2;
+        }
+        .word-row .answer-display {
+            font-size: 17px;
+            font-weight: 500;
+            color: #2c4270;
+            min-width: 120px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.15s;
+        }
+        .word-row .answer-display.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .word-row .answer-display.correct-answer {
+            color: #1b6e48;
+        }
+        .word-row .answer-display.wrong-answer {
+            color: #b13e4b;
+        }
+        .word-row .status-icon {
+            font-size: 20px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        /* 採点後、行の背景色を微調整 */
+        .word-row.graded-correct {
+            background: #eaf7f0;
+        }
+        .word-row.graded-incorrect {
+            background: #fdecee;
+        }
+
+        .footer {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 2px solid #e6ecf5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .footer .summary {
+            font-size: 17px;
+            color: #1a2b4a;
+        }
+        .footer .summary strong {
+            font-weight: 700;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 16px;
+            }
+            .word-row {
+                flex-wrap: wrap;
+                gap: 6px 10px;
+                padding: 12px;
+            }
+            .word-row .japanese {
+                min-width: 80px;
+                font-size: 16px;
+            }
+            .word-row .input-wrap {
+                min-width: 120px;
+                flex: 1 1 100%;
+            }
+            .word-row .answer-display {
+                min-width: 80px;
+                font-size: 15px;
+            }
+            .word-row .index {
+                min-width: 30px;
+                font-size: 13px;
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <h1>
+        📘 単語テスト（一覧形式）
+        <small>日本語 → スペイン語</small>
+    </h1>
+
+    <div class="toolbar">
+        <div class="score" id="scoreDisplay">0 / 0</div>
+        <button class="btn btn-success" id="gradeBtn">✅ 採点する</button>
+        <button class="btn btn-outline" id="resetBtn">🔄 リセット</button>
+        <button class="btn btn-outline" id="showAllBtn">👁️ 正解をすべて表示</button>
+        <span style="font-size:15px; color:#5a6f8a; margin-left:auto;" id="progressInfo">100 問</span>
+    </div>
+
+    <!-- 単語一覧 -->
+    <div class="word-list" id="wordList"></div>
+
+    <div class="footer">
+        <div class="summary" id="summaryText">💡 各入力欄にスペイン語を入力し、「採点する」で一括チェック</div>
+        <button class="btn" id="clearAllBtn" style="background:#6c7a8e;">🧹 すべてクリア</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        // ---------- 問題データ（日本語 → スペイン語） ----------
+        const rawData = [
+            // 数詞
+            { ja: '0', es: 'cero' },
+            { ja: '1', es: 'uno' },
+            { ja: '2', es: 'dos' },
+            { ja: '3', es: 'tres' },
+            { ja: '4', es: 'cuatro' },
+            { ja: '5', es: 'cinco' },
+            { ja: '6', es: 'seis' },
+            { ja: '7', es: 'siete' },
+            { ja: '8', es: 'ocho' },
+            { ja: '9', es: 'nueve' },
+            { ja: '10', es: 'diez' },
+            { ja: '11', es: 'once' },
+            { ja: '12', es: 'doce' },
+            { ja: '13', es: 'trece' },
+            { ja: '14', es: 'catorce' },
+            { ja: '15', es: 'quince' },
+            { ja: '16', es: 'dieciséis' },
+            { ja: '17', es: 'diecisiete' },
+            { ja: '18', es: 'dieciocho' },
+            { ja: '19', es: 'diecinueve' },
+            { ja: '20', es: 'veinte' },
+            { ja: '21', es: 'veintiuno' },
+            { ja: '22', es: 'veintidós' },
+            { ja: '23', es: 'veintitrés' },
+            { ja: '24', es: 'veinticuatro' },
+            { ja: '25', es: 'veinticinco' },
+            { ja: '26', es: 'veintiséis' },
+            { ja: '27', es: 'veintisiete' },
+            { ja: '28', es: 'veintiocho' },
+            { ja: '29', es: 'veintinueve' },
+            { ja: '30', es: 'treinta' },
+            { ja: '31', es: 'treinta y uno' },
+            { ja: '40', es: 'cuarenta' },
+            { ja: '50', es: 'cincuenta' },
+            { ja: '60', es: 'sesenta' },
+            { ja: '70', es: 'setenta' },
+            { ja: '80', es: 'ochenta' },
+            { ja: '90', es: 'noventa' },
+            { ja: '100', es: 'cien' },
+            { ja: '101', es: 'ciento uno' },
+            { ja: '200', es: 'doscientos' },
+            { ja: '300', es: 'trescientos' },
+            { ja: '400', es: 'cuatrocientos' },
+            { ja: '500', es: 'quinientos' },
+            { ja: '600', es: 'seiscientos' },
+            { ja: '700', es: 'setecientos' },
+            { ja: '800', es: 'ochocientos' },
+            { ja: '900', es: 'novecientos' },
+            { ja: '1.000', es: 'mil' },
+            { ja: '10.000', es: 'diez mil' },
+            { ja: '100.000', es: 'cien mil' },
+            { ja: '1.000.000', es: 'un millón' },
+            { ja: '10.000.000', es: 'diez millones' },
+            { ja: '100.000.000', es: 'cien millones' },
+            // 序数詞
+            { ja: '1番目', es: 'primero' },
+            { ja: '2番目', es: 'segundo' },
+            { ja: '3番目', es: 'tercero' },
+            { ja: '4番目', es: 'cuarto' },
+            { ja: '5番目', es: 'quinto' },
+            // 曜日
+            { ja: '月曜日', es: 'lunes' },
+            { ja: '火曜日', es: 'martes' },
+            { ja: '水曜日', es: 'miércoles' },
+            { ja: '木曜日', es: 'jueves' },
+            { ja: '金曜日', es: 'viernes' },
+            { ja: '土曜日', es: 'sábado' },
+            { ja: '日曜日', es: 'domingo' },
+            // 月
+            { ja: '1月', es: 'enero' },
+            { ja: '2月', es: 'febrero' },
+            { ja: '3月', es: 'marzo' },
+            { ja: '4月', es: 'abril' },
+            { ja: '5月', es: 'mayo' },
+            { ja: '6月', es: 'junio' },
+            { ja: '7月', es: 'julio' },
+            { ja: '8月', es: 'agosto' },
+            { ja: '9月', es: 'septiembre' },
+            { ja: '10月', es: 'octubre' },
+            { ja: '11月', es: 'noviembre' },
+            { ja: '12月', es: 'diciembre' },
+            // 時の表現
+            { ja: '時間', es: 'hora' },
+            { ja: '日', es: 'día' },
+            { ja: '週', es: 'semana' },
+            { ja: '月', es: 'mes' },
+            { ja: '年', es: 'año' },
+            { ja: '今日', es: 'hoy' },
+            { ja: '昨日', es: 'ayer' },
+            { ja: '明日', es: 'mañana' },
+            { ja: '明後日', es: 'pasado mañana' },
+            { ja: '一昨日', es: 'anteayer' },
+            // 四季
+            { ja: '春', es: 'primavera' },
+            { ja: '夏', es: 'verano' },
+            { ja: '秋', es: 'otoño' },
+            { ja: '冬', es: 'invierno' },
+            // 方位
+            { ja: '北', es: 'norte' },
+            { ja: '南', es: 'sur' },
+            { ja: '東', es: 'este' },
+            { ja: '西', es: 'oeste' },
+            { ja: '北東', es: 'nordeste' },
+            { ja: '北西', es: 'noroeste' },
+            { ja: '南東', es: 'sudeste' },
+            { ja: '南西', es: 'sudoeste' }
+        ];
+
+        // 正規化（アクセント除去・小文字化）
+        function normalize(str) {
+            return str.normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .trim();
+        }
+
+        // ---------- DOM 参照 ----------
+        const wordListEl = document.getElementById('wordList');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const progressInfo = document.getElementById('progressInfo');
+        const summaryText = document.getElementById('summaryText');
+        const gradeBtn = document.getElementById('gradeBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const showAllBtn = document.getElementById('showAllBtn');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+
+        // ---------- 状態 ----------
+        let questions = [];          // { ja, es }
+        let graded = false;          // 採点済みか
+        let showAll = false;         // 正解を全表示中か
+
+        // 各行の入力要素と表示要素を保持
+        const rowElements = [];
+
+        // ---------- レンダリング ----------
+        function render() {
+            wordListEl.innerHTML = '';
+            rowElements.length = 0;
+
+            questions.forEach((q, idx) => {
+                const row = document.createElement('div');
+                row.className = 'word-row';
+                row.dataset.index = idx;
+
+                // インデックス
+                const indexSpan = document.createElement('span');
+                indexSpan.className = 'index';
+                indexSpan.textContent = idx + 1;
+                row.appendChild(indexSpan);
+
+                // 日本語
+                const jaSpan = document.createElement('span');
+                jaSpan.className = 'japanese';
+                jaSpan.textContent = q.ja;
+                row.appendChild(jaSpan);
+
+                // 入力欄
+                const inputWrap = document.createElement('div');
+                inputWrap.className = 'input-wrap';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'スペイン語';
+                input.dataset.index = idx;
+                inputWrap.appendChild(input);
+                row.appendChild(inputWrap);
+
+                // 正解表示エリア
+                const answerDisplay = document.createElement('span');
+                answerDisplay.className = 'answer-display';
+                answerDisplay.textContent = q.es;
+                row.appendChild(answerDisplay);
+
+                // ステータスアイコン（後で使う）
+                const statusIcon = document.createElement('span');
+                statusIcon.className = 'status-icon';
+                row.appendChild(statusIcon);
+
+                wordListEl.appendChild(row);
+
+                // 要素を保存
+                rowElements.push({
+                    row,
+                    input,
+                    answerDisplay,
+                    statusIcon,
+                    question: q
+                });
+            });
+
+            // 初期表示：スコアリセット
+            updateScoreAndSummary();
+            progressInfo.textContent = `${questions.length} 問`;
+            // 採点状態をリセット
+            graded = false;
+            showAll = false;
+            // 入力内容は保持（リセット時はクリアされる）
+        }
+
+        // スコアとサマリー更新
+        function updateScoreAndSummary() {
+            let correct = 0;
+            let total = questions.length;
+            let answered = 0;
+
+            rowElements.forEach(({ input, question, row, answerDisplay, statusIcon }) => {
+                const val = input.value.trim();
+                if (val !== '') answered++;
+                const isCorrect = normalize(val) === normalize(question.es);
+                if (isCorrect && val !== '') correct++;
+                // 表示更新（採点状態で色分け）
+                if (graded) {
+                    if (val !== '') {
+                        input.className = isCorrect ? 'correct' : 'incorrect';
+                        row.className = 'word-row' + (isCorrect ? ' graded-correct' : ' graded-incorrect');
+                        answerDisplay.classList.add('show');
+                        answerDisplay.className = 'answer-display show ' + (isCorrect ? 'correct-answer' : 'wrong-answer');
+                        statusIcon.textContent = isCorrect ? '✅' : '❌';
+                    } else {
+                        // 未入力は不正解扱い（採点時）
+                        input.className = 'incorrect';
+                        row.className = 'word-row graded-incorrect';
+                        answerDisplay.classList.add('show');
+                        answerDisplay.className = 'answer-display show wrong-answer';
+                        statusIcon.textContent = '❌';
+                    }
+                } else {
+                    // 未採点時はクラスをリセット
+                    input.className = '';
+                    row.className = 'word-row';
+                    if (!showAll) {
+                        answerDisplay.classList.remove('show');
+                        statusIcon.textContent = '';
+                    } else {
+                        // 正解全表示中は常に表示
+                        answerDisplay.classList.add('show');
+                        answerDisplay.className = 'answer-display show correct-answer';
+                        statusIcon.textContent = '👁️';
+                    }
+                }
+            });
+
+            // スコア表示（採点済みなら正解数/回答数、そうでなければ -/-）
+            if (graded) {
+                const totalAnswered = rowElements.filter(({ input }) => input.value.trim() !== '').length;
+                scoreDisplay.textContent = `${correct} / ${totalAnswered}`;
+                summaryText.textContent = `✅ 正解 ${correct} 問 / 回答 ${totalAnswered} 問 (未回答 ${total - totalAnswered} 問)`;
+            } else {
+                const totalAnswered = rowElements.filter(({ input }) => input.value.trim() !== '').length;
+                scoreDisplay.textContent = `? / ${totalAnswered}`;
+                summaryText.textContent = `📝 回答済み ${totalAnswered} 問 / ${total} 問 (採点前)`;
+            }
+        }
+
+        // 採点処理
+        function gradeAll() {
+            graded = true;
+            showAll = false; // 採点時は正解表示モード解除
+            updateScoreAndSummary();
+        }
+
+        // リセット（入力クリア＋採点状態解除）
+        function resetAll() {
+            rowElements.forEach(({ input, answerDisplay, statusIcon, row }) => {
+                input.value = '';
+                input.className = '';
+                row.className = 'word-row';
+                answerDisplay.classList.remove('show');
+                statusIcon.textContent = '';
+            });
+            graded = false;
+            showAll = false;
+            updateScoreAndSummary();
+        }
+
+        // 正解をすべて表示（トグル）
+        function toggleShowAll() {
+            if (graded) {
+                // 採点済みの場合は一旦採点解除？ ここでは採点状態を維持しつつ、正解表示をトグル
+                // ただし、採点済みでも正解表示はされているので、トグルで非表示にできるようにする。
+                // しかし、採点済みの場合は正解表示がすでに出ている。ユーザーは「正解をすべて表示」を押すと、採点前でも全表示したい。
+                // なので、採点状態に関係なく、正解表示をトグルする。
+                // でも、採点済みの場合は正解表示がすでに「show」なので、トグルで消すのは変。
+                // 仕様: 「正解をすべて表示」ボタンは、採点前でも正解を一覧表示するためのもの。押すたびに表示/非表示を切り替え。
+                // 採点済みの場合は、既に正解表示が出ているので、このボタンで非表示にできるようにする。（採点済みの表示を消す）
+                // つまり、showAll フラグで制御。
+                showAll = !showAll;
+                // 採点済みなら、showAllがfalseの場合でも、個別の正解表示は採点結果に従う。
+                // しかし、採点済みの場合、answerDisplayはすでに表示されているので、showAllがfalseなら非表示にする。
+                // また、採点済みかつshowAllがtrueなら、すべての正解表示を強制的に表示（採点結果にかかわらず）
+                // 複雑なのでシンプルに: このボタンは「採点前でも正解を一覧表示/非表示」切り替え。採点後は影響しない（採点後の表示を維持）
+                // ただし、採点後は正解表示は個別に出ているので、このボタンで非表示にできるようにするのは混乱を招く。
+                // より良い: 「正解をすべて表示」は採点前に使うための機能。採点後は無効化する。
+                // または、採点後でも正解表示をトグルできるが、その場合は採点結果の色分けも消える。
+                // 簡単のため、採点後はこのボタンを無効化するか、動作を「正解表示のON/OFF」に統一。
+                // 実装: showAllフラグは「すべての正解を表示する」モード。gradedがtrueの場合は、個別の正解表示がすでにあるため、showAllは無視する。
+                // しかし、gradedがtrueでshowAllをtrueにしても、表示は変わらない（すでに表示されている）。
+                // ここでは、showAllをtrueにすると、採点前でも全表示。採点後は影響しないが、ボタンでトグルできる。
+                // 面倒なので、「正解をすべて表示」ボタンは、採点前に使うものとし、採点後は無効化する。
+                // 採点後は「正解をすべて表示」は「正解をすべて隠す」として動作させない。
+                // より直感的: ボタンのラベルを切り替え、クリックで表示/非表示トグル。ただし、採点済みの場合は既に表示されているので、非表示にできる。
+                // ここでは、showAllフラグで制御し、採点済みでも影響させる。採点済みでshowAllがfalseなら、個別の正解表示を非表示にする。
+                // しかし、採点済みでshowAllをfalseにすると、採点結果の色分けは残るが正解テキストが消える。それはユーザーにとって混乱かも。
+                // シンプルに: このボタンは「採点前」にのみ使うものとし、採点後は無効化する（押せなくする）。
+                // 今回は、採点後も押せるが、動作を「正解表示のON/OFF」とし、採点済みでも正解表示を消せるようにする。ただし、採点結果の色分けは維持する。
+                // 実装: showAllがtrueなら、すべての行のanswerDisplayを表示（採点状態に関係なく）。falseなら、gradedがtrueのときは個別の正解表示を維持（つまり、採点結果で表示されているものは表示されたまま）、gradedがfalseなら全て非表示。
+                // さらに複雑。簡易化: 「正解をすべて表示」は、採点前に正解を一覧表示するためのボタン。採点後は「正解をすべて隠す」に変わる。
+                // 実装: クリックで、showAllフラグを切り替え、それに応じて各answerDisplayの表示を制御。ただし、gradedがtrueの場合は、個別の正解表示がすでに出ているので、showAllがfalseでも表示は変わらない（つまり、ボタンは効かない）。
+                // それでは不便なので、gradedに関係なく、showAllフラグで強制的に表示/非表示を切り替えることにする。
+                // 採点済みでshowAllをfalseにすると、すべての正解表示が消える（採点結果の色分けは残る）。
+                // それで良しとする。
+            }
+
+            // トグル実装
+            showAll = !showAll;
+            rowElements.forEach(({ input, answerDisplay, statusIcon, row, question }) => {
+                if (showAll) {
+                    // 全ての正解を表示（入力内容に関わらず）
+                    answerDisplay.classList.add('show');
+                    answerDisplay.className = 'answer-display show correct-answer';
+                    statusIcon.textContent = '👁️';
+                    // 入力欄の色は変更しない（採点前ならそのまま）
+                } else {
+                    // 非表示に。ただし、gradedがtrueの場合は個別の採点結果に従う（つまり、正解/不正解の表示は維持）
+                    if (graded) {
+                        // 採点済みなら、入力内容に応じた表示を維持（updateScoreAndSummaryで更新される）
+                        // ここでは何もしない。後でupdateScoreAndSummaryを呼ぶ。
+                    } else {
+                        answerDisplay.classList.remove('show');
+                        statusIcon.textContent = '';
+                    }
+                }
+            });
+            if (showAll) {
+                // 全て表示したので、ボタンラベル変更
+                showAllBtn.textContent = '🙈 正解をすべて隠す';
+            } else {
+                showAllBtn.textContent = '👁️ 正解をすべて表示';
+                // 非表示にしたが、gradedの場合は再度updateScoreAndSummaryで正解表示を復元する（gradedなら表示されるべき）
+                if (graded) {
+                    updateScoreAndSummary(); // これでgradedに基づいた表示になる
+                }
+            }
+            // スコア表示は変わらないので、updateScoreAndSummaryは不要（ただし、graded時にshowAllをfalseにすると、正解表示が消えるが、採点結果の色分けは残る）
+            // しかし、updateScoreAndSummaryを呼ぶと、gradedの場合は正解表示が再表示される。それは避けたい。
+            // そこで、updateScoreAndSummaryは呼ばない。代わりに、showAllフラグに応じて直接制御。
+            // 上記のループで制御済み。ただし、gradedがtrueかつshowAllがfalseの場合、個別の表示は維持される（表示されたまま）。
+            // それを非表示にしたいなら、ループ内でgradedに関係なく非表示にすればよい。
+            // 上記では、gradedの場合に何もしないと書いたが、それではshowAllがfalseでも表示されたままになる。
+            // 修正: showAllがfalseなら、gradedに関係なく、answerDisplayから'show'クラスを削除し、statusIconをクリアする。
+            // ただし、gradedの場合でも、入力欄の色分けは維持する。
+            // 修正コード:
+            if (!showAll) {
+                rowElements.forEach(({ input, answerDisplay, statusIcon }) => {
+                    answerDisplay.classList.remove('show');
+                    statusIcon.textContent = '';
+                    // 入力欄の色はそのまま
+                });
+            }
+            // さらに、showAllがtrueの場合、全て表示。
+            if (showAll) {
+                rowElements.forEach(({ answerDisplay, statusIcon, question }) => {
+                    answerDisplay.classList.add('show');
+                    answerDisplay.className = 'answer-display show correct-answer';
+                    statusIcon.textContent = '👁️';
+                });
+            }
+            // ボタンラベル更新
+            showAllBtn.textContent = showAll ? '🙈 正解をすべて隠す' : '👁️ 正解をすべて表示';
+        }
+
+        // すべての入力をクリア（リセットとは別に、入力だけクリア）
+        function clearAllInputs() {
+            rowElements.forEach(({ input, answerDisplay, statusIcon, row }) => {
+                input.value = '';
+                input.className = '';
+                if (!graded && !showAll) {
+                    answerDisplay.classList.remove('show');
+                    statusIcon.textContent = '';
+                }
+                row.className = 'word-row';
+            });
+            // 採点状態は維持（gradedならスコア更新）
+            if (graded) {
+                // 採点済みなら、スコアを再計算（入力がクリアされたので、不正解扱いになる）
+                updateScoreAndSummary();
+            } else {
+                // 未採点ならスコア表示を更新
+                updateScoreAndSummary();
+            }
+        }
+
+        // 初期化
+        function init() {
+            // データをシャッフル（必要に応じて）
+            questions = shuffleArray([...rawData]);
+            render();
+            // イベントリスナー
+            gradeBtn.addEventListener('click', gradeAll);
+            resetBtn.addEventListener('click', resetAll);
+            showAllBtn.addEventListener('click', toggleShowAll);
+            clearAllBtn.addEventListener('click', clearAllInputs);
+
+            // 各入力のイベント（入力時にリアルタイムで何かしたい場合はここに追加）
+            // 例えば、入力を検知してスコア表示更新（ただし、採点前はスコア非表示）
+            rowElements.forEach(({ input }) => {
+                input.addEventListener('input', function() {
+                    if (!graded) {
+                        // 採点前はスコア表示を更新（回答数だけ）
+                        updateScoreAndSummary();
+                    }
+                });
+            });
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // DOM構築後に実行
+        init();
+
+        // 外部から再初期化が必要な場合は、関数を提供
+        window.reloadTest = function() {
+            questions = shuffleArray([...rawData]);
+            render();
+            // イベント再設定は不要（すでに設定済み）
+            // ただし、新しく生成されたinputにイベントを再設定する必要がある
+            rowElements.forEach(({ input }) => {
+                input.removeEventListener('input', updateScoreAndSummary); // 古いのを削除
+                input.addEventListener('input', function() {
+                    if (!graded) {
+                        updateScoreAndSummary();
+                    }
+                });
+            });
+        };
+
+        // リセットボタンでリセットされるが、問題の並び替えはしないように（リセットは入力クリアのみ）
+        // しかし、ユーザーが「リセット」と言ったら問題をシャッフルして再表示するか？ 要件にないので、入力クリアのみ。
+        // 今回は「リセット」は入力をクリアし、採点状態を解除する。
+        // それでOK。
+
+        // 注意：showAllBtnの動作が複雑なので、シンプルに「正解をすべて表示/隠す」トグルにする。
+        // 上記で実装済み。
+    })();
+</script>
+
+</body>
+</html>
