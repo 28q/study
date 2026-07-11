@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Ser・Estar・Haber 使い分けドリル (15問ランダム)</title>
+    <title>Ser・Estar・Haber 使い分けドリル (アクセント厳密判定)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -195,7 +195,7 @@
 <body>
 <div class="container">
     <h1>📘 Ser · Estar · Haber</h1>
-    <div class="subhead">使い分け &amp; 現在形活用 — ランダム15問</div>
+    <div class="subhead">使い分け &amp; 現在形活用 — アクセント記号も厳密に判定 (á, é, í, ó, ú)</div>
 
     <div class="card">
         <div id="questionsContainer"></div>
@@ -210,12 +210,12 @@
         <div id="stats" class="stats"></div>
     </div>
 
-    <footer>※ アクセント記号は無視して判定します（例: está → esta で正解）</footer>
+    <footer>※ 大文字・小文字は区別しませんが、アクセント記号 (á, é, í, ó, ú) は厳密に区別します。</footer>
 </div>
 
 <script>
     // --------------------------------------------------------------
-    // 問題プール
+    // 問題プール (正解にはすべて正しいアクセント記号を含む)
     // --------------------------------------------------------------
     const questionPool = [
         // ---------- ser ----------
@@ -232,7 +232,7 @@
         { sentence: "Nosotras ____ francesas.", correct: "somos", verb: "ser", person: "nosotros" },
         { sentence: "Tú ____ muy simpático.", correct: "eres", verb: "ser", person: "tú" },
 
-        // ---------- estar ----------
+        // ---------- estar (アクセント記号を含む) ----------
         { sentence: "La sopa ya ____ fría.", correct: "está", verb: "estar", person: "ella" },
         { sentence: "Luis y Alicia ahora ____ en Madrid.", correct: "están", verb: "estar", person: "ellos" },
         { sentence: "Vosotros ____ un poco ocupados.", correct: "estáis", verb: "estar", person: "vosotros" },
@@ -261,7 +261,7 @@
     ];
 
     // --------------------------------------------------------------
-    // ユーティリティ
+    // ユーティリティ (アクセント記号は除去せず、大文字小文字のみ正規化)
     // --------------------------------------------------------------
     function shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -271,15 +271,10 @@
         return arr;
     }
 
-    function normalize(str) {
+    function normalizeAccentSensitive(str) {
+        // 大文字小文字を統一し、スペースをトリムするが、アクセント記号はそのまま維持する
         return str.trim().toLowerCase()
-            .replace(/[áàâä]/g, 'a')
-            .replace(/[éèêë]/g, 'e')
-            .replace(/[íìîï]/g, 'i')
-            .replace(/[óòôö]/g, 'o')
-            .replace(/[úùûü]/g, 'u')
-            .replace(/ñ/g, 'n')
-            .replace(/[¿¡]/g, '')
+            .replace(/[¿¡]/g, '')   // 入力ミスで付く可能性がある疑問符・感嘆符を除去
             .replace(/\s+/g, ' ')
             .trim();
     }
@@ -292,9 +287,7 @@
         const estarPool = questionPool.filter(q => q.verb === "estar");
         const haberPool = questionPool.filter(q => q.verb === "haber");
 
-        // 各動詞から5問をなるべく異なる人称から選ぶ
         function pickBalanced(pool, count) {
-            // 人称ごとにグループ化
             const groups = {};
             pool.forEach(q => {
                 if (!groups[q.person]) groups[q.person] = [];
@@ -302,25 +295,22 @@
             });
             const persons = Object.keys(groups);
             let selected = [];
-            // 各人称から1つずつ取っていく (巡回)
             let round = 0;
             while (selected.length < count) {
                 const person = persons[round % persons.length];
                 const group = groups[person];
-                if (group.length > 0) {
+                if (group && group.length > 0) {
                     const idx = Math.floor(Math.random() * group.length);
                     selected.push(group.splice(idx, 1)[0]);
                 } else {
-                    // その人称に問題がなくなったら除外
+                    if (persons.length === 0) break;
                     persons.splice(round % persons.length, 1);
                     if (persons.length === 0) break;
                     continue;
                 }
                 round++;
-                // 無限ループ防止
                 if (round > 100) break;
             }
-            // それでも足りなければ残りをランダムに補充
             while (selected.length < count) {
                 const remaining = pool.filter(q => !selected.includes(q));
                 if (remaining.length === 0) break;
@@ -378,7 +368,6 @@
             container.appendChild(div);
         });
 
-        // グローバルフィードバックを非表示
         globalFeedback.className = 'global-feedback';
         globalFeedback.textContent = '';
         stats.textContent = '';
@@ -387,9 +376,7 @@
     function generateNewQuestions() {
         currentQuestions = selectQuestions();
         renderQuestions(currentQuestions);
-        // 入力欄をクリア
         document.querySelectorAll('.q-input').forEach(inp => inp.value = '');
-        // フィードバックをクリア
         document.querySelectorAll('.q-feedback').forEach(el => {
             el.textContent = '';
             el.className = 'q-feedback';
@@ -400,7 +387,7 @@
     }
 
     // --------------------------------------------------------------
-    // チェック機能
+    // チェック機能 (アクセント厳密)
     // --------------------------------------------------------------
     function checkAnswers() {
         let correctCount = 0;
@@ -409,8 +396,8 @@
         inputs.forEach((inp, idx) => {
             const q = currentQuestions[idx];
             if (!q) return;
-            const user = normalize(inp.value);
-            const expected = normalize(q.correct);
+            const user = normalizeAccentSensitive(inp.value);
+            const expected = normalizeAccentSensitive(q.correct); // こちらも同様に正規化 (大文字小文字のみ)
             const fb = document.getElementById(`fb_${idx}`);
             if (user === expected) {
                 fb.textContent = '✅ 正解！';
@@ -429,10 +416,10 @@
 
         globalFeedback.className = 'global-feedback show';
         if (allCorrect && total > 0) {
-            globalFeedback.textContent = '🎉 ¡Perfecto! すべて正解です！';
+            globalFeedback.textContent = '🎉 ¡Perfecto! すべて正解です (アクセント記号もバッチリ)！';
             globalFeedback.className = 'global-feedback show';
         } else {
-            globalFeedback.textContent = `📝 ${correctCount}/${total} 正解。間違った問題は上記を確認してください。`;
+            globalFeedback.textContent = `📝 ${correctCount}/${total} 正解。アクセント記号 (á, é, í, ó, ú) の有無に注意してください。`;
             globalFeedback.className = 'global-feedback show wrong';
         }
     }
@@ -450,7 +437,6 @@
             fb.textContent = `📖 正解: ${q.correct}`;
             fb.className = 'q-feedback correct';
         });
-        // 自動チェックもしておく
         checkAnswers();
     }
 
