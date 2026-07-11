@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>スペイン語テスト ナビゲーション</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: #f5f7fb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            padding: 40px 36px;
+            transition: 0.2s;
+        }
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        h1 span {
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 2px 14px;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+        }
+        .sub {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 28px;
+            border-left: 4px solid #e2e8f0;
+            padding-left: 16px;
+        }
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: #0f172a;
+            transition: 0.2s ease;
+            border: 1px solid transparent;
+        }
+        .card:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateX(4px);
+        }
+        .card .badge {
+            font-weight: 700;
+            font-size: 14px;
+            background: #e2e8f0;
+            color: #334155;
+            padding: 4px 12px;
+            border-radius: 40px;
+            min-width: 72px;
+            text-align: center;
+            flex-shrink: 0;
+            letter-spacing: 0.3px;
+        }
+        .card .badge.type0 { background: #dbeafe; color: #1d4ed8; }
+        .card .badge.type1 { background: #d1fae5; color: #065f46; }
+        .card .badge.type2 { background: #fef3c7; color: #92400e; }
+        .card .badge.type3 { background: #fce7f3; color: #9d174d; }
+        .card .badge.type4 { background: #e0e7ff; color: #3730a3; }
+        .card .badge.type5 { background: #ffe4e6; color: #9f1239; }
+        .card .badge.type6 { background: #e0f2fe; color: #0369a1; }
+        .card .badge.type7 { background: #f3e8ff; color: #6b21a8; }
+
+        .card .info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card .info .title {
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        .card .info .desc {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .card .arrow {
+            color: #94a3b8;
+            font-size: 20px;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .card:hover .arrow {
+            color: #475569;
+            transform: translateX(4px);
+        }
+        .footer {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid #eef2f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #94a3b8;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 480px) {
+            .container { padding: 24px 16px; }
+            .card { flex-wrap: wrap; gap: 8px; }
+            .card .badge { min-width: 60px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            📘 スペイン語テスト
+            <span>全8種</span>
+        </h1>
+        <div class="sub">
+            ¡Bienvenido! 各テストへジャンプできます
+        </div>
+
+        <div class="grid">
+            <!-- test-00 -->
+            <a href="test-00.html" class="card">
+                <span class="badge type0">test-00</span>
+                <span class="info">
+                    <span class="title">📖 単語テスト（一覧形式）</span>
+                    <span class="desc">日本語 → スペイン語 ／ 100 問</span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- test-01 -->
+            <a href="test-01.html" class="card">
+                <span class="badge type1">test-01</span>
+                <span class="info">
+                    <span class="title">⚡ 直説法現在形 活用演習</span>
+                    <span class="desc">不規則動詞・規則動詞 全30種</span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- test-02 -->
+            <a href="test-02.html" class="card">
+                <span class="badge type2">test-02</span>
+                <span class="info">
+                    <span class="title">🔀 Ser · Estar · Haber</span>
+                    <span class="desc">使い分け &amp; 現在形活用（アクセント記号付き）</span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- test-03 -->
+            <a href="test-03.html" class="card">
+                <span class="badge type3">test-03</span>
+                <span class="info">
+                    <span class="title">💬 スペイン語会話</span>
+                    <span class="desc">内容のみ入力（名前不要）／ 全49文</span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- test-04 （修正箇所） -->
+            <a href="test-04.html" class="card">
+                <span class="badge type4">test-04</span>
+                <span class="info">
+                    <span class="title">📖 スペイン語講読</span>
+                    <span class="desc">内容のみ入力（テキストを読み、設問に回答）</span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- test-05 -->
+            <a href="test-05.html" class="card">
+                <span class="badge type5">test-05</span>
+                <span class="info">
+                    <span class="title">✅ 練習問題 3 チェック</span>
+                    <span class="desc">所有形容詞・質問応答・疑問文作成</span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- test-06 -->
+            <a href="test-06.html" class="card">
+                <span class="badge type6">test-06</span>
+                <span class="info">
+                    <span class="title">✍️ 西訳問題</span>
+                    <span class="desc">第2課 〜 第5課 から抜粋</span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- test-07 -->
+            <a href="test-07.html" class="card">
+                <span class="badge type7">test-07</span>
+                <span class="info">
+                    <span class="title">🗣️ Preguntas personales</span>
+                    <span class="desc">自分に関する質問 ＋ 答えのテンプレート</span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <span>🇪🇸 28q.github.io / spanish</span>
+            <a href="https://github.com/28q/28q.github.io" target="_blank">GitHub</a>
+        </div>
+    </div>
+</body>
+</html>
