@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スペイン語 自分に関する質問と回答テンプレート</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f5f7fb;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 25px 20px 35px;
+        }
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a2634;
+            text-align: center;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #5e6f8d;
+            font-size: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eef2f7;
+            padding-bottom: 18px;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid #e6edf4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+            min-width: 680px;
+        }
+        thead {
+            background: #1e2b3c;
+            color: white;
+        }
+        th {
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        th:nth-child(1) { width: 50px; text-align: center; }
+        th:nth-child(2) { width: 28%; }
+        th:nth-child(3) { width: 18%; }
+        th:nth-child(4) { width: 42%; }
+
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #e9edf4;
+            vertical-align: top;
+            background-color: white;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background-color: #f8faff;
+        }
+        .num {
+            text-align: center;
+            font-weight: 600;
+            color: #6c7a96;
+            font-size: 14px;
+        }
+        .pregunta {
+            font-weight: 500;
+            color: #0b1a2e;
+        }
+        .pregunta small {
+            font-weight: 400;
+            color: #7b8aa6;
+            font-size: 13px;
+            display: block;
+            margin-top: 3px;
+        }
+        .significado {
+            color: #2c3e5c;
+            font-size: 14px;
+        }
+        .respuesta {
+            background: #f2f6fe;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #0c2d5a;
+            word-break: break-word;
+            border-left: 3px solid #3b6cb0;
+        }
+        .respuesta .var {
+            background: #dce5f5;
+            padding: 0 6px;
+            border-radius: 4px;
+            color: #1b3b6b;
+            font-style: italic;
+        }
+        .badge {
+            display: inline-block;
+            background: #dce5f5;
+            color: #1f3b63;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-top: 4px;
+        }
+        .footer {
+            margin-top: 24px;
+            text-align: right;
+            font-size: 13px;
+            color: #8896b0;
+            padding-right: 6px;
+        }
+        @media (max-width: 600px) {
+            body { padding: 15px 10px; }
+            .container { padding: 16px 12px; }
+            td, th { padding: 10px 8px; font-size: 14px; }
+            .respuesta { font-size: 13px; padding: 6px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📌 Preguntas personales</h1>
+    <div class="subtitle">自分に関する質問 ＋ 簡単な答えのテンプレート（第2課〜第5課 / 小テスト範囲）</div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Pregunta en español</th>
+                    <th>Significado</th>
+                    <th>Respuesta modelo (テンプレート)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 1 -->
+                <tr>
+                    <td class="num">1</td>
+                    <td class="pregunta">¿Cómo te llamas? <small>(o: ¿Cuál es tu nombre?)</small></td>
+                    <td class="significado">名前は？</td>
+                    <td class="respuesta">Me llamo <span class="var">[nombre]</span>.</td>
+                </tr>
+                <!-- 2 -->
+                <tr>
+                    <td class="num">2</td>
+                    <td class="pregunta">¿De dónde eres?</td>
+                    <td class="significado">出身はどこ？</td>
+                    <td class="respuesta">Soy de <span class="var">[ciudad/país]</span>.<br><small>例: Soy de Tokio, Japón.</small></td>
+                </tr>
+                <!-- 3 -->
+                <tr>
+                    <td class="num">3</td>
+                    <td class="pregunta">¿Cuántos años tienes?</td>
+                    <td class="significado">何歳？</td>
+                    <td class="respuesta">Tengo <span class="var">[número]</span> años.</td>
+                </tr>
+                <!-- 4 -->
+                <tr>
+                    <td class="num">4</td>
+                    <td class="pregunta">¿Cuándo es tu cumpleaños?</td>
+                    <td class="significado">誕生日はいつ？</td>
+                    <td class="respuesta">Es el <span class="var">[día]</span> de <span class="var">[mes]</span>.<br><small>例: Es el 15 de julio.</small></td>
+                </tr>
+                <!-- 5 -->
+                <tr>
+                    <td class="num">5</td>
+                    <td class="pregunta">¿Cómo eres? <small>(o: ¿Cómo eres tú?)</small></td>
+                    <td class="significado">（性格・特徴は）どんな人？</td>
+                    <td class="respuesta">Soy <span class="var">[adjetivo]</span>.<br><small>例: Soy simpático/a y generoso/a.</small></td>
+                </tr>
+                <!-- 6 -->
+                <tr>
+                    <td class="num">6</td>
+                    <td class="pregunta">¿Cómo son tus padres?</td>
+                    <td class="significado">両親はどんな人？</td>
+                    <td class="respuesta">Son <span class="var">[adjetivo]</span>.<br><small>例: Son amables y trabajadores.</small></td>
+                </tr>
+                <!-- 7 -->
+                <tr>
+                    <td class="num">7</td>
+                    <td class="pregunta">¿Cómo estás? <small>(o: ¿Cómo estás tú?)</small></td>
+                    <td class="significado">（今の気分・体調は）どう？</td>
+                    <td class="respuesta">Estoy <span class="var">[bien / mal / cansado/a]</span>.<br><small>例: Estoy muy bien, gracias.</small></td>
+                </tr>
+                <!-- 8 -->
+                <tr>
+                    <td class="num">8</td>
+                    <td class="pregunta">¿Dónde está tu casa? <small>(o: ¿Dónde vives?)</small></td>
+                    <td class="significado">家はどこ？ / どこに住んでる？</td>
+                    <td class="respuesta">Vivo en <span class="var">[ciudad/barrio]</span>.<br><small>例: Vivo en Setagaya.</small></td>
+                </tr>
+                <!-- 9 -->
+                <tr>
+                    <td class="num">9</td>
+                    <td class="pregunta">¿Qué idiomas hablas?</td>
+                    <td class="significado">何語を話す？</td>
+                    <td class="respuesta">Hablo <span class="var">[idioma]</span>.<br><small>例: Hablo japonés y un poco de español.</small></td>
+                </tr>
+                <!-- 10 -->
+                <tr>
+                    <td class="num">10</td>
+                    <td class="pregunta">¿Qué desayunas? <small>(o: ¿Qué comes en el desayuno?)</small></td>
+                    <td class="significado">朝ごはんは何を食べる？</td>
+                    <td class="respuesta">Desayuno <span class="var">[comida]</span>.<br><small>例: Desayuno pan y café.</small></td>
+                </tr>
+                <!-- 11 -->
+                <tr>
+                    <td class="num">11</td>
+                    <td class="pregunta">¿Tocas el piano? <small>(o: ... la guitarra, etc.)</small></td>
+                    <td class="significado">ピアノ（楽器）を弾く？</td>
+                    <td class="respuesta">Sí, toco el <span class="var">[instrumento]</span>. / No, no toco.<br><small>例: Sí, toco la guitarra.</small></td>
+                </tr>
+                <!-- 12 -->
+                <tr>
+                    <td class="num">12</td>
+                    <td class="pregunta">¿Qué comida te gusta?</td>
+                    <td class="significado">どんな食べ物が好き？</td>
+                    <td class="respuesta">Me gusta la comida <span class="var">[mexicana / japonesa / ...]</span>.<br><small>例: Me gusta la comida mexicana.</small></td>
+                </tr>
+                <!-- 13 -->
+                <tr>
+                    <td class="num">13</td>
+                    <td class="pregunta">¿Qué deporte te gusta?</td>
+                    <td class="significado">どんなスポーツが好き？</td>
+                    <td class="respuesta">Me gusta <span class="var">[deporte]</span>.<br><small>例: Me gusta jugar al tenis / nadar.</small></td>
+                </tr>
+                <!-- 14 -->
+                <tr>
+                    <td class="num">14</td>
+                    <td class="pregunta">¿Qué película te gusta?</td>
+                    <td class="significado">どんな映画が好き？</td>
+                    <td class="respuesta">Me gusta la película de <span class="var">[acción / comedia / anime]</span>.<br><small>例: Me gusta el anime.</small></td>
+                </tr>
+                <!-- 15 -->
+                <tr>
+                    <td class="num">15</td>
+                    <td class="pregunta">¿A qué hora te levantas?</td>
+                    <td class="significado">何時に起きる？</td>
+                    <td class="respuesta">Me levanto a las <span class="var">[hora]</span>.<br><small>例: Me levanto a las siete.</small></td>
+                </tr>
+                <!-- 16 -->
+                <tr>
+                    <td class="num">16</td>
+                    <td class="pregunta">¿A qué hora desayunas?</td>
+                    <td class="significado">何時に朝ごはんを食べる？</td>
+                    <td class="respuesta">Desayuno a las <span class="var">[hora]</span>.</td>
+                </tr>
+                <!-- 17 -->
+                <tr>
+                    <td class="num">17</td>
+                    <td class="pregunta">¿A qué hora sales de casa?</td>
+                    <td class="significado">何時に家を出る？</td>
+                    <td class="respuesta">Salgo de casa a las <span class="var">[hora]</span>.</td>
+                </tr>
+                <!-- 18 -->
+                <tr>
+                    <td class="num">18</td>
+                    <td class="pregunta">¿A qué hora te bañas? <small>(o: ¿te duchas?)</small></td>
+                    <td class="significado">何時にお風呂（シャワー）に入る？</td>
+                    <td class="respuesta">Me baño a las <span class="var">[hora]</span>.</td>
+                </tr>
+                <!-- 19 -->
+                <tr>
+                    <td class="num">19</td>
+                    <td class="pregunta">¿A qué hora te acuestas?</td>
+                    <td class="significado">何時に寝る？</td>
+                    <td class="respuesta">Me acuesto a las <span class="var">[hora]</span>.</td>
+                </tr>
+                <!-- 20 -->
+                <tr>
+                    <td class="num">20</td>
+                    <td class="pregunta">¿Cuántas veces al día te lavas los dientes?</td>
+                    <td class="significado">1日何回歯を磨く？</td>
+                    <td class="respuesta">Me lavo los dientes <span class="var">[número]</span> veces al día.<br><small>例: Me lavo los dientes tres veces al día.</small></td>
+                </tr>
+                <!-- 21 -->
+                <tr>
+                    <td class="num">21</td>
+                    <td class="pregunta">¿Has estado alguna vez en un país extranjero?</td>
+                    <td class="significado">海外に行ったことがある？</td>
+                    <td class="respuesta">Sí, he estado en <span class="var">[país]</span>. / No, no he estado.</td>
+                </tr>
+                <!-- 22 -->
+                <tr>
+                    <td class="num">22</td>
+                    <td class="pregunta">¿Has comido alguna vez la paella / los tacos / ...?</td>
+                    <td class="significado">（特定の料理を）食べたことある？</td>
+                    <td class="respuesta">Sí, la he probado. / No, no la he probado.</td>
+                </tr>
+                <!-- 23 -->
+                <tr>
+                    <td class="num">23</td>
+                    <td class="pregunta">¿A ti te gusta el fútbol? <small>(o: ¿... el béisbol?)</small></td>
+                    <td class="significado">サッカーは好き？</td>
+                    <td class="respuesta">Sí, me gusta. / No, no me gusta. Me gusta el <span class="var">[otro deporte]</span>.</td>
+                </tr>
+                <!-- 24 -->
+                <tr>
+                    <td class="num">24</td>
+                    <td class="pregunta">¿Qué vas a hacer este fin de semana?</td>
+                    <td class="significado">今週末は何をする予定？</td>
+                    <td class="respuesta">Voy a <span class="var">[verbo]</span>.<br><small>例: Voy a estudiar y descansar.</small></td>
+                </tr>
+                <!-- 25 -->
+                <tr>
+                    <td class="num">25</td>
+                    <td class="pregunta">¿Cuántos hermanos tienes?</td>
+                    <td class="significado">兄弟は何人？</td>
+                    <td class="respuesta">Tengo <span class="var">[número]</span> hermanos/as.</td>
+                </tr>
+                <!-- 26 -->
+                <tr>
+                    <td class="num">26</td>
+                    <td class="pregunta">¿Qué tal? <small>(o: ¿Cómo te va?)</small></td>
+                    <td class="significado">元気？ / どう？</td>
+                    <td class="respuesta">Bien, ¿y tú? / Muy bien, gracias.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="footer">
+        📖 出典：スペイン語2列②〜⑫ / 小テスト・期末試験範囲より抜粋
+    </div>
+</div>
+</body>
+</html>
