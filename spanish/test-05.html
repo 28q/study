@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>練習問題3 チェック (所有形容詞・質問応答・疑問文作成)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+            max-width: 1100px;
+            margin: 28px auto;
+            padding: 18px;
+            background: #fbf8f0;
+            color: #21313c;
+            line-height: 1.6;
+        }
+        h1,
+        h2,
+        h3 {
+            margin: 0.35em 0;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.9rem;
+            border-bottom: 3px solid #b22234;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+        .title-block {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .meta-box {
+            background: #eef5ea;
+            border-left: 8px solid #2c5f2d;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin: 18px 0 24px;
+            font-size: 0.96rem;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: #fff4de;
+            padding: 12px 16px;
+            border-radius: 20px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        button {
+            background: #2c5f2d;
+            color: #fff;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s ease, background .15s ease;
+            font-size: 0.92rem;
+        }
+        button:hover {
+            transform: scale(.98);
+            background: #214521;
+        }
+        .secondary {
+            background: #6c757d;
+        }
+        .danger {
+            background: #b23c1c;
+        }
+        select {
+            padding: 8px 12px;
+            border-radius: 24px;
+            border: 1px solid #cdbb91;
+            background: #fff;
+        }
+        #timer-area {
+            font-weight: 700;
+            background: #ffe1b8;
+            padding: 6px 12px;
+            border-radius: 24px;
+            color: #b23c1c;
+            display: none;
+        }
+        .section {
+            background: #fff;
+            border: 1px solid #eadfc7;
+            border-radius: 24px;
+            padding: 18px 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+        }
+        .section h3 {
+            border-left: 6px solid #b22234;
+            padding-left: 12px;
+            margin-bottom: 14px;
+            text-align: left;
+        }
+        .note {
+            font-size: 0.88rem;
+            background: #f7f1df;
+            padding: 8px 12px;
+            border-radius: 18px;
+            margin: 8px 0 14px;
+            display: inline-block;
+        }
+        .question {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            background: #fffdf7;
+            border: 1px solid #f1e7cf;
+        }
+        .question-text {
+            font-size: 1.02rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            background: #f6f1e6;
+            padding: 8px 12px;
+            border-radius: 18px;
+            display: inline-block;
+        }
+        .jp-hint {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 0.84rem;
+            color: #005f6b;
+            background: #e4f3f5;
+            padding: 2px 10px;
+            border-radius: 18px;
+        }
+        .answer-hint {
+            display: none;
+            margin-left: 10px;
+            font-size: 0.86rem;
+            color: #3d6b3d;
+            background: #eef6ea;
+            padding: 2px 9px;
+            border-radius: 18px;
+        }
+        .audio-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            vertical-align: middle;
+            color: #2c5f2d;
+            padding: 0 4px;
+            margin-left: 6px;
+        }
+        input.blank-input {
+            width: clamp(80px, 15vw, 180px);
+            min-width: 75px;
+            padding: 8px 10px;
+            font-size: 1rem;
+            border: 1px solid #cfb87c;
+            border-radius: 14px;
+            background: #fffef9;
+            text-align: center;
+            vertical-align: middle;
+            margin: 2px 4px;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        input.blank-input:focus {
+            outline: none;
+            border-color: #2c5f2d;
+            box-shadow: 0 0 0 2px rgba(44, 95, 45, 0.18);
+        }
+        input.blank-input.correct-highlight {
+            background-color: #c8e6c9 !important;
+            border-color: #2c5f2d !important;
+        }
+        textarea.full-input {
+            width: 100%;
+            max-width: 700px;
+            padding: 10px 14px;
+            font-size: 1rem;
+            border: 1px solid #cfb87c;
+            border-radius: 14px;
+            background: #fffef9;
+            resize: vertical;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+            line-height: 1.5;
+            font-family: inherit;
+        }
+        textarea.full-input:focus {
+            outline: none;
+            border-color: #2c5f2d;
+            box-shadow: 0 0 0 2px rgba(44, 95, 45, 0.18);
+        }
+        textarea.full-input.correct-highlight {
+            background-color: #c8e6c9 !important;
+            border-color: #2c5f2d !important;
+        }
+        .sentence-line {
+            line-height: 2.2;
+            font-size: 1.04rem;
+            margin-top: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .word {
+            display: inline-block;
+            margin: 0 2px;
+            white-space: nowrap;
+        }
+        .inline-label {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+        #result {
+            background: #f4f1e1;
+            border-radius: 20px;
+            padding: 14px 18px;
+            margin-top: 18px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.82rem;
+            color: #5e5e52;
+        }
+        .ex-num {
+            display: inline-block;
+            background: #b22234;
+            color: #fff;
+            border-radius: 30px;
+            padding: 0 14px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-right: 8px;
+            line-height: 1.9;
+        }
+        @media (max-width: 760px) {
+            input.blank-input {
+                width: 88px;
+            }
+            textarea.full-input {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-block">
+        <h1>📘 練習問題 3 チェック</h1>
+        <p>所有形容詞・質問応答・疑問文作成</p>
+    </div>
+
+    <div class="meta-box">
+        🔹 <strong>第1問</strong>：所有形容詞（前置詞・後置詞）を正しい形で埋めてください。<br>
+        🔹 <strong>第2問・第3問</strong>：質問に簡潔に答えてください（問題文の動詞を使った形が模範解答）。<br>
+        🔹 <strong>第4問</strong>：下線部の文が答えになるような疑問文を作ってください。<br>
+        🔹 正解を入力するとその場で <span style="background:#c8e6c9; padding:2px 8px; border-radius:12px;">緑色</span> に変わります。<br>
+        🔹 アクセント記号なし・大文字小文字の違いは無視して判定します。
+    </div>
+
+    <div class="controls">
+        <button onclick="generateQuiz()">✨ 問題生成（リセット）</button>
+        <button onclick="gradeQuiz()" class="secondary">📝 採点</button>
+        <button onclick="toggleAnswers()" id="toggleBtn">🔎 答え表示</button>
+        <button onclick="resetHistory()" class="danger">🗑 履歴リセット</button>
+        <label for="timeLimit">⏱️ 制限時間:</label>
+        <select id="timeLimit">
+            <option value="0">制限なし</option>
+            <option value="180">3分</option>
+            <option value="300">5分</option>
+            <option value="480">8分</option>
+        </select>
+        <div id="timer-area">⏳ 残り <span id="timeDisplay">--:--</span></div>
+    </div>
+
+    <form id="quizForm"></form>
+    <div id="result"></div>
+    <div class="footer">📗 空欄に入力するとリアルタイムで正誤判定されます。「答え表示」で模範解答を確認できます。</div>
+
+    <script>
+        // ============================================================
+        //  正規化（アクセント除去・小文字化・句読点除去）
+        // ============================================================
+        function normalize(str) {
+            if (!str) return '';
+            return str.toLowerCase().trim()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, ' ')
+                .replace(/[¿?¡!.,;:()]/g, '');
+        }
+
+        function shuffleArray(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function speakText(text) {
+            if (!text) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.88;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // ============================================================
+        //  グローバル状態
+        // ============================================================
+        let currentQuestions = [];
+        let showAnswersFlag = false;
+        let timerInterval = null;
+        let timeLeft = 0;
+        let scoreHistory = JSON.parse(localStorage.getItem('ex3_history') || '[]');
+        window.answerMap = {};
+
+        // ============================================================
+        //  タイマー
+        // ============================================================
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            const limitSec = parseInt(document.getElementById('timeLimit').value, 10);
+            const timerDiv = document.getElementById('timer-area');
+            if (limitSec === 0) {
+                timerDiv.style.display = 'none';
+                return;
+            }
+            timeLeft = limitSec;
+            timerDiv.style.display = 'block';
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 1) {
+                    clearInterval(timerInterval);
+                    timerDiv.style.display = 'none';
+                    alert('⏰ 制限時間終了！自動採点します。');
+                    gradeQuiz();
+                } else {
+                    timeLeft--;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function toggleAnswers() {
+            showAnswersFlag = !showAnswersFlag;
+            document.querySelectorAll('.answer-hint').forEach(el => {
+                el.style.display = showAnswersFlag ? 'inline' : 'none';
+            });
+            document.getElementById('toggleBtn').innerText = showAnswersFlag ? '🔒 答え非表示' : '🔎 答え表示';
+        }
+
+        function resetHistory() {
+            scoreHistory = [];
+            localStorage.setItem('ex3_history', JSON.stringify(scoreHistory));
+            document.getElementById('result').innerHTML = '<p>📊 スコア履歴をリセットしました。</p>';
+        }
+
+        // ============================================================
+        //  リアルタイム正誤判定（入力時に緑色）
+        // ============================================================
+        function validateInput(el) {
+            const expected = window.answerMap ? window.answerMap[el.id] : null;
+            if (expected === undefined || expected === null) return;
+            if (normalize(el.value) === normalize(expected)) {
+                el.classList.add('correct-highlight');
+            } else {
+                el.classList.remove('correct-highlight');
+            }
+        }
+
+        // ============================================================
+        //  データ
+        // ============================================================
+
+        // ---- 第1問：所有形容詞 ----
+        const possessiveData = [
+            { jp: '(彼女の)', before: '______ coche', after: '', answer: 'su' },
+            { jp: '(君たちの)', before: '______ padres', after: '', answer: 'vuestros' },
+            { jp: '(あなた方の)', before: '______ ideas', after: '', answer: 'sus' },
+            { jp: '(私の)', before: '______ camiseta', after: '', answer: 'mi' },
+            { jp: '(私たちの)', before: 'un profesor', after: '______', answer: 'nuestro' },
+            { jp: '(君の)', before: 'la culpa', after: '______', answer: 'tuya' },
+            { jp: '(あなたの)', before: 'las opiniones', after: '______', answer: 'tuyas' },
+            { jp: '(私の)', before: 'los trabajos', after: '______', answer: 'míos' }
+        ];
+
+        // ---- 第2問：Mole に関する質問 ----
+        const q2Data = [
+            { q: '¿Con qué acompañan el mole?', answer: 'con arroz' },
+            { q: '¿Qué les gusta a Laura y Antonio?', answer: 'el mole' },
+            { q: '¿Qué cocinan ellos para la cena?', answer: 'mole' },
+            { q: '¿Cuál es la base de la alimentación de los mexicanos?', answer: 'el maíz' }
+        ];
+
+        // ---- 第3問：ペルー / マチュピチュに関する質問 ----
+        const q3Data = [
+            { q: '¿Cuál es más alto, el Monte Fuji (3776m) o Machu Picchu (2430m)?', answer: 'el monte fuji es más alto' },
+            { q: '¿Qué lugares piensa visitar Elvira en Perú?', answer: 'machu picchu' },
+            { q: '¿Cuáles son los lugares Patrimonio de Humanidad más visitados en América Latina?', answer: 'machu picchu y chichén itzá' },
+            { q: '¿Cómo llegan los turistas a Machu Picchu?', answer: 'en tren' }
+        ];
+
+        // ---- 第4問：答えから疑問文を作る ----
+        const q4Data = [
+            { answerText: 'Nos comunicamos por el móvil.', question: '¿Cómo se comunican?' },
+            { answerText: 'Yo me llamo Silvio y mi hermano (se llama) Diego.', question: '¿Cómo se llaman?' },
+            { answerText: 'Generalmente me levanto a las seis y media.', question: '¿A qué hora te levantas?' },
+            { answerText: 'Me arrepiento de no haber venido ayer.', question: '¿De qué te arrepientes?' }
+        ];
+
+        // ============================================================
+        //  レンダリング関数
+        // ============================================================
+
+        // ---- 第1問：所有形容詞 ----
+        function buildPossessiveSection() {
+            const section = document.createElement('div');
+            section.className = 'section';
+            section.innerHTML = `
+                <h3><span class="ex-num">第1問</span> 所有形容詞（性数一致）</h3>
+                <div class="note">カッコ内の所有形容詞を適切な形（前置詞・後置詞）で埋めてください。</div>
+            `;
+
+            possessiveData.forEach((item, idx) => {
+                const q = document.createElement('div');
+                q.className = 'question';
+                const qId = `pos_${idx}`;
+
+                let html = `<div class="question-text">${idx+1}. <span class="jp-hint">${item.jp}</span></div>`;
+                html += `<div class="sentence-line">`;
+
+                if (item.before) {
+                    // 前に空欄がある場合 (____ coche)
+                    const parts = item.before.split('______');
+                    if (parts.length === 2) {
+                        html += `<span class="word">${parts[0]}</span>`;
+                        html +=
+                            `<input class="blank-input" id="${qId}" type="text" placeholder="□" autocomplete="off" oninput="validateInput(this)">`;
+                        html += `<span class="word">${parts[1]}</span>`;
+                    } else {
+                        // 前に空欄がない場合 (un profesor ______)
+                        html += `<span class="word">${item.before}</span>`;
+                        html +=
+                            `<input class="blank-input" id="${qId}" type="text" placeholder="□" autocomplete="off" oninput="validateInput(this)">`;
+                        if (item.after) html += `<span class="word">${item.after}</span>`;
+                    }
+                } else {
+                    // fallback
+                    html +=
+                        `<input class="blank-input" id="${qId}" type="text" placeholder="□" autocomplete="off" oninput="validateInput(this)">`;
+                }
+
+                html += `</div>`;
+
+                // 音声
+                const fullText = (item.before + ' ' + item.answer + ' ' + (item.after || '')).trim();
+                html +=
+                    `<button type="button" class="audio-btn" onclick="speakText('${fullText.replace(/'/g,"\\'")}')">🔊</button>`;
+
+                // ヒント
+                const hintText = (item.before + ' ' + item.answer + ' ' + (item.after || '')).trim();
+                html += `<span class="answer-hint"> → ${hintText}</span>`;
+
+                q.innerHTML = html;
+                section.appendChild(q);
+
+                // 正解マップ
+                window.answerMap[qId] = item.answer;
+
+                currentQuestions.push({
+                    type: 'pos',
+                    id: qId,
+                    answer: item.answer,
+                    display: hintText
+                });
+            });
+
+            return section;
+        }
+
+        // ---- 第2問・第3問：質問に答える ----
+        function buildQASection(title, data, prefix) {
+            const section = document.createElement('div');
+            section.className = 'section';
+            section.innerHTML = `<h3><span class="ex-num">${prefix}</span> ${title}</h3><div class="note">質問に簡潔に答えてください。</div>`;
+
+            data.forEach((item, idx) => {
+                const q = document.createElement('div');
+                q.className = 'question';
+                const qId = `${prefix}_${idx}`;
+
+                let html = `<div class="question-text">${idx+1}. ${item.q}</div>`;
+                html += `<div class="sentence-line">`;
+                html +=
+                    `<input class="blank-input" id="${qId}" type="text" placeholder="答えを入力" autocomplete="off" oninput="validateInput(this)" style="width:clamp(120px,25vw,280px);">`;
+                html += `</div>`;
+
+                // 音声
+                html +=
+                    `<button type="button" class="audio-btn" onclick="speakText('${item.q.replace(/'/g,"\\'")}')">🔊</button>`;
+
+                // ヒント
+                html += `<span class="answer-hint"> → ${item.answer}</span>`;
+
+                q.innerHTML = html;
+                section.appendChild(q);
+
+                window.answerMap[qId] = item.answer;
+                currentQuestions.push({
+                    type: 'qa',
+                    id: qId,
+                    answer: item.answer,
+                    display: item.answer
+                });
+            });
+
+            return section;
+        }
+
+        // ---- 第4問：答えから疑問文を作る ----
+        function buildQuestionCreationSection() {
+            const section = document.createElement('div');
+            section.className = 'section';
+            section.innerHTML = `
+                <h3><span class="ex-num">第4問</span> 疑問文作成</h3>
+                <div class="note">下線部の文が答えになるような疑問文をスペイン語で書いてください。</div>
+            `;
+
+            q4Data.forEach((item, idx) => {
+                const q = document.createElement('div');
+                q.className = 'question';
+                const qId = `q4_${idx}`;
+
+                let html = `<div class="question-text">${idx+1}. <span style="font-weight:400;">答え：</span><span style="background:#f0efe0;padding:2px 10px;border-radius:12px;">${item.answerText}</span></div>`;
+                html += `<div class="sentence-line">`;
+                html +=
+                    `<textarea class="full-input" id="${qId}" rows="2" placeholder="疑問文を入力してください" autocomplete="off" oninput="validateInput(this)"></textarea>`;
+                html += `</div>`;
+
+                // 音声
+                html +=
+                    `<button type="button" class="audio-btn" onclick="speakText('${item.question.replace(/'/g,"\\'")}')">🔊</button>`;
+
+                // ヒント
+                html += `<span class="answer-hint"> → ${item.question}</span>`;
+
+                q.innerHTML = html;
+                section.appendChild(q);
+
+                window.answerMap[qId] = item.question;
+                currentQuestions.push({
+                    type: 'qcreate',
+                    id: qId,
+                    answer: item.question,
+                    display: item.question
+                });
+            });
+
+            return section;
+        }
+
+        // ============================================================
+        //  メイン生成
+        // ============================================================
+        function generateQuiz() {
+            if (timerInterval) clearInterval(timerInterval);
+            currentQuestions = [];
+            window.answerMap = {};
+            const form = document.getElementById('quizForm');
+            form.innerHTML = '';
+            document.getElementById('result').innerHTML = '';
+
+            // 第1問
+            form.appendChild(buildPossessiveSection());
+
+            // 第2問
+            form.appendChild(buildQASection('Mole に関する質問', q2Data, 'q2'));
+
+            // 第3問
+            form.appendChild(buildQASection('ペルー / マチュピチュに関する質問', q3Data, 'q3'));
+
+            // 第4問
+            form.appendChild(buildQuestionCreationSection());
+
+            if (showAnswersFlag) {
+                document.querySelectorAll('.answer-hint').forEach(el => el.style.display = 'inline');
+            }
+            startTimer();
+
+            // 初期状態ですでに緑になっているものがないようにする（念のため）
+            document.querySelectorAll('.correct-highlight').forEach(el => el.classList.remove('correct-highlight'));
+        }
+
+        // ============================================================
+        //  採点
+        // ============================================================
+        function gradeQuiz() {
+            if (timerInterval) clearInterval(timerInterval);
+            let correctCount = 0;
+            let totalCount = currentQuestions.length;
+            if (totalCount === 0) {
+                document.getElementById('result').innerHTML = '<p>⚠️ 問題がありません。生成ボタンを押してください。</p>';
+                return;
+            }
+
+            let html = '<h3>📋 採点結果</h3><ul style="list-style:none; padding-left:0;">';
+            let details = [];
+
+            currentQuestions.forEach((q, idx) => {
+                const el = document.getElementById(q.id);
+                const userVal = el ? el.value : '';
+                const isCorrect = normalize(userVal) === normalize(q.answer);
+                if (isCorrect) correctCount++;
+                if (el) {
+                    if (isCorrect) el.classList.add('correct-highlight');
+                    else el.classList.remove('correct-highlight');
+                }
+                const label = q.type === 'pos' ? `第1問-${idx+1}` :
+                    q.type === 'qa' ? `第${idx < 4 ? 2 : 3}問-${(idx % 4) + 1}` :
+                    `第4問-${idx - q4Data.length + 1}`;
+                details.push({
+                    label: label,
+                    ok: isCorrect,
+                    user: userVal || '(空白)',
+                    answer: q.answer,
+                    display: q.display || q.answer
+                });
+            });
+
+            // グループ分けして表示
+            const groups = [
+                { name: '第1問（所有形容詞）', start: 0, end: possessiveData.length },
+                { name: '第2問（Mole）', start: possessiveData.length, end: possessiveData.length + q2Data.length },
+                { name: '第3問（ペルー／マチュピチュ）', start: possessiveData.length + q2Data.length, end: possessiveData.length +
+                        q2Data.length + q3Data.length },
+                { name: '第4問（疑問文作成）', start: possessiveData.length + q2Data.length + q3Data.length, end: currentQuestions
+                        .length }
+            ];
+
+            groups.forEach(g => {
+                html += `<li style="margin-top:10px;font-weight:700;">${g.name}</li>`;
+                for (let i = g.start; i < g.end && i < currentQuestions.length; i++) {
+                    const q = currentQuestions[i];
+                    const el = document.getElementById(q.id);
+                    const userVal = el ? el.value : '';
+                    const isCorrect = normalize(userVal) === normalize(q.answer);
+                    html += `<li style="margin-left:18px;margin-bottom:4px;">
+                        ${isCorrect ? '✅' : '❌'} 
+                        <span style="font-size:0.92rem;">
+                            入力: ${userVal || '(空白)'} &nbsp;→&nbsp; 
+                            <span style="color:#2c5f2d;font-weight:500;">${q.answer}</span>
+                        </span>
+                    </li>`;
+                }
+            });
+
+            const percent = totalCount ? Math.round(correctCount / totalCount * 100) : 0;
+            html +=
+                `</ul><p style="font-size:1.2rem;font-weight:700;margin-top:12px;">🎯 ${correctCount} / ${totalCount} 正解 (${percent}%)</p>`;
+
+            scoreHistory.push(percent);
+            if (scoreHistory.length > 8) scoreHistory.shift();
+            localStorage.setItem('ex3_history', JSON.stringify(scoreHistory));
+            const avg = scoreHistory.length ? Math.round(scoreHistory.reduce((a, b) => a + b, 0) / scoreHistory.length) : 0;
+            html += `<p>📈 直近${scoreHistory.length}回の平均点: ${avg}%</p>`;
+
+            document.getElementById('result').innerHTML = html;
+        }
+
+        // ============================================================
+        //  グローバル公開
+        // ============================================================
+        window.generateQuiz = generateQuiz;
+        window.gradeQuiz = gradeQuiz;
+        window.toggleAnswers = toggleAnswers;
+        window.resetHistory = resetHistory;
+        window.speakText = speakText;
+        window.validateInput = validateInput;
+
+        // ============================================================
+        //  起動
+        // ============================================================
+        window.onload = () => {
+            generateQuiz();
+        };
+    </script>
+
+</body>
+</html>
