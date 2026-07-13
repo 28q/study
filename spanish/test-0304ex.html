@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>試験対策 - 和訳・西訳 予測分析</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI','Helvetica Neue',Arial,sans-serif; background:#f5f7fb; padding:30px 20px; color:#1e293b; }
+        .container { max-width:1200px; margin:0 auto; background:#fff; border-radius:24px; box-shadow:0 10px 40px rgba(0,0,0,.08); padding:30px 28px 40px; }
+        h1 { font-size:26px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+        h1 small { font-size:15px; font-weight:400; color:#64748b; margin-left:8px; }
+        .header-bar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; border-bottom:2px solid #e9edf4; padding-bottom:18px; margin-bottom:28px; gap:14px; }
+        .filter-area { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+        .filter-area label { font-weight:600; font-size:15px; color:#334155; }
+        .filter-area select { padding:8px 38px 8px 14px; border-radius:40px; border:1.5px solid #d1d9e6; background:#fafcff; font-size:15px; font-weight:500; color:#0f172a; cursor:pointer; outline:none; transition:.2s; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23334155' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; }
+        .filter-area select:hover { border-color:#94a3b8; }
+        .filter-area select:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+        .badge-status { font-size:13px; background:#eef2f6; padding:4px 16px; border-radius:30px; color:#475569; white-space:nowrap; }
+        
+        .summary-block { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 24px; margin-bottom: 32px; }
+        .summary-title { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .summary-columns { display: flex; gap: 32px; flex-wrap: wrap; }
+        .summary-col { flex: 1; min-width: 300px; }
+        .summary-col ul { padding-left: 20px; font-size: 14px; line-height: 1.6; color: #1e293b; }
+        .summary-col ul li { margin-bottom: 14px; }
+        .summary-col strong { color: #2563eb; font-size: 15px; }
+        .summary-col code { background: #eef2f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13.5px; color: #0f172a; }
+        .summary-desc { font-size: 12.5px; color: #64748b; margin-top: 4px; margin-bottom: 4px; display: block; line-height: 1.5; }
+
+        .conv-block { margin-bottom:32px; }
+        .conv-title { font-size:16px; font-weight:700; color:#0f172a; background:#f1f4f9; padding:8px 18px; border-radius:40px; display:inline-block; margin-bottom:16px; letter-spacing:.3px; }
+        
+        .sentence-card { display:flex; align-items:stretch; border:1.5px solid #e2e8f0; border-radius:14px; margin-bottom:10px; background:#fff; transition:border-color .2s,box-shadow .2s; overflow:hidden; min-height:58px; }
+        .sentence-card:hover { border-color:#cbd5e1; box-shadow:0 2px 8px rgba(0,0,0,.03); }
+        
+        .sentence-card .spanish-col { flex:0 0 48%; padding:14px 18px; background:#fafcff; border-right:1.5px solid #e2e8f0; font-size:15px; line-height:1.6; color:#0f172a; word-break:break-word; display:flex; flex-direction: column; justify-content: center; }
+        .sentence-card .japanese-col { flex:1; padding:14px 18px; background:#fff; font-size:15px; line-height:1.6; color:#0f172a; display:flex; flex-direction: column; justify-content: center; font-weight:500; }
+        
+        .tags-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+        .mod-tag { font-size:11px; font-weight:700; padding:2px 10px; border-radius:40px; letter-spacing:.3px; }
+        .tag-grammar { background: #f1f4f9; color: #64748b; }
+        .tag-es-high { background: #e6f9ee; color: #1a8a4a; border: 1px solid #bbf7d0; }
+        .tag-ja-high { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        
+        @media (max-width:768px){
+            .container{padding:18px 14px;}
+            .summary-columns { gap: 20px; }
+            .sentence-card{flex-direction:column;border-radius:14px;}
+            .sentence-card .spanish-col{flex:none;border-right:none;border-bottom:1.5px solid #e2e8f0;padding:12px 16px;font-size:14px;}
+            .sentence-card .japanese-col{padding:12px 16px;font-size:14px;}
+            .header-bar{flex-direction:column;align-items:flex-start;gap:12px;}
+            .filter-area{width:100%;flex-wrap:wrap;}
+            .filter-area select{flex:1;min-width:120px;}
+            h1{font-size:21px;}
+        }
+        .fade-in { animation:fadeIn .3s ease; }
+        @keyframes fadeIn { 0%{opacity:.4;transform:translateY(4px);} 100%{opacity:1;transform:translateY(0);} }
+        .footer-note { margin-top:28px; font-size:13px; color:#94a3b8; text-align:center; border-top:1px solid #e9edf4; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="header-bar">
+            <h1>📊 試験対策分析 <small>— 和訳・西訳 出題予測</small></h1>
+            <div class="filter-area">
+                <label for="sortSelect">並び替え：</label>
+                <select id="sortSelect">
+                    <option value="default">📖 標準（テキスト順）</option>
+                    <option value="es-desc">✍️ 西訳（日→西）出題確率 高い順</option>
+                    <option value="ja-desc">👀 和訳（西→日）出題確率 高い順</option>
+                </select>
+                <span class="badge-status" id="statusBadge">全 <strong>61</strong> 文</span>
+            </div>
+        </div>
+
+        <!-- 頻出単語・構文リスト -->
+        <div class="summary-block">
+            <div class="summary-title">💡 先生のメール分析に基づく 重要構文・単語解説</div>
+            <p style="font-size: 13.5px; color: #475569; margin-bottom: 20px;">
+                「単語の勉強より活用や文法の復習が重要」「固有名詞は推測できればOK」という指示に基づく傾向分析です。
+            </p>
+            <div class="summary-columns">
+                <!-- 西訳向け -->
+                <div class="summary-col">
+                    <div class="summary-title" style="font-size: 15px;">✍️ 西訳（日→西）で狙われやすい構文</div>
+                    <ul>
+                        <li>
+                            <strong>ser と estar の区別</strong>
+                            <span class="summary-desc"><code>ser</code> は「性質・出身・国籍」、<code>estar</code> は「状態・所在」を表します。短く書きやすいので西訳の定番です。</span>
+                            例: <code>soy de...</code> (〜出身です), <code>estoy en...</code> (〜にいます)
+                        </li>
+                        <li>
+                            <strong>gustar 型動詞（主語と目的語の逆転）</strong>
+                            <span class="summary-desc">「〜が好きだ」はスペイン語で「〜(主語)が、私に(間接目的語)喜びを与える」という構造になります。主語の単数・複数で動詞が変わる点に注意。</span>
+                            例: <code>me gusta el fútbol</code> (サッカーが好き), <code>les gustan los tacos</code> (タコスが好き), <code>me encanta</code> (大好き)
+                        </li>
+                        <li>
+                            <strong>基本的な再帰動詞</strong>
+                            <span class="summary-desc">自分自身に動作を向ける動詞です。再帰代名詞(me, te, se 等)を忘れずに。</span>
+                            例: <code>me llamo</code> (〜という名前です), <code>me pongo nervioso</code> (緊張します)
+                        </li>
+                        <li>
+                            <strong>基本の前置詞・疑問詞・接続詞</strong>
+                            <span class="summary-desc">基礎的な接続詞や疑問詞を正確に書けるかが問われます。</span>
+                            例: <code>en casa</code> (家で), <code>para estudiar</code> (勉強のために), <code>¿De dónde...?</code> (どこ出身？), <code>pero</code> (しかし)
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 和訳向け -->
+                <div class="summary-col">
+                    <div class="summary-title" style="font-size: 15px;">👀 和訳（西→日）で狙われやすい構文</div>
+                    <ul>
+                        <li>
+                            <strong>頻出の不定詞（原形）と助動詞的表現</strong>
+                            <span class="summary-desc">
+                                テキストによく出る不定詞：<code>estudiar</code>(勉強する), <code>viajar</code>(旅行する), <code>visitar</code>(訪れる), <code>conocer</code>(知る/訪れる), <code>salir</code>(出発する), <code>llegar</code>(到着する), <code>ver</code>(見る), <code>jugar</code>(プレーする)<br>
+                                これらが以下の構文と組み合わさって出題されます。<br>
+                                【義務】<code>deber / hay que + 不定詞</code> (〜しなければならない)<br>
+                                【予定・意志】<code>ir a / pensar / querer + 不定詞</code> (〜するつもり / 〜したい)
+                            </span>
+                        </li>
+                        <li>
+                            <strong>現在完了形 (haber + 過去分詞)</strong>
+                            <span class="summary-desc">「〜したことがある、〜してしまった」を表します。不規則変化する過去分詞に注意が必要です。</span>
+                            例: <code>he visto</code> (見たことがある ※verの過去分詞), <code>se han convertido</code> (〜に変わった)
+                        </li>
+                        <li>
+                            <strong>目的格代名詞の語順と意味</strong>
+                            <span class="summary-desc">「〜を(lo, la, los, las)」などの代名詞は、活用した動詞の前、または不定詞の後ろにくっつきます。何を指しているか読み解く力が問われます。</span>
+                            例: <code>lo sabes</code> (それを知っている), <code>invitarlas</code> (彼女たちを招待すること)
+                        </li>
+                        <li>
+                            <strong>関係代名詞・比較・最上級</strong>
+                            <span class="summary-desc">文が長くなり構造が複雑になるため、和訳問題の定番です。</span>
+                            例: <code>lugares que poseen...</code> (〜を持つ場所), <code>más alta que...</code> (〜より高い), <code>el más popular</code> (最も人気のある)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="listContainer"></div>
+        <div class="footer-note"></div>
+    </div>
+
+    <script>
+        // データ構築：メールの指示に基づき「西訳(日→西)は短くて文法・活用の基本が問われるもの（固有名詞なし）」「和訳(西→日)は長文で構文（現在完了、比較、関係詞など）や推測力を問われるもの」として重みを設定。
+        const rawData = [
+            // Lección 2
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Ji Sung: Buenos días, Naoki.", ja: "おはようございます、ナオキ。", wEs: 10, wJa: 10, tags: ["挨拶"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Ji Sung: Oh, mira, allí está mi amiga.", ja: "あ、見て、そこに私の友達がいるよ。", wEs: 60, wJa: 40, tags: ["estar(所在)"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Naoki: Hola, ¿cómo te llamas?", ja: "こんにちは、お名前は何ですか？", wEs: 70, wJa: 30, tags: ["再帰動詞(llamar)"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Lupe: Me llamo Lupe.", ja: "ルペと言います。", wEs: 80, wJa: 20, tags: ["再帰動詞(llamar)"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Naoki: Yo me llamo Naoki, mucho gusto.", ja: "私はナオキと言います、初めまして。", wEs: 70, wJa: 20, tags: ["挨拶表現"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Naoki: ¿De dónde eres, Lupe?", ja: "ルペさんはどこ出身ですか？", wEs: 90, wJa: 30, tags: ["ser(出身)", "疑問詞(de dónde)"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Lupe: Soy de Morelos, México. ¿Tú eres de Tokio?", ja: "メキシコのモレロス出身です。あなたは東京出身ですか？", wEs: 85, wJa: 40, tags: ["ser(出身)"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Naoki: No, soy de Fukuoka, pero ahora estoy en Tokio para estudiar.", ja: "いいえ、福岡出身ですが、今は勉強のために東京にいます。", wEs: 95, wJa: 70, tags: ["serとestarの区別", "para+不定詞(estudiar)"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Lupe: Ji Sung, tú eres chino, ¿verdad?", ja: "ジソンさん、あなたは中国人ですよね？", wEs: 75, wJa: 40, tags: ["ser(国籍)"] },
+            { sec: "📖 Lección 2 — あいさつ・出身", es: "Ji Sung: No, soy coreano, de Seúl.", ja: "いいえ、韓国人です、ソウル出身です。", wEs: 85, wJa: 40, tags: ["ser(国籍・出身)"] },
+
+            // Lección 3
+            { sec: "🍽️ Lección 3 — メキシコ料理の夕べ", es: "Laura: Hoy Antonio y yo preparamos una comida mexicana en casa.", ja: "今日、アントニオと私は家でメキシコ料理を用意します。", wEs: 70, wJa: 60, tags: ["現在形", "前置詞(en)"] },
+            { sec: "🍽️ Lección 3 — メキシコ料理の夕べ", es: "Laura: Sí. ¿Estás libre? A nosotros nos gusta recibir a los amigos en casa.", ja: "はい。お暇ですか？私たちは家で友達を迎えるのが好きです。", wEs: 95, wJa: 85, tags: ["estar(状態)", "gustar型", "不定詞(recibir)"] },
+            { sec: "🍽️ Lección 3 — メキシコ料理の夕べ", es: "Teresa: ¡Qué lástima! Debo esperar a unas amigas chilenas en el aeropuerto.", ja: "残念！空港でチリ人の友人たちを待たなければなりません。", wEs: 70, wJa: 85, tags: ["deber+不定詞(esperar)", "目的語のa"] },
+            { sec: "🍽️ Lección 3 — メキシコ料理の夕べ", es: "Laura: ¿Por qué no las invitas?", ja: "彼女たちを招待してはどうですか？", wEs: 85, wJa: 60, tags: ["目的格代名詞(las)"] },
+            { sec: "🍽️ Lección 3 — メキシコ料理の夕べ", es: "Laura: Sí. Tal vez a tus amigas chilenas les gustan los tacos y el mole.", ja: "ええ。たぶんあなたのチリ人の友達はタコスとモレが好きでしょう。", wEs: 80, wJa: 85, tags: ["gustar型(複数)", "間接目的格"] },
+            { sec: "🍽️ Lección 3 — メキシコ料理の夕べ", es: "Laura: Es una salsa un poco picante. Lleva chocolate y varios condimentos; lo acompañamos con carne de pollo y arroz.", ja: "少しピリッとしたソースです。チョコレートといくつかの香辛料が入っています。鶏肉とご飯と一緒にいただきます。", wEs: 30, wJa: 90, tags: ["語彙推測", "目的格代名詞(lo)"] },
+            { sec: "🍽️ Lección 3 — メキシコ料理の夕べ", es: "Laura: Sí. A mí me encanta. Seguramente a ti y a tus amigas también les gusta.", ja: "はい。私は大好きです。きっとあなたやあなたの友達も気に入るでしょう。", wEs: 90, wJa: 80, tags: ["gustar型(encantar)", "強調のa mí"] },
+            { sec: "🍽️ Lección 3 — メキシコ料理の夕べ", es: "Teresa: Me parece perfecto. ¡La comida mexicana me fascina!", ja: "完璧だと思います。メキシコ料理に魅了されます！", wEs: 95, wJa: 80, tags: ["gustar型(parecer/fascinar)"] },
+
+            // Lección 4
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Elvira: Ah, ¿no lo sabes? Esta es una fotografía de Machu Picchu, unas ruinas incaicas de Perú.", ja: "あ、知らないの？これはペルーのインカ遺跡、マチュピチュの写真よ。", wEs: 40, wJa: 70, tags: ["目的格代名詞(lo)", "固有名詞推測"] },
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Akari: ¿Vas a viajar a Perú?", ja: "ペルーに旅行に行くの？", wEs: 90, wJa: 50, tags: ["ir a+不定詞(viajar)"] },
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Elvira: Sí. Pienso visitar varias ciudades en agosto, cuando allá es invierno. Quiero conocer Cusco y Machu Picchu, que son Patrimonio de la Humanidad.", ja: "そう。8月にいくつかの都市を訪れる予定よ、あちらは冬だから。世界遺産のクスコとマチュピチュに行きたいの。", wEs: 20, wJa: 95, tags: ["pensar+不定詞(visitar)", "querer+不定詞(conocer)", "関係代名詞(que)"] },
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Elvira: Sí. En ambos hay construcciones incaicas y tienen una historia muy interesante.", ja: "そう。両方ともインカの建造物があって、とても興味深い歴史があるの。", wEs: 60, wJa: 80, tags: ["hay(存在)", "tener"] },
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Akari: Ya lo creo. Para ser Patrimonio de la Humanidad los lugares deben tener valor histórico o natural.", ja: "そうだね。世界遺産になるには、歴史的または自然的価値がなければならないよね。", wEs: 30, wJa: 90, tags: ["deber+不定詞(tener)", "para+不定詞(ser)"] },
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Elvira: Machu Picchu es una ciudadela que está en lo alto de una montaña.", ja: "マチュピチュは山の上にある城塞都市よ。", wEs: 40, wJa: 85, tags: ["関係代名詞(que)", "estar(所在)"] },
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Akari: ¿Es más alta o menos alta que el Monte Fuji?", ja: "富士山より高い？それとも低い？", wEs: 85, wJa: 80, tags: ["比較級(más/menos... que)"] },
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Elvira: Es menos alta. Para llegar hay que salir desde Cusco en tren, que es la ciudad más turística de Perú.", ja: "低いわ。行くにはペルーで一番観光客が多い都市、クスコから列車で出発しなければならないの。", wEs: 30, wJa: 95, tags: ["hay que(義務)+salir", "para+不定詞(llegar)", "最上級"] },
+            { sec: "🏔️ Lección 4 — マチュピチュ旅行", es: "Akari: ¿Cuántos días vas a estar allí?", ja: "何日間そこにいるの？", wEs: 85, wJa: 60, tags: ["疑問詞", "ir a+不定詞(estar)"] },
+
+            // Lección 5
+            { sec: "⚽ Lección 5 — サッカーと野球", es: "Rolando: ¿A ti te gusta el fútbol?", ja: "あなたはサッカーが好きですか？", wEs: 95, wJa: 50, tags: ["gustar型", "強調のa ti"] },
+            { sec: "⚽ Lección 5 — サッカーと野球", es: "Marco: Sí, he visto algunos partidos de la Liga Española. Me gusta mucho el ambiente de los estadios.", ja: "はい、スペインリーグの試合をいくつか見ました。スタジアムの雰囲気がとても好きです。", wEs: 60, wJa: 90, tags: ["現在完了(he visto)", "gustar型"] },
+            { sec: "⚽ Lección 5 — サッカーと野球", es: "Rolando: No mucho. Prefiero el béisbol. Es el deporte más popular de mi país. Sobre todo me gusta cuando está jugando mi equipo preferido, aunque a veces me pongo muy nervioso.", ja: "あまり好きではありません。野球の方が好きです。私の国で一番人気のあるスポーツです。特に好きなチームが試合をしている時が好きですが、時々とても緊張します。", wEs: 30, wJa: 95, tags: ["最上級", "現在進行形(está jugando)", "再帰動詞(ponerse)"] },
+            { sec: "⚽ Lección 5 — サッカーと野球", es: "Marco: ¿Has ido a ver algún juego de béisbol en el estadio?", ja: "スタジアムに野球の試合を見に行ったことがありますか？", wEs: 70, wJa: 90, tags: ["現在完了(has ido)", "ir a+不定詞(ver)"] },
+            { sec: "⚽ Lección 5 — サッカーと野球", es: "Rolando: Sí, he visto algunos partidos. Pero últimamente solo los he seguido por la televisión.", ja: "はい、いくつか試合を見たことがあります。でも最近はテレビでしか観ていません。", wEs: 50, wJa: 90, tags: ["現在完了(he seguido)", "目的格代名詞(los)"] },
+            { sec: "⚽ Lección 5 — サッカーと野球", es: "Marco: El fútbol y el béisbol se han convertido en deportes muy populares, ¿verdad?", ja: "サッカーと野球はとても人気のあるスポーツになりましたよね？", wEs: 60, wJa: 95, tags: ["現在完了", "再帰動詞(convertirse)"] },
+            { sec: "⚽ Lección 5 — サッカーと野球", es: "Marco: ¿Quieres ver un partido de fútbol en el Santiago Bernabéu? Estoy pensando en ir. Es como un sueño.", ja: "サンティアゴ・ベルナベウでサッカーの試合を見たいですか？行こうと思っています。まるで夢のようです。", wEs: 50, wJa: 85, tags: ["querer+不定詞(ver)", "pensar en+不定詞(ir)"] },
+
+            // 購読 2
+            { sec: "🏙️ 購読2 — Dos ciudades españolas", es: "Madrid está en el centro de España.", ja: "マドリードはスペインの中心にあります。", wEs: 85, wJa: 60, tags: ["estar(所在)"] },
+            { sec: "🏙️ 購読2 — Dos ciudades españolas", es: "Hay muchos edificios altos y tiendas bonitas.", ja: "たくさんの高い建物と素敵な店があります。", wEs: 90, wJa: 60, tags: ["hay(存在)", "形容詞の後置"] },
+            { sec: "🏙️ 購読2 — Dos ciudades españolas", es: "Alicante es una ciudad pequeña. Está al lado del mar Mediterráneo, en el sudeste de España.", ja: "アリカンテは小さな都市です。地中海のそば、スペイン南東部にあります。", wEs: 60, wJa: 80, tags: ["ser/estarの区別", "前置詞句(al lado de)"] },
+
+            // 購読 3
+            { sec: "🌮 購読3 — La comida mexicana", es: "Los mexicanos usan productos autóctonos como el tomate, el chile, el aguacate y el chocolate para preparar una gran variedad de salsas.", ja: "メキシコ人はトマト、チリ、アボカド、チョコレートなどの在来種の食材を使って多種多様なソースを調理します。", wEs: 10, wJa: 95, tags: ["para+不定詞(preparar)", "語彙からの推測"] },
+            { sec: "🌮 購読3 — La comida mexicana", es: "Las tortillas, los tacos y los tamales son de maíz.", ja: "トルティーヤ、タコス、タマレスはトウモロコシで作られています。", wEs: 70, wJa: 70, tags: ["ser de(材料)"] },
+            { sec: "🌮 購読3 — La comida mexicana", es: "¡La comida mexicana es riquísima!", ja: "メキシコ料理はとても美味しいです！", wEs: 85, wJa: 60, tags: ["絶対最上級(-ísimo)"] },
+
+            // 購読 4
+            { sec: "🏛️ 購読4 — Patrimonio de la Humanidad", es: "Son lugares que poseen un gran valor histórico, natural y cultural.", ja: "それらは歴史的、自然的、文化的に大きな価値を持つ場所です。", wEs: 30, wJa: 85, tags: ["関係代名詞(que)"] },
+            { sec: "🏛️ 購読4 — Patrimonio de la Humanidad", es: "Cuando visitamos esos lugares debemos atender las recomendaciones y cuidarlos para las futuras generaciones.", ja: "それらの場所を訪れる際は、推奨事項に従い、将来の世代のためにそれらを大切にしなければなりません。", wEs: 20, wJa: 95, tags: ["deber+不定詞(atender)", "代名詞付加(-los)"] },
+            { sec: "🏛️ 購読4 — Patrimonio de la Humanidad", es: "Todos estos lugares tienen algo especial, algunos son más grandes, otros más antiguos, pero ninguno es menos importante.", ja: "これらの場所はすべて特別な何かを持っており、いくつかはより大きく、他はより古いですが、どれも重要でないものはありません。", wEs: 15, wJa: 95, tags: ["不定語/否定語", "比較級"] },
+
+            // 購読 5
+            { sec: "⚽ 購読5 — Dos deportes populares", es: "El fútbol y el béisbol son los deportes que despiertan más pasiones en el mundo hispano.", ja: "サッカーと野球は、ヒスパニック世界で最も情熱をかき立てるスポーツです。", wEs: 20, wJa: 95, tags: ["関係代名詞(que)", "最上級"] },
+            { sec: "⚽ 購読5 — Dos deportes populares", es: "En casi todos los países de América Latina, como en España, el fútbol es el rey de los deportes.", ja: "スペインと同様に、ラテンアメリカのほぼすべての国で、サッカーはスポーツの王様です。", wEs: 30, wJa: 85, tags: ["文脈推測"] }
+        ];
+
+        // データを初期状態（標準順）のインデックス付きにマッピング
+        let sentences = rawData.map((d, i) => ({ ...d, id: i }));
+        const container = document.getElementById('listContainer');
+        const sortSelect = document.getElementById('sortSelect');
+
+        function renderList() {
+            container.innerHTML = '';
+            
+            // セクションごとにグループ化して表示
+            let currentSec = "";
+            let currentBlock = null;
+
+            sentences.forEach(s => {
+                if (s.sec !== currentSec) {
+                    if (currentBlock) container.appendChild(currentBlock);
+                    currentSec = s.sec;
+                    currentBlock = document.createElement('div');
+                    currentBlock.className = 'conv-block fade-in';
+                    const title = document.createElement('div');
+                    title.className = 'conv-title';
+                    title.textContent = currentSec;
+                    currentBlock.appendChild(title);
+                }
+
+                const card = document.createElement('div');
+                card.className = 'sentence-card';
+
+                const colEs = document.createElement('div');
+                colEs.className = 'spanish-col';
+                
+                const esText = document.createElement('div');
+                esText.textContent = s.es;
+                colEs.appendChild(esText);
+
+                const tagsRow = document.createElement('div');
+                tagsRow.className = 'tags-row';
+
+                // タグの生成
+                if (s.wEs >= 75) {
+                    const t = document.createElement('span');
+                    t.className = 'mod-tag tag-es-high';
+                    t.textContent = `西訳確率: ${s.wEs}%`;
+                    tagsRow.appendChild(t);
+                }
+                if (s.wJa >= 75) {
+                    const t = document.createElement('span');
+                    t.className = 'mod-tag tag-ja-high';
+                    t.textContent = `和訳確率: ${s.wJa}%`;
+                    tagsRow.appendChild(t);
+                }
+                s.tags.forEach(tg => {
+                    const t = document.createElement('span');
+                    t.className = 'mod-tag tag-grammar';
+                    t.textContent = tg;
+                    tagsRow.appendChild(t);
+                });
+
+                colEs.appendChild(tagsRow);
+                card.appendChild(colEs);
+
+                const colJa = document.createElement('div');
+                colJa.className = 'japanese-col';
+                colJa.textContent = s.ja;
+                card.appendChild(colJa);
+
+                currentBlock.appendChild(card);
+            });
+            if (currentBlock) container.appendChild(currentBlock);
+        }
+
+        sortSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val === 'es-desc') {
+                sentences.sort((a, b) => b.wEs - a.wEs);
+            } else if (val === 'ja-desc') {
+                sentences.sort((a, b) => b.wJa - a.wJa);
+            } else {
+                sentences.sort((a, b) => a.id - b.id);
+            }
+            renderList();
+        });
+
+        // 初回描画
+        renderList();
+    </script>
+</body>
+</html>
