@@ -1,490 +1,125 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>スペイン語会話 - スペイン語入力練習（名前不要）</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>スペイン語購読 - 単語穴あきモード</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI','Helvetica Neue',Arial,sans-serif; background:#f5f7fb; padding:30px 20px; color:#1e293b; }
+        .container { max-width:1200px; margin:0 auto; background:#fff; border-radius:24px; box-shadow:0 10px 40px rgba(0,0,0,.08); padding:30px 28px 40px; }
+        h1 { font-size:26px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+        h1 small { font-size:15px; font-weight:400; color:#64748b; margin-left:8px; }
+        .header-bar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; border-bottom:2px solid #e9edf4; padding-bottom:18px; margin-bottom:28px; gap:14px; }
+        .filter-area { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+        .filter-area label { font-weight:600; font-size:15px; color:#334155; }
+        .filter-area select { padding:8px 38px 8px 14px; border-radius:40px; border:1.5px solid #d1d9e6; background:#fafcff; font-size:15px; font-weight:500; color:#0f172a; cursor:pointer; outline:none; transition:.2s; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23334155' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; }
+        .filter-area select:hover { border-color:#94a3b8; }
+        .filter-area select:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+        .blank-toggle { display:flex; align-items:center; gap:8px; background:#f1f4f9; padding:4px 14px 4px 12px; border-radius:40px; font-weight:500; font-size:14px; color:#1e293b; cursor:pointer; user-select:none; transition:background .2s; }
+        .blank-toggle:hover { background:#e2e8f0; }
+        .blank-toggle input[type="checkbox"] { width:18px; height:18px; accent-color:#3b82f6; cursor:pointer; }
+        .badge-status { font-size:13px; background:#eef2f6; padding:4px 16px; border-radius:30px; color:#475569; white-space:nowrap; }
+        .badge-status strong { color:#0f172a; }
+        .conv-block { margin-bottom:32px; }
+        .conv-title { font-size:18px; font-weight:700; color:#0f172a; background:#f1f4f9; padding:8px 18px; border-radius:40px; display:inline-block; margin-bottom:16px; letter-spacing:.3px; }
+        .sentence-card { display:flex; align-items:stretch; border:1.5px solid #e2e8f0; border-radius:14px; margin-bottom:10px; background:#fff; transition:border-color .2s,box-shadow .2s; overflow:hidden; min-height:58px; }
+        .sentence-card:hover { border-color:#cbd5e1; box-shadow:0 2px 8px rgba(0,0,0,.03); }
+        .sentence-card .spanish-col { flex:0 0 52%; padding:14px 18px; background:#fafcff; border-right:1.5px solid #e2e8f0; font-size:15px; line-height:1.9; color:#0f172a; word-break:break-word; display:flex; align-items:center; flex-wrap:wrap; min-height:58px; }
+        .sentence-card .japanese-col { flex:1; padding:14px 18px; background:#fff; font-size:15px; line-height:1.6; color:#0f172a; display:flex; align-items:center; font-weight:500; min-height:58px; }
+        .blank-input { display:inline-block; margin:0 2px; padding:2px 6px; border:2px solid #3b82f6; border-radius:6px; background:#fff; font-size:15px; font-family:inherit; color:#0f172a; outline:none; transition:border-color .25s,box-shadow .25s,background .2s; min-width:60px; width:auto; max-width:520px; vertical-align:middle; }
+        .blank-input:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.15); }
+        .blank-input.correct { border-color:#22a65e; background:#e6f9ee; box-shadow:0 0 0 3px rgba(34,166,94,.15); }
+        .blank-input.wrong { border-color:#dc2626; background:#fef2f2; box-shadow:0 0 0 3px rgba(220,38,38,.12); }
+        .blank-input::placeholder { color:#b0baca; font-weight:400; font-size:12px; font-style:italic; }
+        .text-fragment { display:inline; white-space:pre-wrap; }
+        .mod-tag { font-size:10px; font-weight:700; color:#94a3b8; background:#f1f4f9; padding:1px 10px; border-radius:40px; letter-spacing:.3px; margin-left:6px; flex-shrink:0; }
+        .blank-fill-btn { display:inline-block; margin-left:4px; padding:1px 10px; border:1.5px solid transparent; border-radius:20px; background:#eef2f6; color:#1e293b; font-size:11px; font-weight:600; cursor:pointer; transition:.2s; vertical-align:middle; line-height:1.8; }
+        .blank-fill-btn:hover { background:#dce2ec; }
+        .blank-fill-btn:active { transform:scale(.94); }
+        .blank-fill-btn.filled { background:#22a65e; color:#fff; border-color:#1a8a4a; }
+        .no-blank-msg { font-size:13px; color:#94a3b8; font-style:italic; background:#f8fafc; padding:2px 12px; border-radius:30px; margin-left:8px; }
+        @media (max-width:768px){
+            .container{padding:18px 14px;}
+            .sentence-card{flex-direction:column;border-radius:14px;}
+            .sentence-card .spanish-col{flex:none;border-right:none;border-bottom:1.5px solid #e2e8f0;padding:12px 16px;font-size:14px;background:#f8faff;}
+            .sentence-card .japanese-col{padding:12px 16px;font-size:14px;flex-wrap:wrap;}
+            .blank-input{font-size:14px;min-width:50px;max-width:280px;}
+            .header-bar{flex-direction:column;align-items:flex-start;gap:12px;}
+            .filter-area{width:100%;flex-wrap:wrap;}
+            .filter-area select{flex:1;min-width:120px;}
+            h1{font-size:21px;}
         }
-
-        body {
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            background: #f5f7fb;
-            padding: 30px 20px;
-            color: #1e293b;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            padding: 30px 28px 40px;
-        }
-
-        h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 6px;
-        }
-        h1 small {
-            font-size: 15px;
-            font-weight: 400;
-            color: #64748b;
-            margin-left: 8px;
-        }
-
-        .header-bar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px solid #e9edf4;
-            padding-bottom: 18px;
-            margin-bottom: 28px;
-        }
-
-        .filter-area {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-        .filter-area label {
-            font-weight: 600;
-            font-size: 15px;
-            color: #334155;
-        }
-        .filter-area select {
-            padding: 8px 18px 8px 14px;
-            border-radius: 40px;
-            border: 1.5px solid #d1d9e6;
-            background: #fafcff;
-            font-size: 15px;
-            font-weight: 500;
-            color: #0f172a;
-            cursor: pointer;
-            outline: none;
-            transition: 0.2s;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23334155' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 38px;
-        }
-        .filter-area select:hover {
-            border-color: #94a3b8;
-        }
-        .filter-area select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
-
-        .badge-status {
-            font-size: 13px;
-            background: #eef2f6;
-            padding: 4px 14px;
-            border-radius: 30px;
-            color: #475569;
-        }
-        .badge-status strong {
-            color: #0f172a;
-        }
-
-        /* ===== 会話ブロック ===== */
-        .conv-block {
-            margin-bottom: 32px;
-        }
-        .conv-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0f172a;
-            background: #f1f4f9;
-            padding: 8px 18px;
-            border-radius: 40px;
-            display: inline-block;
-            margin-bottom: 16px;
-            letter-spacing: 0.3px;
-        }
-
-        /* ===== 各センテンスカード ===== */
-        .sentence-card {
-            display: flex;
-            align-items: stretch;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 14px;
-            margin-bottom: 10px;
-            background: #ffffff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            overflow: hidden;
-            min-height: 58px;
-        }
-        .sentence-card:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        }
-
-        /* 左側：スペイン語（入力欄に変わる） */
-        .sentence-card .spanish-col {
-            flex: 0 0 48%;
-            padding: 14px 18px;
-            background: #fafcff;
-            border-right: 1.5px solid #e2e8f0;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #0f172a;
-            word-break: break-word;
-            display: flex;
-            align-items: center;
-            min-height: 58px;
-        }
-        /* 右側：日本語（固定表示） */
-        .sentence-card .japanese-col {
-            flex: 1;
-            padding: 14px 18px;
-            background: #ffffff;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #0f172a;
-            display: flex;
-            align-items: center;
-            font-weight: 500;
-            min-height: 58px;
-        }
-
-        .sentence-card .spanish-col .input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .sentence-card .spanish-col .input-group input {
-            flex: 1;
-            min-width: 140px;
-            padding: 8px 14px;
-            border: 2px solid #d1d9e6;
-            border-radius: 30px;
-            font-size: 15px;
-            background: #ffffff;
-            outline: none;
-            transition: border-color 0.25s, box-shadow 0.25s, background 0.2s;
-            font-family: inherit;
-            color: #0f172a;
-        }
-        .sentence-card .spanish-col .input-group input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-        }
-        .sentence-card .spanish-col .input-group input.correct {
-            border-color: #22a65e;
-            background: #e6f9ee;
-            box-shadow: 0 0 0 3px rgba(34, 166, 94, 0.15);
-        }
-
-        .sentence-card .spanish-col .input-group .fill-btn {
-            padding: 7px 18px;
-            border: none;
-            border-radius: 30px;
-            background: #eef2f6;
-            color: #1e293b;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            white-space: nowrap;
-            border: 1.5px solid transparent;
-        }
-        .sentence-card .spanish-col .input-group .fill-btn:hover {
-            background: #dce2ec;
-        }
-        .sentence-card .spanish-col .input-group .fill-btn:active {
-            transform: scale(0.96);
-        }
-
-        .sentence-card .spanish-col .input-group .fill-btn.fill-done {
-            background: #22a65e;
-            color: #fff;
-            border-color: #1a8a4a;
-        }
-        .sentence-card .spanish-col .input-group .fill-btn.fill-done:hover {
-            background: #1a8a4a;
-        }
-
-        /* mod タグ（視覚補助） */
-        .mod-tag {
-            font-size: 10px;
-            font-weight: 700;
-            color: #94a3b8;
-            background: #f1f4f9;
-            padding: 1px 10px;
-            border-radius: 40px;
-            letter-spacing: 0.3px;
-            margin-left: 6px;
-            flex-shrink: 0;
-        }
-
-        /* ===== レスポンシブ ===== */
-        @media (max-width: 768px) {
-            .container {
-                padding: 18px 14px;
-            }
-            .sentence-card {
-                flex-direction: column;
-                border-radius: 14px;
-            }
-            .sentence-card .spanish-col {
-                flex: none;
-                border-right: none;
-                border-bottom: 1.5px solid #e2e8f0;
-                padding: 12px 16px;
-                font-size: 14px;
-                background: #f8faff;
-            }
-            .sentence-card .japanese-col {
-                padding: 12px 16px;
-                font-size: 14px;
-                flex-wrap: wrap;
-            }
-            .sentence-card .spanish-col .input-group input {
-                min-width: 100px;
-                font-size: 14px;
-            }
-            .header-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-            .filter-area {
-                width: 100%;
-            }
-            .filter-area select {
-                flex: 1;
-                min-width: 120px;
-            }
-            .badge-status {
-                font-size: 12px;
-            }
-            h1 {
-                font-size: 21px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .sentence-card .spanish-col .input-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .sentence-card .spanish-col .input-group .fill-btn {
-                text-align: center;
-            }
-        }
-
-        /* ===== スクロール＆ユーティリティ ===== */
-        .hidden {
-            display: none !important;
-        }
-        .fade-in {
-            animation: fadeIn 0.2s ease;
-        }
-        @keyframes fadeIn {
-            0% {
-                opacity: 0.4;
-                transform: translateY(2px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .footer-note {
-            margin-top: 28px;
-            font-size: 13px;
-            color: #94a3b8;
-            text-align: center;
-            border-top: 1px solid #e9edf4;
-            padding-top: 20px;
-        }
-        .footer-note span {
-            background: #f1f4f9;
-            padding: 2px 10px;
-            border-radius: 30px;
-        }
-
-        .sentence-card .spanish-col .input-group input::placeholder {
-            color: #b0baca;
-            font-weight: 400;
-            font-size: 13px;
-            font-style: italic;
-        }
-        .sentence-card .spanish-col .input-group input.correct::placeholder {
-            color: #1a8a4a;
-            opacity: 0.7;
-        }
+        @media (max-width:480px){ .blank-input{max-width:200px;min-width:40px;font-size:13px;} .blank-fill-btn{font-size:10px;padding:0 8px;} }
+        .fade-in { animation:fadeIn .2s ease; }
+        @keyframes fadeIn { 0%{opacity:.4;transform:translateY(2px);} 100%{opacity:1;transform:translateY(0);} }
+        .footer-note { margin-top:28px; font-size:13px; color:#94a3b8; text-align:center; border-top:1px solid #e9edf4; padding-top:20px; }
+        .footer-note span { background:#f1f4f9; padding:2px 14px; border-radius:30px; }
     </style>
 </head>
 <body>
-
     <div class="container" id="app">
         <div class="header-bar">
-            <h1>
-                ✍️ スペイン語会話
-                <small>— 内容のみ入力（名前不要）</small>
-            </h1>
+            <h1>📖 スペイン語購読 <small>— 単語穴あきモード</small></h1>
             <div class="filter-area">
-                <label for="modSelect">表示モード：</label>
+                <label for="modSelect">表示フィルター：</label>
                 <select id="modSelect">
                     <option value="all">✨ すべて表示</option>
-                    <option value="0">🔵 mod 0 を空欄にする（スペイン語）</option>
-                    <option value="1">🟠 mod 1 を空欄にする（スペイン語）</option>
+                    <option value="0">🔵 mod 0 のみ</option>
+                    <option value="1">🟠 mod 1 のみ</option>
                 </select>
+                <label class="blank-toggle">
+                    <input type="checkbox" id="blankModeToggle" checked />
+                    <span>✏️ 単語穴あきモード</span>
+                </label>
                 <span class="badge-status" id="statusBadge">全 <strong id="totalCount">0</strong> 文</span>
             </div>
         </div>
-
         <div id="conversationsContainer"></div>
-
-        <div class="footer-note">
-            <span>💡 空欄には会話の内容だけを入力</span>
-        </div>
+        <div class="footer-note"><span>💡 空欄に本文を入力 · Enter で正答を入力</span></div>
     </div>
 
     <script>
-        // ============================================================
-        //  データ：4つの会話（スペイン語 / 日本語訳）
-        //  新コンテンツ：購読2〜購読5 に完全差し替え
-        // ============================================================
-        const conversationData = [{
-            title: '🏙️ 購読2 — Dos ciudades españolas',
-            sentences: [
-                'Madrid está en el centro de España.|マドリードはスペインの中心にあります。',
-                'Es la capital del país.|それは国の首都です。',
-                'Hay muchos edificios altos y tiendas bonitas.|たくさんの高い建物と素敵な店があります。',
-                'En Madrid está el Museo del Prado.|マドリードにはプラド美術館があります。',
-                'Es un museo famoso.|それは有名な美術館です。',
-                'También está el estadio Santiago Bernabéu, del equipo Real Madrid.|レアル・マドリードのサンティアゴ・ベルナベウ競技場もあります。',
-                'Es muy grande e impresionante.|それはとても大きくて印象的です。',
-                'Alicante es una ciudad pequeña.|アリカンテは小さな都市です。',
-                'Está al lado del mar Mediterráneo, en el sudeste de España.|地中海のそば、スペイン南東部にあります。',
-                'En Alicante hay numerosas playas y un paseo marítimo agradable.|アリカンテにはたくさんのビーチと楽しい海辺の遊歩道があります。',
-                'También hay un castillo muy antiguo.|とても古い城もあります。',
-                'Es el Castillo de Santa Bárbara.|それはサンタ・バルバラ城です。'
-            ]
-        }, {
-            title: '🌮 購読3 — La comida mexicana',
-            sentences: [
-                'En la cocina mexicana hay muchos platillos deliciosos.|メキシコ料理にはたくさんの美味しい料理があります。',
-                'Los mexicanos usan productos autóctonos como el tomate, el chile, el aguacate y el chocolate para preparar una gran variedad de salsas.|メキシコ人はトマト、チリ、アボカド、チョコレートなどの在来種の食材を使って多種多様なソースを調理します。',
-                'La base de la alimentación de los mexicanos es el maíz.|メキシコ人の食生活の基本はトウモロコシです。',
-                'Las tortillas, los tacos y los tamales son de maíz.|トルティーヤ、タコス、タマレスはトウモロコシで作られています。',
-                'Los mexicanos comen carne de cerdo, res o pollo, casi siempre con salsas y tortillas.|メキシコ人は豚肉、牛肉、鶏肉を、ほとんど常にソースとトルティーヤと一緒に食べます。',
-                'También son muy populares las bebidas alcohólicas como el tequila y el mezcal, o los jugos de frutas naturales.|テキーラやメスカルなどのアルコール飲料や、天然のフルーツジュースも非常に人気があります。',
-                '¡La comida mexicana es riquísima!|メキシコ料理はとても美味しいです！'
-            ]
-        }, {
-            title: '🏛️ 購読4 — Patrimonio de la Humanidad',
-            sentences: [
-                'Son lugares que poseen un gran valor histórico, natural y cultural.|それらは歴史的、自然的、文化的に大きな価値を持つ場所です。',
-                'Hay muchos en todo el mundo.|世界中にたくさんあります。',
-                'Una gran cantidad de personas viaja para conocer y apreciar su belleza.|多くの人々がその美しさを知り鑑賞するために旅行します。',
-                'Cuando visitamos esos lugares debemos atender las recomendaciones y cuidarlos para las futuras generaciones.|それらの場所を訪れる際は、推奨事項に従い、将来の世代のためにそれらを大切にしなければなりません。',
-                'Son muy atractivos aquellos sitios declarados Patrimonio de la Humanidad.|世界遺産に登録された場所は非常に魅力的です。',
-                'Entre los más visitados en América Latina están Teotihuacán, en México; el Parque Nacional Tikal, en Guatemala; el Parque Nacional Canaima, en Venezuela y las Cataratas del Iguazú, que quedan entre Brasil, Paraguay y Argentina.|ラテンアメリカで最も訪れている場所には、メキシコのテオティワカン、グアテマラのティカル国立公園、ベネズエラのカナイマ国立公園、そしてブラジル、パラグアイ、アルゼンチンにまたがるイグアスの滝があります。',
-                'Hay muchos otros en distintos países.|さまざまな国に他にもたくさんあります。',
-                'Todos estos lugares tienen algo especial, algunos son más grandes, otros más antiguos, pero ninguno es menos importante.|これらの場所はすべて特別な何かを持っており、いくつかはより大きく、他はより古いですが、どれも重要でないものはありません。',
-                '¡Vamos a conocerlos!|それらを知りに行きましょう！'
-            ]
-        }, {
-            title: '⚽ 購読5 — Dos deportes populares',
-            sentences: [
-                'El fútbol y el béisbol son los deportes que despiertan más pasiones en el mundo hispano.|サッカーと野球は、ヒスパニック世界で最も情熱をかき立てるスポーツです。',
-                'Al igual que en otros países, el fútbol atrae a grandes masas de espectadores a los estadios y muchos siguen los juegos a través de la radio y la televisión.|他の国々と同様に、サッカーは多くの観客をスタジアムに集め、多くの人がラジオやテレビで試合を追っています。',
-                'En casi todos los países de América Latina, como en España, el fútbol es el rey de los deportes.|スペインと同様に、ラテンアメリカのほぼすべての国で、サッカーはスポーツの王様です。',
-                'Sin embargo, en América también el béisbol es muy popular y hay importantes campeonatos, entre ellos, el de las Grandes Ligas en los Estados Unidos y la Serie del Caribe, donde compiten los equipos campeones de México, Puerto Rico, República Dominicana y Venezuela.|しかし、アメリカ大陸では野球も非常に人気があり、重要な大会があります。その中には、アメリカのメジャーリーグや、メキシコ、プエルトリコ、ドミニカ共和国、ベネズエラのチャンピオンチームが競うカリビアンシリーズがあります。'
-            ]
-        }];
+        const conversationData = [{"title": "📖 購読2 — Dos ciudades españolas", "sentences": [{"full": "Madrid está en el centro de España.", "ja": "マドリードはスペインの中心にあります。", "blank": "Madrid está en el centro de España", "segments": [{"type": "blank", "content": "Madrid"}, {"type": "blank", "content": "está"}, {"type": "blank", "content": "en"}, {"type": "blank", "content": "el"}, {"type": "blank", "content": "centro"}, {"type": "blank", "content": "de"}, {"type": "blank", "content": "España."}]}, {"full": "Es la capital del país.", "ja": "それは国の首都です。", "blank": "Es la capital del país", "segments": [{"type": "blank", "content": "Es"}, {"type": "blank", "content": "la"}, {"type": "blank", "content": "capital"}, {"type": "blank", "content": "del"}, {"type": "blank", "content": "país."}]}, {"full": "Hay muchos edificios altos y tiendas bonitas.", "ja": "たくさんの高い建物と素敵な店があります。", "blank": "Hay muchos edificios altos", "segments": [{"type": "blank", "content": "Hay"}, {"type": "blank", "content": "muchos"}, {"type": "blank", "content": "edificios"}, {"type": "blank", "content": "altos"}, {"type": "text", "content": "y tiendas bonitas."}]}, {"full": "En Madrid está el Museo del Prado.", "ja": "マドリードにはプラド美術館があります。", "blank": "está", "segments": [{"type": "text", "content": "En Madrid"}, {"type": "blank", "content": "está"}, {"type": "text", "content": "el Museo del Prado."}]}, {"full": "Es un museo famoso.", "ja": "それは有名な美術館です。", "blank": "Es", "segments": [{"type": "blank", "content": "Es"}, {"type": "text", "content": "un museo famoso."}]}, {"full": "También está el estadio Santiago Bernabéu, del equipo Real Madrid.", "ja": "レアル・マドリードのサンティアゴ・ベルナベウ競技場もあります。", "blank": "está del", "segments": [{"type": "text", "content": "También"}, {"type": "blank", "content": "está"}, {"type": "text", "content": "el estadio Santiago Bernabéu,"}, {"type": "blank", "content": "del"}, {"type": "text", "content": "equipo Real Madrid."}]}, {"full": "Es muy grande e impresionante.", "ja": "それはとても大きくて印象的です。", "blank": "Es muy grande", "segments": [{"type": "blank", "content": "Es"}, {"type": "blank", "content": "muy"}, {"type": "blank", "content": "grande"}, {"type": "text", "content": "e impresionante."}]}, {"full": "Alicante es una ciudad pequeña.", "ja": "アリカンテは小さな都市です。", "blank": "", "segments": [{"type": "text", "content": "Alicante es una ciudad pequeña."}]}, {"full": "Está al lado del mar Mediterráneo, en el sudeste de España.", "ja": "地中海のそば、スペイン南東部にあります。", "blank": "Está al lado del", "segments": [{"type": "blank", "content": "Está"}, {"type": "blank", "content": "al"}, {"type": "blank", "content": "lado"}, {"type": "blank", "content": "del"}, {"type": "text", "content": "mar Mediterráneo, en el sudeste de España."}]}, {"full": "En Alicante hay numerosas playas y un paseo marítimo agradable.", "ja": "アリカンテにはたくさんのビーチと楽しい海辺の遊歩道があります。", "blank": "hay", "segments": [{"type": "text", "content": "En Alicante"}, {"type": "blank", "content": "hay"}, {"type": "text", "content": "numerosas playas y un paseo marítimo agradable."}]}, {"full": "También hay un castillo muy antiguo.", "ja": "とても古い城もあります。", "blank": "hay", "segments": [{"type": "text", "content": "También"}, {"type": "blank", "content": "hay"}, {"type": "text", "content": "un castillo muy antiguo."}]}, {"full": "Es el Castillo de Santa Bárbara.", "ja": "それはサンタ・バルバラ城です。", "blank": "Es", "segments": [{"type": "blank", "content": "Es"}, {"type": "text", "content": "el Castillo de Santa Bárbara."}]}]}, {"title": "🌮 購読3 — La comida mexicana", "sentences": [{"full": "En la cocina mexicana hay muchos platillos deliciosos.", "ja": "メキシコ料理にはたくさんの美味しい料理があります。", "blank": "hay", "segments": [{"type": "text", "content": "En la cocina mexicana"}, {"type": "blank", "content": "hay"}, {"type": "text", "content": "muchos platillos deliciosos."}]}, {"full": "Los mexicanos usan productos autóctonos como el tomate, el chile, el aguacate y el chocolate para preparar una gran variedad de salsas.", "ja": "メキシコ人はトマト、チリ、アボカド、チョコレートなどの在来種の食材を使って多種多様なソースを調理します。", "blank": "", "segments": [{"type": "text", "content": "Los mexicanos usan productos autóctonos como el tomate, el chile, el aguacate y el chocolate para preparar una gran variedad de salsas."}]}, {"full": "La base de la alimentación de los mexicanos es el maíz.", "ja": "メキシコ人の食生活の基本はトウモロコシです。", "blank": "La base de la alimentación de", "segments": [{"type": "blank", "content": "La"}, {"type": "blank", "content": "base"}, {"type": "blank", "content": "de"}, {"type": "blank", "content": "la"}, {"type": "blank", "content": "alimentación"}, {"type": "blank", "content": "de"}, {"type": "text", "content": "los mexicanos es el maíz."}]}, {"full": "Las tortillas, los tacos y los tamales son de maíz.", "ja": "トルティーヤ、タコス、タマレスはトウモロコシで作られています。", "blank": "", "segments": [{"type": "text", "content": "Las tortillas, los tacos y los tamales son de maíz."}]}, {"full": "Los mexicanos comen carne de cerdo, res o pollo, casi siempre con salsas y tortillas.", "ja": "メキシコ人は豚肉、牛肉、鶏肉を、ほとんど常にソースとトルティーヤと一緒に食べます。", "blank": "siempre", "segments": [{"type": "text", "content": "Los mexicanos comen carne de cerdo, res o pollo, casi"}, {"type": "blank", "content": "siempre"}, {"type": "text", "content": "con salsas y tortillas."}]}, {"full": "También son muy populares las bebidas alcohólicas como el tequila y el mezcal, o los jugos de frutas naturales.", "ja": "テキーラやメスカルなどのアルコール飲料や、天然のフルーツジュースも非常に人気があります。", "blank": "También", "segments": [{"type": "blank", "content": "También"}, {"type": "text", "content": "son muy populares las bebidas alcohólicas como el tequila y el mezcal, o los jugos de frutas naturales."}]}, {"full": "¡La comida mexicana es riquísima!", "ja": "メキシコ料理はとても美味しいです！", "blank": "La comida", "segments": [{"type": "blank", "content": "¡La"}, {"type": "blank", "content": "comida"}, {"type": "text", "content": "mexicana es riquísima!"}]}]}, {"title": "🏛️ 購読4 — Patrimonio de la Humanidad", "sentences": [{"full": "Son lugares que poseen un gran valor histórico, natural y cultural.", "ja": "それらは歴史的、自然的、文化的に大きな価値を持つ場所です。", "blank": "Son lugares que", "segments": [{"type": "blank", "content": "Son"}, {"type": "blank", "content": "lugares"}, {"type": "blank", "content": "que"}, {"type": "text", "content": "poseen un gran valor histórico, natural y cultural."}]}, {"full": "Hay muchos en todo el mundo.", "ja": "世界中にたくさんあります。", "blank": "Hay muchos en todo el mundo", "segments": [{"type": "blank", "content": "Hay"}, {"type": "blank", "content": "muchos"}, {"type": "blank", "content": "en"}, {"type": "blank", "content": "todo"}, {"type": "blank", "content": "el"}, {"type": "blank", "content": "mundo."}]}, {"full": "Una gran cantidad de personas viaja para conocer y apreciar su belleza.", "ja": "多くの人々がその美しさを知り鑑賞するために旅行します。", "blank": "viaja para conocer", "segments": [{"type": "text", "content": "Una gran cantidad de personas"}, {"type": "blank", "content": "viaja"}, {"type": "blank", "content": "para"}, {"type": "blank", "content": "conocer"}, {"type": "text", "content": "y apreciar su belleza."}]}, {"full": "Cuando visitamos esos lugares debemos atender las recomendaciones y cuidarlos para las futuras generaciones.", "ja": "それらの場所を訪れる際は、推奨事項に従い、将来の世代のためにそれらを大切にしなければなりません。", "blank": "Cuando visitamos esos lugares debemos", "segments": [{"type": "blank", "content": "Cuando"}, {"type": "blank", "content": "visitamos"}, {"type": "blank", "content": "esos"}, {"type": "blank", "content": "lugares"}, {"type": "blank", "content": "debemos"}, {"type": "text", "content": "atender las recomendaciones y cuidarlos para las futuras generaciones."}]}, {"full": "Son muy atractivos aquellos sitios declarados Patrimonio de la Humanidad.", "ja": "世界遺産に登録された場所は非常に魅力的です。", "blank": "Son aquellos", "segments": [{"type": "blank", "content": "Son"}, {"type": "text", "content": "muy atractivos"}, {"type": "blank", "content": "aquellos"}, {"type": "text", "content": "sitios declarados Patrimonio de la Humanidad."}]}, {"full": "Entre los más visitados en América Latina están Teotihuacán, en México; el Parque Nacional Tikal, en Guatemala; el Parque Nacional Canaima, en Venezuela y las Cataratas del Iguazú, que quedan entre Brasil, Paraguay y Argentina.", "ja": "ラテンアメリカで最も訪れている場所には、メキシコのテオティワカン、グアテマラのティカル国立公園、ベネズエラのカナイマ国立公園、そしてブラジル、パラグアイ、アルゼンチンにまたがるイグアスの滝があります。", "blank": "los más visitados", "segments": [{"type": "text", "content": "Entre"}, {"type": "blank", "content": "los"}, {"type": "blank", "content": "más"}, {"type": "blank", "content": "visitados"}, {"type": "text", "content": "en América Latina están Teotihuacán, en México; el Parque Nacional Tikal, en Guatemala; el Parque Nacional Canaima, en Venezuela y las Cataratas del Iguazú, que quedan entre Brasil, Paraguay y Argentina."}]}, {"full": "Hay muchos otros en distintos países.", "ja": "さまざまな国に他にもたくさんあります。", "blank": "Hay", "segments": [{"type": "blank", "content": "Hay"}, {"type": "text", "content": "muchos otros en distintos países."}]}, {"full": "Todos estos lugares tienen algo especial, algunos son más grandes, otros más antiguos, pero ninguno es menos importante.", "ja": "これらの場所はすべて特別な何かを持っており、いくつかはより大きく、他はより古いですが、どれも重要でないものはありません。", "blank": "Todos estos lugares tienen es menos importante", "segments": [{"type": "blank", "content": "Todos"}, {"type": "blank", "content": "estos"}, {"type": "blank", "content": "lugares"}, {"type": "blank", "content": "tienen"}, {"type": "text", "content": "algo especial, algunos son más grandes, otros más antiguos, pero ninguno"}, {"type": "blank", "content": "es"}, {"type": "blank", "content": "menos"}, {"type": "blank", "content": "importante."}]}, {"full": "¡Vamos a conocerlos!", "ja": "それらを知りに行きましょう！", "blank": "Vamos a conocerlos", "segments": [{"type": "blank", "content": "¡Vamos"}, {"type": "blank", "content": "a"}, {"type": "blank", "content": "conocerlos!"}]}]}, {"title": "⚽ 購読5 — Dos deportes populares", "sentences": [{"full": "El fútbol y el béisbol son los deportes que despiertan más pasiones en el mundo hispano.", "ja": "サッカーと野球は、ヒスパニック世界で最も情熱をかき立てるスポーツです。", "blank": "son que", "segments": [{"type": "text", "content": "El fútbol y el béisbol"}, {"type": "blank", "content": "son"}, {"type": "text", "content": "los deportes"}, {"type": "blank", "content": "que"}, {"type": "text", "content": "despiertan más pasiones en el mundo hispano."}]}, {"full": "Al igual que en otros países, el fútbol atrae a grandes masas de espectadores a los estadios y muchos siguen los juegos a través de la radio y la televisión.", "ja": "他の国々と同様に、サッカーは多くの観客をスタジアムに集め、多くの人がラジオやテレビで試合を追っています。", "blank": "que en otros países", "segments": [{"type": "text", "content": "Al igual"}, {"type": "blank", "content": "que"}, {"type": "blank", "content": "en"}, {"type": "blank", "content": "otros"}, {"type": "blank", "content": "países,"}, {"type": "text", "content": "el fútbol atrae a grandes masas de espectadores a los estadios y muchos siguen los juegos a través de la radio y la televisión."}]}, {"full": "En casi todos los países de América Latina, como en España, el fútbol es el rey de los deportes.", "ja": "スペインと同様に、ラテンアメリカのほぼすべての国で、サッカーはスポーツの王様です。", "blank": "como en", "segments": [{"type": "text", "content": "En casi todos los países de América Latina,"}, {"type": "blank", "content": "como"}, {"type": "blank", "content": "en"}, {"type": "text", "content": "España, el fútbol es el rey de los deportes."}]}, {"full": "Sin embargo, en América también el béisbol es muy popular y hay importantes campeonatos, entre ellos, el de las Grandes Ligas en los Estados Unidos y la Serie del Caribe, donde compiten los equipos campeones de México, Puerto Rico, República Dominicana y Venezuela.", "ja": "しかし、アメリカ大陸では野球も非常に人気があり、重要な大会があります。その中には、アメリカのメジャーリーグや、メキシコ、プエルトリコ、ドミニカ共和国、ベネズエラのチャンピオンチームが競うカリビアンシリーズがあります。", "blank": "hay importantes", "segments": [{"type": "text", "content": "Sin embargo, en América también el béisbol es muy popular y"}, {"type": "blank", "content": "hay"}, {"type": "blank", "content": "importantes"}, {"type": "text", "content": "campeonatos, entre ellos, el de las Grandes Ligas en los Estados Unidos y la Serie del Caribe, donde compiten los equipos campeones de México, Puerto Rico, República Dominicana y Venezuela."}]}]}];
 
-        // ============================================================
-        //  データをフラット化し、各文に index, mod, 内容のみ（名前除去）を追加
-        // ============================================================
         let allSentences = [];
-        let globalIndex = 0;
-
+        let g = 0;
         conversationData.forEach((conv, ci) => {
-            conv.sentences.forEach((raw) => {
-                const parts = raw.split('|');
-                const spanishFull = parts[0].trim();
-                const japanese = parts[1].trim();
-
-                // 人名とコロンを除去して内容のみを抽出（新コンテンツには話者名がないためそのまま）
-                let spanishContent = spanishFull;
-                // 最初の ": " または ":" で分割（念のため対応）
-                const colonIndex = spanishFull.indexOf(': ');
-                if (colonIndex !== -1) {
-                    spanishContent = spanishFull.substring(colonIndex + 2).trim();
-                } else {
-                    const idx = spanishFull.indexOf(':');
-                    if (idx !== -1) {
-                        spanishContent = spanishFull.substring(idx + 1).trim();
-                    }
-                }
-
+            conv.sentences.forEach((s) => {
                 allSentences.push({
-                    id: globalIndex,
-                    mod: globalIndex % 2,
-                    spanishFull: spanishFull,
-                    spanishContent: spanishContent,
-                    japanese: japanese,
+                    id: g,
+                    mod: g % 2,
+                    segments: s.segments,
+                    japanese: s.ja,
                     convIndex: ci,
                     convTitle: conv.title,
+                    hasBlank: s.segments.some(seg => seg.type === 'blank')
                 });
-                globalIndex++;
+                g++;
             });
         });
 
-        // ============================================================
-        //  DOM 構築
-        // ============================================================
         const container = document.getElementById('conversationsContainer');
         const modSelect = document.getElementById('modSelect');
+        const blankToggle = document.getElementById('blankModeToggle');
         const totalCount = document.getElementById('totalCount');
-
-        let currentMode = 'all';
-
+        let currentFilter = 'all';
+        let blankMode = true;
         const sentenceElements = new Map();
 
         function render() {
             container.innerHTML = '';
             sentenceElements.clear();
-
             const grouped = {};
-            allSentences.forEach(s => {
-                if (!grouped[s.convIndex]) grouped[s.convIndex] = [];
-                grouped[s.convIndex].push(s);
-            });
+            allSentences.forEach(s => { (grouped[s.convIndex] ||= []).push(s); });
 
             Object.keys(grouped).forEach((convIdx) => {
                 const conv = grouped[convIdx];
-                const title = conv[0].convTitle;
-
                 const block = document.createElement('div');
                 block.className = 'conv-block';
-
                 const titleEl = document.createElement('div');
                 titleEl.className = 'conv-title';
-                titleEl.textContent = title;
+                titleEl.textContent = conv[0].convTitle;
                 block.appendChild(titleEl);
 
                 conv.forEach((s) => {
@@ -493,159 +128,130 @@
                     card.dataset.mod = s.mod;
                     card.dataset.id = s.id;
 
-                    // --- 左：スペイン語（テキスト + 入力グループ） ---
                     const colEs = document.createElement('div');
                     colEs.className = 'spanish-col';
+                    const fc = document.createElement('span');
+                    fc.style.display = 'inline';
+                    fc.style.width = '100%';
+                    const blankInputs = [];
 
-                    // スペイン語テキスト（固定表示、名前付き）
-                    const textEs = document.createElement('span');
-                    textEs.className = 'text';
-                    textEs.textContent = s.spanishFull;
-                    colEs.appendChild(textEs);
+                    s.segments.forEach((seg) => {
+                        if (seg.type === 'text') {
+                            const sp = document.createElement('span');
+                            sp.className = 'text-fragment';
+                            sp.textContent = (seg.content ? seg.content + ' ' : '');
+                            fc.appendChild(sp);
+                        } else {
+                            const wrapper = document.createElement('span');
+                            wrapper.className = 'blank-wrapper';
+                            wrapper.style.display = 'inline-flex';
+                            wrapper.style.alignItems = 'center';
+                            wrapper.style.gap = '2px';
+                            wrapper.style.margin = '0 3px 0 1px';
+                            wrapper.style.verticalAlign = 'middle';
 
-                    // 入力グループ（初期非表示）
-                    const inputGroup = document.createElement('div');
-                    inputGroup.className = 'input-group hidden';
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.className = 'blank-input';
+                            input.placeholder = '…';
+                            input.dataset.correct = seg.content;
+                            input.autocomplete = 'off';
+                            input.spellcheck = false;
+                            input.size = Math.max(6, Math.min(60, seg.content.length + 1));
 
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.placeholder = '（名前不要）スペイン語を入力…';
-                    input.dataset.correct = s.spanishContent;
-                    input.dataset.id = s.id;
-                    input.autocomplete = 'off';
-                    input.classList.add('answer-input');
+                            const btn = document.createElement('button');
+                            btn.className = 'blank-fill-btn';
+                            btn.textContent = '✓';
+                            btn.title = '正答を入力';
 
-                    const fillBtn = document.createElement('button');
-                    fillBtn.className = 'fill-btn';
-                    fillBtn.textContent = '正答を入力';
-                    fillBtn.dataset.id = s.id;
+                            wrapper.appendChild(input);
+                            wrapper.appendChild(btn);
+                            fc.appendChild(wrapper);
+                            blankInputs.push({ input, btn, correct: seg.content });
+                        }
+                    });
+                    colEs.appendChild(fc);
 
                     const modTag = document.createElement('span');
                     modTag.className = 'mod-tag';
-                    modTag.textContent = `mod ${s.mod}`;
+                    modTag.textContent = 'mod ' + s.mod;
+                    colEs.appendChild(modTag);
 
-                    inputGroup.appendChild(input);
-                    inputGroup.appendChild(fillBtn);
-                    inputGroup.appendChild(modTag);
-                    colEs.appendChild(inputGroup);
-
+                    if (!s.hasBlank) {
+                        const msg = document.createElement('span');
+                        msg.className = 'no-blank-msg';
+                        msg.textContent = '（空欄なし）';
+                        colEs.appendChild(msg);
+                    }
                     card.appendChild(colEs);
 
-                    // --- 右：日本語（固定表示、常に表示） ---
                     const colJa = document.createElement('div');
                     colJa.className = 'japanese-col';
-                    const textJa = document.createElement('span');
-                    textJa.className = 'text';
-                    textJa.textContent = s.japanese;
-                    colJa.appendChild(textJa);
+                    const tja = document.createElement('span');
+                    tja.textContent = s.japanese;
+                    colJa.appendChild(tja);
                     card.appendChild(colJa);
 
-                    // ---- イベント ----
-                    input.addEventListener('input', function() {
-                        const userVal = this.value.trim();
-                        const correct = this.dataset.correct.trim();
-                        if (userVal === correct) {
-                            this.classList.add('correct');
-                        } else {
-                            this.classList.remove('correct');
-                        }
-                    });
-
-                    fillBtn.addEventListener('click', function() {
-                        const inp = this.parentElement.querySelector('input');
-                        const correct = inp.dataset.correct.trim();
-                        inp.value = correct;
-                        inp.classList.add('correct');
-                        this.textContent = '✓ 入力済';
-                        this.classList.add('fill-done');
-                        setTimeout(() => {
-                            this.textContent = '正答を入力';
-                            this.classList.remove('fill-done');
-                        }, 1800);
+                    const normalize = v => v.trim().replace(/\s+/g, ' ');
+                    blankInputs.forEach(({ input, btn, correct }) => {
+                        input.addEventListener('input', function () {
+                            const u = normalize(this.value);
+                            const c = normalize(correct);
+                            if (u === c) { this.classList.remove('wrong'); this.classList.add('correct'); }
+                            else if (u.length > 0) { this.classList.remove('correct'); this.classList.add('wrong'); }
+                            else { this.classList.remove('correct', 'wrong'); }
+                        });
+                        btn.addEventListener('click', function () {
+                            input.value = correct;
+                            input.classList.remove('wrong');
+                            input.classList.add('correct');
+                            this.classList.add('filled');
+                            setTimeout(() => this.classList.remove('filled'), 1200);
+                        });
+                        input.addEventListener('keydown', function (e) {
+                            if (e.key === 'Enter') { e.preventDefault(); btn.click(); }
+                        });
                     });
 
                     block.appendChild(card);
-
-                    sentenceElements.set(s.id, {
-                        card,
-                        input,
-                        textEs,
-                        inputGroup,
-                        fillBtn,
-                        data: s,
-                        colEs,
-                        colJa
-                    });
+                    sentenceElements.set(s.id, { card, colEs, data: s });
                 });
-
                 container.appendChild(block);
             });
 
             totalCount.textContent = allSentences.length;
-            applyMode(currentMode);
+            applyFiltersAndBlank();
         }
 
-        // ============================================================
-        //  モード適用（スペイン語側を表示/非表示）
-        // ============================================================
-        function applyMode(mode) {
-            currentMode = mode;
-
-            sentenceElements.forEach((el, id) => {
+        function applyFiltersAndBlank() {
+            sentenceElements.forEach((el) => {
                 const s = el.data;
-                const showInput = (mode === 'all') ? false : (parseInt(mode) === s.mod);
+                let show = true;
+                if (currentFilter === '0' && s.mod !== 0) show = false;
+                if (currentFilter === '1' && s.mod !== 1) show = false;
+                el.card.style.display = show ? 'flex' : 'none';
 
-                if (showInput) {
-                    el.textEs.classList.add('hidden');
-                    el.inputGroup.classList.remove('hidden');
+                const blanks = el.colEs.querySelectorAll('.blank-wrapper');
+                const noBlankMsg = el.colEs.querySelector('.no-blank-msg');
+                if (blankMode && s.hasBlank) {
+                    blanks.forEach(w => w.style.display = 'inline-flex');
+                    if (noBlankMsg) noBlankMsg.style.display = 'none';
                 } else {
-                    el.textEs.classList.remove('hidden');
-                    el.inputGroup.classList.add('hidden');
+                    blanks.forEach(w => w.style.display = 'none');
+                    if (noBlankMsg) noBlankMsg.style.display = 'inline';
                 }
             });
-
-            const modeLabel = mode === 'all' ? 'すべて表示' : `mod ${mode} を空欄（スペイン語）`;
-            document.querySelector('.badge-status').innerHTML =
-                `${modeLabel} ｜ 全 <strong>${allSentences.length}</strong> 文`;
+            const filterLabel = currentFilter === 'all' ? 'すべて表示' : ('mod ' + currentFilter + ' のみ');
+            const blankLabel = blankMode ? '✏️ 穴あきON' : '✏️ 穴あきOFF';
+            document.getElementById('statusBadge').innerHTML =
+                filterLabel + ' ｜ ' + blankLabel + ' ｜ 全 <strong>' + allSentences.length + '</strong> 文';
         }
 
-        // ============================================================
-        //  選択ボックス変更ハンドラ
-        // ============================================================
-        modSelect.addEventListener('change', function() {
-            const val = this.value;
-            if (val === 'all') {
-                applyMode('all');
-            } else if (val === '0' || val === '1') {
-                applyMode(val);
-            }
-        });
+        modSelect.addEventListener('change', function () { currentFilter = this.value; applyFiltersAndBlank(); });
+        blankToggle.addEventListener('change', function () { blankMode = this.checked; applyFiltersAndBlank(); });
 
-        // ============================================================
-        //  初期レンダリング
-        // ============================================================
         render();
-        modSelect.value = 'all';
-        applyMode('all');
-
-        // Enterキーで正答を入力
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const target = e.target;
-                if (target.tagName === 'INPUT' && target.classList.contains('answer-input')) {
-                    const parentGroup = target.closest('.input-group');
-                    if (parentGroup) {
-                        const btn = parentGroup.querySelector('.fill-btn');
-                        if (btn) btn.click();
-                        e.preventDefault();
-                    }
-                }
-            }
-        });
-
-        console.log('✅ スペイン語会話学習ツール（名前不要版）が起動しました。');
-        console.log(`📚 全 ${allSentences.length} 文 (mod 0: ${allSentences.filter(s=>s.mod===0).length} 文, mod 1: ${allSentences.filter(s=>s.mod===1).length} 文)`);
+        console.log('✅ 起動 全 ' + allSentences.length + ' 文');
     </script>
-
 </body>
 </html>
