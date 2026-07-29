@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>微分積分学1 ── 含意関係チートシート</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+:root{
+  --paper:#F4F5F2; --card:#FFFFFF; --ink:#16202E; --ink2:#55606F; --ink3:#8A939F;
+  --line:#DCE0DA; --line2:#C3C9BF;
+  --ok:#2F5D50; --okbg:#E9F0ED; --okline:#B6CCC4;
+  --no:#8C3B4A; --nobg:#F7EBED;
+  --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Times New Roman",serif;
+  --sans:"Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Noto Sans JP",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.8;font-feature-settings:"palt" 1}
+.wrap{max-width:820px;margin:0 auto;padding:56px 24px 80px}
+header{border-bottom:1px solid var(--line2);padding-bottom:28px;margin-bottom:44px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--ink3);margin:0 0 10px}
+h1{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1.4;margin:0 0 12px;letter-spacing:.02em}
+.lede{margin:0;color:var(--ink2);font-size:15px}
+.howto{margin:20px 0 0;padding:14px 18px;background:var(--card);border:1px solid var(--line);border-radius:6px;font-size:14px;color:var(--ink2)}
+.howto b{color:var(--ink);font-weight:600}
+h2{font-family:var(--serif);font-size:22px;font-weight:600;margin:56px 0 6px;letter-spacing:.02em}
+h2 .num{display:inline-block;font-size:12px;font-family:var(--sans);letter-spacing:.16em;color:var(--ok);vertical-align:middle;margin-right:12px}
+.sub{margin:0 0 22px;color:var(--ink2);font-size:14px}
+.board{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 8px}
+svg{display:block;width:100%;height:auto;font-family:var(--sans)}
+.bx{fill:#FFFFFF;stroke:var(--line2);stroke-width:1}
+.bxk{fill:var(--okbg);stroke:var(--ok);stroke-width:1.5}
+.bxs{fill:#F7F8F5;stroke:var(--line2);stroke-width:1;stroke-dasharray:4 3}
+.tt{font-size:14px;font-weight:600;fill:var(--ink)}
+.tb{font-size:11.5px;fill:var(--ink2)}
+.tp{font-size:11px;font-weight:600;fill:var(--ok)}
+.ln{stroke:var(--ink3);stroke-width:1.4;fill:none}
+.pl{fill:var(--okbg);stroke:var(--okline);stroke-width:1}
+.hit{fill:transparent}
+.nd{cursor:pointer}
+.nd:hover .bx,.nd:hover .bxs{stroke:var(--ink)}
+.nd:hover .pl{fill:#DCE8E3}
+.nd.on .bx,.nd.on .bxs,.nd.on .bxk{stroke:var(--ok);stroke-width:2.5}
+.nd.on .pl{fill:var(--ok)}
+.nd.on .tp{fill:#FFFFFF}
+.nd:focus{outline:none}
+.nd:focus-visible rect:first-of-type{stroke:var(--ok);stroke-width:2.5}
+.panel{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:22px 26px;min-height:180px}
+.hint{margin:0;color:var(--ink3);font-size:14px}
+.detail[hidden],.hint[hidden]{display:none}
+.cap{display:inline-block;font-size:11px;letter-spacing:.14em;color:var(--ok);background:var(--okbg);border:1px solid var(--okline);border-radius:3px;padding:3px 9px;margin-bottom:12px}
+.detail h3{font-family:var(--serif);font-size:19px;font-weight:600;margin:0 0 14px;letter-spacing:.02em}
+.detail p{margin:0 0 12px;font-size:15px;line-height:1.9;color:#2A3442}
+.detail p:last-child{margin-bottom:0}
+.detail ol{margin:0 0 12px;padding-left:1.4em;font-size:15px;line-height:1.9;color:#2A3442}
+.detail ol li{margin-bottom:6px}
+.rev{margin-top:16px;padding:12px 16px;background:var(--nobg);border:1px solid #E3C8CD;border-radius:5px;font-size:14px;line-height:1.85;color:#4A2830}
+.rev b{color:var(--no);font-weight:600;letter-spacing:.02em}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:#EFF1EC;font-weight:600;font-size:13px;letter-spacing:.04em}
+footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line2);font-size:13px;color:var(--ink3)}
+.katex{font-size:1.03em}
+@media (max-width:600px){
+  .wrap{padding:36px 16px 60px}
+  h1{font-size:24px}
+  .panel{padding:18px}
+  table{font-size:13px}
+  th,td{padding:8px}
+}
+@media print{
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  .detail[hidden]{display:block;border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+  .hint{display:none}
+  .panel{min-height:0}
+  h2{page-break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">微分積分学1 ／ 定理と演習ハンドブックより</p>
+  <h1>定義と性質の含意関係</h1>
+  <p class="lede">「どの条件がどの条件を導くか」を一枚に。矢印はすべて一方通行で、逆はすべて偽です。</p>
+  <div class="howto"><b>使い方</b>　ボックスを押すと定義、矢印の脇にある「証明」バッジを押すと十分性の証明と、逆が偽であることの反例が下の欄に出ます。</div>
+</header>
+
+<h2><span class="num">01</span>1 変数関数</h2>
+<p class="sub">左の縦一列が関数クラスの階層、右の破線ボックスが「近似をもつ」という別系統の性質です。</p>
+
+<div class="board">
+<svg viewBox="0 0 680 718" role="img" aria-label="1変数関数のクラスの含意関係図">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<g class="nd" data-id="v-r1" tabindex="0"><rect class="bx" x="170" y="20" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="44" text-anchor="middle" dominant-baseline="central">C<tspan font-size="10" dy="-5">ω</tspan><tspan dy="5"> 級（実解析的）</tspan></text>
+<text class="tb" x="270" y="61" text-anchor="middle" dominant-baseline="central">テイラー展開可能</text></g>
+
+<line class="ln" x1="270" y1="74" x2="270" y2="98" marker-end="url(#ar)"/>
+<g class="nd" data-id="v-a1" tabindex="0"><rect class="hit" x="246" y="72" width="82" height="28"/><rect class="pl" x="282" y="76" width="46" height="20" rx="3"/><text class="tp" x="305" y="86" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-r2" tabindex="0"><rect class="bx" x="170" y="108" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="132" text-anchor="middle" dominant-baseline="central">C<tspan font-size="10" dy="-5">∞</tspan><tspan dy="5"> 級</tspan></text>
+<text class="tb" x="270" y="149" text-anchor="middle" dominant-baseline="central">無限回微分可能</text></g>
+
+<line class="ln" x1="270" y1="162" x2="270" y2="186" marker-end="url(#ar)"/>
+<g class="nd" data-id="v-a2" tabindex="0"><rect class="hit" x="246" y="160" width="82" height="28"/><rect class="pl" x="282" y="164" width="46" height="20" rx="3"/><text class="tp" x="305" y="174" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-r3" tabindex="0"><rect class="bx" x="170" y="196" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="220" text-anchor="middle" dominant-baseline="central">C<tspan font-size="10" dy="-5">n</tspan><tspan dy="5"> 級</tspan></text>
+<text class="tb" x="270" y="237" text-anchor="middle" dominant-baseline="central">n 階導関数が連続</text></g>
+
+<line class="ln" x1="370" y1="222" x2="424" y2="222" marker-end="url(#ar)"/>
+<g class="nd" data-id="v-a8" tabindex="0"><rect class="hit" x="372" y="200" width="56" height="52"/><rect class="pl" x="378" y="228" width="46" height="20" rx="3"/><text class="tp" x="401" y="238" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-s1" tabindex="0"><rect class="bxs" x="430" y="196" width="230" height="52" rx="6"/>
+<text class="tt" x="545" y="220" text-anchor="middle" dominant-baseline="central">n 次近似をもつ</text>
+<text class="tb" x="545" y="237" text-anchor="middle" dominant-baseline="central">テイラー多項式</text></g>
+
+<line class="ln" x1="270" y1="250" x2="270" y2="274" marker-end="url(#ar)"/>
+<g class="nd" data-id="v-a3" tabindex="0"><rect class="hit" x="246" y="248" width="82" height="28"/><rect class="pl" x="282" y="252" width="46" height="20" rx="3"/><text class="tp" x="305" y="262" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-r4" tabindex="0"><rect class="bx" x="170" y="284" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="308" text-anchor="middle" dominant-baseline="central">n 回微分可能</text>
+<text class="tb" x="270" y="325" text-anchor="middle" dominant-baseline="central">連続性は要求しない</text></g>
+
+<line class="ln" x1="270" y1="338" x2="270" y2="362" marker-end="url(#ar)"/>
+<g class="nd" data-id="v-a4" tabindex="0"><rect class="hit" x="246" y="336" width="82" height="28"/><rect class="pl" x="282" y="340" width="46" height="20" rx="3"/><text class="tp" x="305" y="350" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-r5" tabindex="0"><rect class="bx" x="170" y="372" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="396" text-anchor="middle" dominant-baseline="central">C<tspan font-size="10" dy="-5">1</tspan><tspan dy="5"> 級</tspan></text>
+<text class="tb" x="270" y="413" text-anchor="middle" dominant-baseline="central">導関数が連続</text></g>
+
+<line class="ln" x1="270" y1="426" x2="270" y2="450" marker-end="url(#ar)"/>
+<g class="nd" data-id="v-a5" tabindex="0"><rect class="hit" x="246" y="424" width="82" height="28"/><rect class="pl" x="282" y="428" width="46" height="20" rx="3"/><text class="tp" x="305" y="438" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-r6" tabindex="0"><rect class="bxk" x="170" y="460" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="484" text-anchor="middle" dominant-baseline="central">微分可能</text>
+<text class="tb" x="270" y="501" text-anchor="middle" dominant-baseline="central">導関数が存在</text></g>
+
+<line class="ln" x1="374" y1="486" x2="424" y2="486" marker-end="url(#ar)" marker-start="url(#ar)"/>
+<g class="nd" data-id="v-a9" tabindex="0"><rect class="hit" x="372" y="464" width="56" height="52"/><rect class="pl" x="378" y="492" width="46" height="20" rx="3"/><text class="tp" x="401" y="502" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-s2" tabindex="0"><rect class="bxs" x="430" y="460" width="230" height="52" rx="6"/>
+<text class="tt" x="545" y="484" text-anchor="middle" dominant-baseline="central">1 次近似をもつ</text>
+<text class="tb" x="545" y="501" text-anchor="middle" dominant-baseline="central">接線をもつ</text></g>
+
+<line class="ln" x1="270" y1="514" x2="270" y2="538" marker-end="url(#ar)"/>
+<g class="nd" data-id="v-a6" tabindex="0"><rect class="hit" x="246" y="512" width="82" height="28"/><rect class="pl" x="282" y="516" width="46" height="20" rx="3"/><text class="tp" x="305" y="526" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-r7" tabindex="0"><rect class="bx" x="170" y="548" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="574" text-anchor="middle" dominant-baseline="central">連続（C<tspan font-size="10" dy="-5">0</tspan><tspan dy="5"> 級）</tspan></text></g>
+
+<line class="ln" x1="270" y1="602" x2="270" y2="626" marker-end="url(#ar)"/>
+<g class="nd" data-id="v-a7" tabindex="0"><rect class="hit" x="246" y="600" width="82" height="28"/><rect class="pl" x="282" y="604" width="46" height="20" rx="3"/><text class="tp" x="305" y="614" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="v-r8" tabindex="0"><rect class="bx" x="170" y="636" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="662" text-anchor="middle" dominant-baseline="central">関数全体</text></g>
+</svg>
+</div>
+
+<div class="panel" id="panel-v">
+<p class="hint">ボックスまたは「証明」バッジを押してください。</p>
+
+<div class="detail" id="d-v-r1" hidden>
+<span class="cap">定義 4.1</span>
+<h3>C<sup>ω</sup> 級（実解析的関数）</h3>
+<p>点 \(c\) でテイラー展開可能とは、\(c\) を含む開区間 \((a,b)\) をうまく取ると、そこで \(f\) が \(C^\infty\) 級であり、かつ \[f(x)=\sum_{n=0}^{\infty}\frac{f^{(n)}(c)}{n!}(x-c)^n \quad (\forall x\in(a,b))\] が成り立つこと。定義域の各点でこれが成り立つ関数を実解析的関数（\(C^\omega\) 級）という。</p>
+<p>条件は「級数が書けること」ではなく「級数が \(f\) に戻ること」。両者を結ぶのはテイラーの定理の剰余項で、\(\lim_{n\to\infty}R_{n+1}(x)=0\) が成り立つかどうかが分かれ目です。</p>
+<p>局所的な定義であることに注意。\(g(x)=\dfrac{1}{1+x^2}\) は \(0\) 中心の展開が \(|x|<1\) でしか一致しませんが、各点でその点の近傍を取り直せばよいので実解析的です（演習 4.4）。</p>
+</div>
+
+<div class="detail" id="d-v-r2" hidden>
+<span class="cap">定義</span>
+<h3>C<sup>∞</sup> 級</h3>
+<p>すべての \(n\) について \(f^{(n)}\) が存在すること。\(f^{(n)}\) が微分可能なら連続なので、「すべての階数で微分可能」だけで自動的にすべての導関数が連続になります。</p>
+<p>このときテイラー級数 \(\sum \frac{f^{(n)}(c)}{n!}(x-c)^n\) という式は必ず書けますが、それが \(f\) に等しいかは別問題です。</p>
+</div>
+
+<div class="detail" id="d-v-r3" hidden>
+<span class="cap">定義</span>
+<h3>C<sup>n</sup> 級</h3>
+<p>\(n\) 回微分可能で、さらに \(f^{(n)}\) が連続であること。テイラーの定理①（\(n\) 次テイラー多項式が \(n\) 次近似になる）の仮定がこれです。</p>
+<p>包含関係は \(\{\text{関数}\}\supsetneq C^0\supsetneq C^1\supsetneq\cdots\supsetneq C^\infty\supsetneq C^\omega\) で、すべて真の包含。</p>
+</div>
+
+<div class="detail" id="d-v-r4" hidden>
+<span class="cap">定義</span>
+<h3>n 回微分可能</h3>
+<p>\(f^{(n)}\) が存在すること。\(f^{(n)}\) の連続性は要求しないので \(C^n\) 級より真に弱い条件です。</p>
+<p>テイラーの定理②（ラグランジュの剰余項）が要求するのはこちらの側で、\(n+1\) 回微分可能であれば \[f(x)-p_n(x)=\frac{f^{(n+1)}\bigl(c+\theta(x-c)\bigr)}{(n+1)!}(x-c)^{n+1}\] を満たす \(\theta\in(0,1)\) が存在します。①と②で仮定が違うことに注意。</p>
+</div>
+
+<div class="detail" id="d-v-r5" hidden>
+<span class="cap">定義</span>
+<h3>C<sup>1</sup> 級</h3>
+<p>\(f'\) が存在し、かつ \(f'\) が連続であること。多変数では「\(C^1\) 級 ⇒ 全微分可能」という形で、扱いやすい十分条件として決定的な役割を果たします。</p>
+</div>
+
+<div class="detail" id="d-v-r6" hidden>
+<span class="cap">定義</span>
+<h3>微分可能</h3>
+<p>\[f'(c)=\lim_{x\to c}\frac{f(x)-f(c)}{x-c}\] が存在すること。これは「\(1\) 次近似（接線）をもつ」ことと同値で、この同値が多変数の全微分可能性の定義の原型になっています。</p>
+<p>\(n\ge 2\) ではこの同値は崩れ、\(n\) 次近似をもっても \(n\) 回微分可能とは限りません。</p>
+</div>
+
+<div class="detail" id="d-v-r7" hidden>
+<span class="cap">定義</span>
+<h3>連続（C<sup>0</sup> 級）</h3>
+<p>\(\lim_{x\to c}f(x)=f(c)\)。\(\varepsilon\text{-}\delta\) では \(\forall\varepsilon>0,\ \exists\delta>0\) s.t. \(|x-c|<\delta\Rightarrow|f(x)-f(c)|<\varepsilon\)。</p>
+<p>1 変数では近づき方が左右の 2 通りしかないのが、2 変数との決定的な違いです。</p>
+</div>
+
+<div class="detail" id="d-v-r8" hidden>
+<span class="cap">出発点</span>
+<h3>関数全体</h3>
+<p>何の仮定も置かない状態。ここから 1 段上がるだけでも、たとえばディリクレ関数 \[D(x)=\begin{cases}1 & (x\in\mathbb{Q})\\ 0 & (x\notin\mathbb{Q})\end{cases}\] のようにどの点でも連続でないものが排除されます。</p>
+</div>
+
+<div class="detail" id="d-v-s1" hidden>
+<span class="cap">定義 2.1 ／ 定理 2.1</span>
+<h3>n 次近似をもつ</h3>
+<p>\(p_n(x)\) が点 \(c\) の周りでの \(f\) の \(n\) 次近似であるとは、次の 3 条件が成り立つこと。</p>
+<ol>
+<li>\(p_n\) は \(n\) 次以下の多項式関数</li>
+<li>\(p_n(c)=f(c)\)</li>
+<li>\(\displaystyle\lim_{x\to c}\frac{f(x)-p_n(x)}{(x-c)^n}=0\)</li>
+</ol>
+<p>③は誤差 \(|f(x)-p_n(x)|\) が \(|x-c|^n\) よりさらに速く \(0\) へ行くという意味で、\(n\) が大きいほど厳しい要求になります。存在すればただ 1 つ（定理 2.1）。</p>
+<p>切り捨て・線型結合・積・合成の 4 つの基本性質があるので、\(e^x,\sin x,\cos x,\log(1+x),\frac{1}{1-x}\) の近似式さえ覚えれば、微分計算なしで複雑な関数の近似が作れます。極限計算ではロピタルより速いことが多い。</p>
+</div>
+
+<div class="detail" id="d-v-s2" hidden>
+<span class="cap">定義 2.1（n = 1）</span>
+<h3>1 次近似（接線）をもつ</h3>
+<p>\(n=1\) の場合で、このときだけ \[f \text{ が } c \text{ で微分可能} \iff f \text{ が } c \text{ で } 1 \text{ 次近似をもつ}\] という同値が成り立ち、\(p_1(x)=f(c)+f'(c)(x-c)\)。つまり接線です。</p>
+<p>この「微分可能 ⇔ 1 次近似をもつ」を、分母を \(|x-c|\) から \(\|(x,y)-(x_0,y_0)\|\) に取り替えてそのまま多変数へ持ち上げたものが全微分可能性の定義です。</p>
+</div>
+
+<div class="detail" id="d-v-a1" hidden>
+<span class="cap">十分性の証明</span>
+<h3>C<sup>ω</sup> 級 ⇒ C<sup>∞</sup> 級</h3>
+<p>定義 4.1 の中に「\(f\) は \((a,b)\) 上で \(C^\infty\) 級で、かつ級数が \(f\) に一致する」と含まれているので、定義から直ちに従います。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x)=e^{-1/x^2}\ (x>0),\ f(x)=0\ (x\le 0)\) は \(\mathbb{R}\) 上 \(C^\infty\) 級ですが、すべての \(n\) で \(f^{(n)}(0)=0\)。マクローリン級数は恒等的に \(0\) で、\(x>0\) では \(f>0\) なので一致しません。級数はきちんと収束しているのに収束先が \(f\) でない、という点が急所です。</div>
+</div>
+
+<div class="detail" id="d-v-a2" hidden>
+<span class="cap">十分性の証明</span>
+<h3>C<sup>∞</sup> 級 ⇒ C<sup>n</sup> 級</h3>
+<p>\(C^\infty\) 級ならすべての階数の導関数が存在し、\(f^{(n)}\) も微分可能なので連続。よって \(n\) 回微分可能かつ \(f^{(n)}\) 連続、すなわち \(C^n\) 級です。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x)=|x|^{n+1}\) は \(C^n\) 級ですが \(C^{n+1}\) 級ではありません（\(f^{(n+1)}\) が原点で符号を飛ばす）。各段階に反例があるので包含はすべて真の包含です。</div>
+</div>
+
+<div class="detail" id="d-v-a3" hidden>
+<span class="cap">十分性の証明</span>
+<h3>C<sup>n</sup> 級 ⇒ n 回微分可能</h3>
+<p>\(C^n\) 級の定義から連続性の要求を落とすだけ。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x)=x^2\sin\frac{1}{x}\ (x\ne 0),\ f(0)=0\) は \(\mathbb{R}\) 上 1 回微分可能で \(f'(0)=0\) ですが、\(x\ne0\) では \(f'(x)=2x\sin\frac1x-\cos\frac1x\) で、\(\cos\frac1x\) が振動するため \(f'\) は原点で連続でない。よって微分可能だが \(C^1\) 級でない。</div>
+</div>
+
+<div class="detail" id="d-v-a4" hidden>
+<span class="cap">十分性の証明</span>
+<h3>n 回微分可能 ⇒ C<sup>1</sup> 級（n ≥ 2）</h3>
+<p>\(f^{(n)}\) が存在するということは \(f^{(n-1)}\) が微分可能ということ。微分可能なら連続なので \(f^{(n-1)}\) は連続です。</p>
+<p>同じ議論を繰り返すと \(f',f'',\dots,f^{(n-1)}\) はすべて微分可能、したがってすべて連続。特に \(f'\) が連続なので \(f\) は \(C^1\) 級。一般に「\(n\) 回微分可能 \(\Rightarrow C^{n-1}\) 級」です。</p>
+<div class="rev"><b>逆は偽</b>　\(C^1\) 級でも 2 回微分できるとは限りません。例：\(f(x)=x|x|\) は \(f'(x)=2|x|\) で \(C^1\) 級ですが、\(f''(0)\) は存在しません。</div>
+</div>
+
+<div class="detail" id="d-v-a5" hidden>
+<span class="cap">十分性の証明</span>
+<h3>C<sup>1</sup> 級 ⇒ 微分可能</h3>
+<p>定義に「\(f'\) が存在し」と含まれているので直ちに従います。</p>
+<div class="rev"><b>逆は偽</b>　\(x^2\sin\frac1x\)（原点で \(0\)）。微分可能だが \(f'\) が原点で連続でない。多変数の「全微分可能だが \(C^1\) 級でない」（演習 7.3）と全く同じ構造の反例です。</div>
+</div>
+
+<div class="detail" id="d-v-a6" hidden>
+<span class="cap">十分性の証明</span>
+<h3>微分可能 ⇒ 連続</h3>
+<p>\(x\ne c\) のとき \[f(x)-f(c)=\frac{f(x)-f(c)}{x-c}\cdot(x-c)\] と書けます。\(x\to c\) とすると右辺の第 1 因子は \(f'(c)\) に収束し、第 2 因子は \(0\) に行くので、積は \(f'(c)\cdot 0=0\)。</p>
+<p>よって \(f(x)\to f(c)\)、すなわち \(f\) は \(c\) で連続です。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x)=|x|\) は原点で連続ですが、\(\frac{|x|}{x}\) が右から \(1\)、左から \(-1\) なので微分可能でありません。</div>
+</div>
+
+<div class="detail" id="d-v-a7" hidden>
+<span class="cap">十分性の証明</span>
+<h3>連続 ⇒ 関数</h3>
+<p>自明。</p>
+<div class="rev"><b>逆は偽</b>　ディリクレ関数はどの点でも連続でありません。</div>
+</div>
+
+<div class="detail" id="d-v-a8" hidden>
+<span class="cap">十分性の証明 ／ テイラーの定理①</span>
+<h3>C<sup>n</sup> 級 ⇒ n 次近似をもつ</h3>
+<p>\(c\) を含む開区間上で \(f\) が \(C^n\) 級のとき、\[p_n(x)=\sum_{k=0}^{n}\frac{f^{(k)}(c)}{k!}(x-c)^k\] が \(n\) 次近似になります（\(n\) 次テイラー多項式）。</p>
+<p>証明はロピタルの定理の系を使います。\(g(x)=(x-c)^n\) とおくと \(f-p_n\) と \(g\) は \(c\) で \(n-1\) 階までの微分係数がすべて \(0\) なので、\[\lim_{x\to c}\frac{f(x)-p_n(x)}{(x-c)^n}=\lim_{x\to c}\frac{f^{(n-1)}(x)-p_n^{(n-1)}(x)}{n!\,(x-c)}\] に帰着します。右辺の分子は \(f^{(n-1)}(x)-f^{(n-1)}(c)-f^{(n)}(c)(x-c)\) なので、\(f^{(n)}(c)\) の定義そのものから極限は \(0\)。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x)=x^3\ (x\in\mathbb{Q}),\ -x^3\ (x\notin\mathbb{Q})\) は \(p_2=0\) を 2 次近似にもちます（\(\frac{|f(x)|}{|x|^2}=|x|\to 0\)）が、原点以外のどの点でも連続でないので 2 回微分などできません（演習 2.1）。</div>
+</div>
+
+<div class="detail" id="d-v-a9" hidden>
+<span class="cap">同値性の証明</span>
+<h3>微分可能 ⇔ 1 次近似をもつ</h3>
+<p>（\(\Rightarrow\)）\(p_1(x)=f(c)+f'(c)(x-c)\) とおくと①②は明らか。③は \[\frac{f(x)-p_1(x)}{x-c}=\frac{f(x)-f(c)}{x-c}-f'(c)\longrightarrow 0.\]</p>
+<p>（\(\Leftarrow\)）\(p_1(x)=a_0+a_1(x-c)\) が 1 次近似とすると、②から \(a_0=f(c)\)。③から \[\frac{f(x)-f(c)}{x-c}-a_1=\frac{f(x)-p_1(x)}{x-c}\longrightarrow 0\] なので \(\frac{f(x)-f(c)}{x-c}\to a_1\)、すなわち \(f\) は \(c\) で微分可能で \(f'(c)=a_1\)。</p>
+<p>この同値が成り立つのは \(n=1\) のときだけです。</p>
+</div>
+</div>
+
+<h2><span class="num">02</span>2 変数関数</h2>
+<p class="sub">試験の中心はここ。中央の「全微分可能」が、上からの十分条件と下への必要条件を分ける要になります。</p>
+
+<div class="board">
+<svg viewBox="0 0 680 658" role="img" aria-label="2変数関数の微分可能性に関する含意関係図">
+<defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<g class="nd" data-id="m-r1" tabindex="0"><rect class="bx" x="170" y="20" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="44" text-anchor="middle" dominant-baseline="central">C<tspan font-size="10" dy="-5">∞</tspan><tspan dy="5"> 級</tspan></text>
+<text class="tb" x="270" y="61" text-anchor="middle" dominant-baseline="central">任意階数の偏導関数が連続</text></g>
+
+<line class="ln" x1="270" y1="74" x2="270" y2="98" marker-end="url(#ar2)"/>
+<g class="nd" data-id="m-a1" tabindex="0"><rect class="hit" x="246" y="72" width="82" height="28"/><rect class="pl" x="282" y="76" width="46" height="20" rx="3"/><text class="tp" x="305" y="86" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="m-r2" tabindex="0"><rect class="bx" x="170" y="108" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="132" text-anchor="middle" dominant-baseline="central">C<tspan font-size="10" dy="-5">n</tspan><tspan dy="5"> 級</tspan></text>
+<text class="tb" x="270" y="149" text-anchor="middle" dominant-baseline="central">n 階までの偏導関数が連続</text></g>
+
+<line class="ln" x1="270" y1="162" x2="270" y2="186" marker-end="url(#ar2)"/>
+<g class="nd" data-id="m-a2" tabindex="0"><rect class="hit" x="246" y="160" width="82" height="28"/><rect class="pl" x="282" y="164" width="46" height="20" rx="3"/><text class="tp" x="305" y="174" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="m-r3" tabindex="0"><rect class="bx" x="170" y="196" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="220" text-anchor="middle" dominant-baseline="central">C<tspan font-size="10" dy="-5">2</tspan><tspan dy="5"> 級</tspan></text>
+<text class="tb" x="270" y="237" text-anchor="middle" dominant-baseline="central">2 階偏導関数が連続</text></g>
+
+<line class="ln" x1="370" y1="222" x2="424" y2="222" marker-end="url(#ar2)"/>
+<g class="nd" data-id="m-a8" tabindex="0"><rect class="hit" x="372" y="200" width="56" height="52"/><rect class="pl" x="378" y="228" width="46" height="20" rx="3"/><text class="tp" x="401" y="238" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="m-s1" tabindex="0"><rect class="bxs" x="430" y="196" width="230" height="52" rx="6"/>
+<text class="tt" x="545" y="220" text-anchor="middle" dominant-baseline="central">偏微分の順序交換ができる</text>
+<text class="tb" x="545" y="237" text-anchor="middle" dominant-baseline="central">fxy = fyx</text></g>
+
+<line class="ln" x1="270" y1="250" x2="270" y2="274" marker-end="url(#ar2)"/>
+<g class="nd" data-id="m-a3" tabindex="0"><rect class="hit" x="246" y="248" width="82" height="28"/><rect class="pl" x="282" y="252" width="46" height="20" rx="3"/><text class="tp" x="305" y="262" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="m-r4" tabindex="0"><rect class="bx" x="170" y="284" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="308" text-anchor="middle" dominant-baseline="central">C<tspan font-size="10" dy="-5">1</tspan><tspan dy="5"> 級</tspan></text>
+<text class="tb" x="270" y="325" text-anchor="middle" dominant-baseline="central">fx, fy が存在して連続</text></g>
+
+<line class="ln" x1="270" y1="338" x2="270" y2="362" marker-end="url(#ar2)"/>
+<g class="nd" data-id="m-a4" tabindex="0"><rect class="hit" x="246" y="336" width="82" height="28"/><rect class="pl" x="282" y="340" width="46" height="20" rx="3"/><text class="tp" x="305" y="350" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="m-r5" tabindex="0"><rect class="bxk" x="170" y="372" width="200" height="52" rx="6"/>
+<text class="tt" x="270" y="396" text-anchor="middle" dominant-baseline="central">全微分可能</text>
+<text class="tb" x="270" y="413" text-anchor="middle" dominant-baseline="central">1 次近似・接平面をもつ</text></g>
+
+<line class="ln" x1="370" y1="398" x2="424" y2="398" marker-end="url(#ar2)"/>
+<g class="nd" data-id="m-a9" tabindex="0"><rect class="hit" x="372" y="376" width="56" height="52"/><rect class="pl" x="378" y="404" width="46" height="20" rx="3"/><text class="tp" x="401" y="414" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="m-s2" tabindex="0"><rect class="bxs" x="430" y="372" width="230" height="52" rx="6"/>
+<text class="tt" x="545" y="396" text-anchor="middle" dominant-baseline="central">連鎖律が使える</text>
+<text class="tb" x="545" y="413" text-anchor="middle" dominant-baseline="central">合成が微分可能（定理 9.2）</text></g>
+
+<path class="ln" d="M270 426 L270 452"/>
+<path class="ln" d="M270 452 L110 452 L110 478" marker-end="url(#ar2)"/>
+<path class="ln" d="M270 452 L470 452 L470 478" marker-end="url(#ar2)"/>
+
+<g class="nd" data-id="m-a5" tabindex="0"><rect class="hit" x="100" y="444" width="150" height="36"/><rect class="pl" x="150" y="456" width="46" height="20" rx="3"/><text class="tp" x="173" y="466" text-anchor="middle" dominant-baseline="central">証明</text></g>
+<g class="nd" data-id="m-a6" tabindex="0"><rect class="hit" x="300" y="444" width="190" height="36"/><rect class="pl" x="390" y="456" width="46" height="20" rx="3"/><text class="tp" x="413" y="466" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="m-b6" tabindex="0"><rect class="bx" x="20" y="488" width="180" height="52" rx="6"/>
+<text class="tt" x="110" y="514" text-anchor="middle" dominant-baseline="central">連続（C<tspan font-size="10" dy="-5">0</tspan><tspan dy="5"> 級）</tspan></text></g>
+
+<g class="nd" data-id="m-b7" tabindex="0"><rect class="bx" x="350" y="488" width="240" height="52" rx="6"/>
+<text class="tt" x="470" y="512" text-anchor="middle" dominant-baseline="central">全方向に方向微分可能</text>
+<text class="tb" x="470" y="529" text-anchor="middle" dominant-baseline="central">しかも v について線型</text></g>
+
+<line class="ln" x1="470" y1="542" x2="470" y2="566" marker-end="url(#ar2)"/>
+<g class="nd" data-id="m-a7" tabindex="0"><rect class="hit" x="446" y="540" width="82" height="28"/><rect class="pl" x="482" y="544" width="46" height="20" rx="3"/><text class="tp" x="505" y="554" text-anchor="middle" dominant-baseline="central">証明</text></g>
+
+<g class="nd" data-id="m-b8" tabindex="0"><rect class="bx" x="350" y="576" width="240" height="52" rx="6"/>
+<text class="tt" x="470" y="602" text-anchor="middle" dominant-baseline="central">偏微分可能</text></g>
+</svg>
+</div>
+
+<div class="panel" id="panel-m">
+<p class="hint">ボックスまたは「証明」バッジを押してください。</p>
+
+<div class="detail" id="d-m-r1" hidden>
+<span class="cap">定義</span>
+<h3>C<sup>∞</sup> 級（2 変数）</h3>
+<p>開集合 \(D\) 上で任意の階数の偏導関数がすべて存在し、すべて連続であること。</p>
+<p>このとき何階の偏導関数でも微分する変数の順序に依存しません。多項式、\(e^{xy}\)、\(\sin x\) など初等関数の四則・合成で書けるものは、定義域内でたいていこれを満たします。</p>
+</div>
+
+<div class="detail" id="d-m-r2" hidden>
+<span class="cap">定義</span>
+<h3>C<sup>n</sup> 級（2 変数）</h3>
+<p>\(D\) 上で \(n\) 階までのすべての種類の偏微分が可能で、それらがすべて連続であること。</p>
+<p>定理 8.1 の後半により、\(C^n\) 級ならば \(n\) 階までの偏導関数は微分する変数の順序に依存しません。</p>
+</div>
+
+<div class="detail" id="d-m-r3" hidden>
+<span class="cap">定義 8.1</span>
+<h3>C<sup>2</sup> 級</h3>
+<p>\(\mathbb{R}^2\) の開集合 \(D\) 上で、すべての種類の 2 階偏微分が可能で、\(f_{xx},f_{xy},f_{yx},f_{yy}\) がすべて連続であること。</p>
+<p>記号の順番に注意：\(f_{xy}=\dfrac{\partial^2 f}{\partial y\,\partial x}\) は「先に \(x\)、次に \(y\)」の意味です。</p>
+</div>
+
+<div class="detail" id="d-m-r4" hidden>
+<span class="cap">定理 7.2 の仮定</span>
+<h3>C<sup>1</sup> 級</h3>
+<p>点 \((x_0,y_0)\) を含むある円板上で \(f_x,f_y\) がともに存在し、その両方が連続であること。</p>
+<p>定義通りに全微分可能性を確かめるのは大変ですが、\(C^1\) 級なら「偏微分して、それが連続かを見る」という計算だけで済みます。実用上いちばん使う十分条件です。</p>
+</div>
+
+<div class="detail" id="d-m-r5" hidden>
+<span class="cap">定義 7.1</span>
+<h3>全微分可能</h3>
+<p>\(1\) 次以下の多項式関数 \(p(x,y)\) が存在して \[p(x_0,y_0)=f(x_0,y_0),\qquad \lim_{(x,y)\to(x_0,y_0)}\frac{f(x,y)-p(x,y)}{\|(x,y)-(x_0,y_0)\|}=0\] となること。この \(p\) を \(1\) 次近似、グラフ \(z=p(x,y)\) を点 \((x_0,y_0,f(x_0,y_0))\) での接平面という。</p>
+<p>\(1\) 変数の「微分可能 ⇔ 接線をもつ」の分母を \(|x-c|\) から \(\|(x,y)-(x_0,y_0)\|\) に取り替えただけの定義です。方向微分と違い、あらゆる近づき方を一度に扱うのがミソ。</p>
+<p>全微分可能なとき \(1\) 次近似は一意に決まり \[p(x,y)=f(x_0,y_0)+f_x(x_0,y_0)(x-x_0)+f_y(x_0,y_0)(y-y_0).\]</p>
+</div>
+
+<div class="detail" id="d-m-b6" hidden>
+<span class="cap">定義 5.2</span>
+<h3>連続（C<sup>0</sup> 級）</h3>
+<p>\(\forall\varepsilon>0,\ \exists\delta>0\) s.t. \(\|(x,y)-(x_0,y_0)\|<\delta \Rightarrow |f(x,y)-f(x_0,y_0)|<\varepsilon\)。</p>
+<p>1 変数との決定的な違いは、近づき方が無限にあること。存在を示すには \(\varepsilon\text{-}\delta\) かはさみうちで近づき方によらない評価を作り、否定するには値の違う 2 経路を見つけます。</p>
+<p>すべての直線に沿う極限が一致しても極限が存在しないことがあるので要注意。\(\dfrac{x^2y}{x^4+y^2}\) は直線に沿えばすべて \(0\) ですが、放物線 \(y=x^2\) に沿うと \(\frac12\) です（演習 5.4）。</p>
+</div>
+
+<div class="detail" id="d-m-b7" hidden>
+<span class="cap">定義 6.1 ／ 定理 7.1(3)</span>
+<h3>全方向に方向微分可能</h3>
+<p>任意の \(v\in\mathbb{R}^2\) に対し \[\frac{\partial f}{\partial v}(x_0,y_0)=\lim_{t\to 0}\frac{f\bigl((x_0,y_0)+tv\bigr)-f(x_0,y_0)}{t}\] が存在すること。\(v=(1,0)\) なら \(f_x\)、\(v=(0,1)\) なら \(f_y\) で、偏微分の一般化になっています。また \(\frac{\partial f}{\partial (kv)}=k\frac{\partial f}{\partial v}\)。</p>
+<p>全微分可能な場合はさらに強く、\(\frac{\partial f}{\partial v}=v_1 f_x+v_2 f_y\) と \(v\) について線型になります。逆にいえば、方向微分係数を計算して \(v\) の線型式になっていなければ、その点で全微分可能でないと即断できる。これが反例判定の定石です。</p>
+<p>方向微分は結局「直線に沿った 1 変数の微分」でしかないので、全方向で存在してもその点で連続とは限らず、接平面が存在するとも限りません。</p>
+</div>
+
+<div class="detail" id="d-m-b8" hidden>
+<span class="cap">定義 6.1</span>
+<h3>偏微分可能</h3>
+<p>\[\frac{\partial f}{\partial x}(x_0,y_0)=\lim_{x\to x_0}\frac{f(x,y_0)-f(x_0,y_0)}{x-x_0},\qquad \frac{\partial f}{\partial y}(x_0,y_0)=\lim_{y\to y_0}\frac{f(x_0,y)-f(x_0,y_0)}{y-y_0}\] がともに存在すること。</p>
+<p>他の変数を定数と思って 1 変数の微分をするだけなので、1 変数の微分公式がそのまま全部使えます。ただしこの条件は非常に弱く、連続性すら導きません。</p>
+</div>
+
+<div class="detail" id="d-m-s1" hidden>
+<span class="cap">定理 8.1</span>
+<h3>偏微分の順序交換ができる</h3>
+<p>\(f_{xy}(x_0,y_0)=f_{yx}(x_0,y_0)\)、すなわち \(\dfrac{\partial^2 f}{\partial x\,\partial y}=\dfrac{\partial^2 f}{\partial y\,\partial x}\) が成り立つこと。</p>
+<p>これは \(C^2\) 級から導かれる結論であって、定義ではありません。逆向きには使えないので「\(f_{xy}=f_{yx}\) だから \(C^2\) 級」とは言えない点に注意。</p>
+</div>
+
+<div class="detail" id="d-m-s2" hidden>
+<span class="cap">定理 9.2</span>
+<h3>連鎖律が使える</h3>
+<p>\(x(t),y(t)\) がともに \(t_0\) で微分可能で、\(f\) が点 \((x(t_0),y(t_0))\) で全微分可能ならば、\(\varphi(t)=f(x(t),y(t))\) は \(t_0\) で微分可能で \[\frac{d\varphi}{dt}(t_0)=\frac{\partial f}{\partial x}\frac{dx}{dt}(t_0)+\frac{\partial f}{\partial y}\frac{dy}{dt}(t_0).\]</p>
+<p>ヤコビ行列で書けば \[\frac{d\varphi}{dt}(t_0)=\begin{pmatrix} f_x & f_y\end{pmatrix}\begin{pmatrix} dx/dt \\ dy/dt\end{pmatrix}\] で、「合成関数のヤコビ行列＝それぞれのヤコビ行列の積」。</p>
+<p>仮定に注目：\(f\) の側は「偏微分可能」では足りず「全微分可能」が必要です。偏微分可能なだけの関数は連続ですらない場合があるので当然といえます。</p>
+</div>
+
+<div class="detail" id="d-m-a1" hidden>
+<span class="cap">十分性の証明</span>
+<h3>C<sup>∞</sup> 級 ⇒ C<sup>n</sup> 級</h3>
+<p>定義から直ちに従います（要求する階数を \(n\) までに落とすだけ）。</p>
+<div class="rev"><b>逆は偽</b>　各階数で反例が作れます。1 変数の \(|x|^{n+1}\) を \(f(x,y)=|x|^{n+1}\) とみなせば、\(C^n\) 級だが \(C^{n+1}\) 級でない 2 変数関数になります。</div>
+</div>
+
+<div class="detail" id="d-m-a2" hidden>
+<span class="cap">十分性の証明</span>
+<h3>C<sup>n</sup> 級 ⇒ C<sup>2</sup> 級（n ≥ 2）</h3>
+<p>\(n\) 階までのすべての偏導関数が連続なら、そのうち 2 階までのものも当然すべて連続。定義から直ちに従います。</p>
+<div class="rev"><b>逆は偽</b>　2 階偏導関数が連続でも 3 階が存在するとは限りません。</div>
+</div>
+
+<div class="detail" id="d-m-a3" hidden>
+<span class="cap">十分性の証明（演習 8.3）</span>
+<h3>C<sup>2</sup> 級 ⇒ C<sup>1</sup> 級</h3>
+<p>\(f\) が \(C^2\) 級とすると、\(f_x,f_y\) は偏微分可能で、その偏導関数（\(f\) の 2 階偏導関数）はすべて連続。よって \(f_x,f_y\) は \(C^1\) 級です。</p>
+<p>\(C^1\) 級ならば全微分可能（定理 7.2）、全微分可能ならば連続（定理 7.1(4)）。したがって \(f_x,f_y\) は連続であり、\(f\) は \(C^1\) 級。</p>
+<p>ここで「\(C^1\) 級 ⇒ 全微分可能 ⇒ 連続」という下流の定理を、上流の \(C^2\) の議論に使い回しているのが面白いところです。</p>
+<div class="rev"><b>逆は偽</b>　\(f_x,f_y\) が連続でも 2 階偏導関数が連続とは限りません。</div>
+</div>
+
+<div class="detail" id="d-m-a4" hidden>
+<span class="cap">十分性の証明 ／ 定理 7.2</span>
+<h3>C<sup>1</sup> 級 ⇒ 全微分可能</h3>
+<p>要は差を 2 段階に分けて、それぞれに 1 変数の平均値の定理を使うことです。</p>
+<ol>
+<li>\(f(x,y)-f(x_0,y_0)=\bigl\{f(x,y)-f(x_0,y)\bigr\}+\bigl\{f(x_0,y)-f(x_0,y_0)\bigr\}\) と分解する。</li>
+<li>第 1 項は \(y\) を固定した \(x\) の 1 変数関数、第 2 項は \(x_0\) を固定した \(y\) の 1 変数関数なので、平均値の定理より \[=f_x(\xi,y)(x-x_0)+f_y(x_0,\eta)(y-y_0)\] （\(\xi\) は \(x_0\) と \(x\) の間、\(\eta\) は \(y_0\) と \(y\) の間）。</li>
+<li>\(f_x,f_y\) の連続性から \(f_x(\xi,y)=f_x(x_0,y_0)+\varepsilon_1,\ f_y(x_0,\eta)=f_y(x_0,y_0)+\varepsilon_2\) と書け、\((x,y)\to(x_0,y_0)\) のとき \(\varepsilon_1,\varepsilon_2\to 0\)。</li>
+<li>\(p\) を定理 7.1(2) の 1 次式とすると \(f-p=\varepsilon_1(x-x_0)+\varepsilon_2(y-y_0)\)。\(|x-x_0|,|y-y_0|\le\|(x,y)-(x_0,y_0)\|\) だから \[\frac{|f-p|}{\|(x,y)-(x_0,y_0)\|}\le|\varepsilon_1|+|\varepsilon_2|\longrightarrow 0.\]</li>
+</ol>
+<div class="rev"><b>逆は偽</b>　\(f(x,y)=(x^2+y^2)\sin\dfrac{1}{\sqrt{x^2+y^2}}\)（原点で \(0\)）は原点で全微分可能（\(1\) 次近似は \(p=0\) で \(\bigl|\frac{f}{r}\bigr|=r|\sin\frac1r|\le r\to0\)）ですが、\(f_x(x,0)=2x\sin\frac1x-\cos\frac1x\) が振動するため \(f_x\) は原点で連続でなく \(C^1\) 級でありません（演習 7.3）。</div>
+</div>
+
+<div class="detail" id="d-m-a5" hidden>
+<span class="cap">十分性の証明 ／ 定理 7.1(4)</span>
+<h3>全微分可能 ⇒ 連続</h3>
+<p>\(p\) は \(1\) 次多項式なので連続で、\((x,y)\to(x_0,y_0)\) のとき \(p(x,y)\to p(x_0,y_0)=f(x_0,y_0)\)。</p>
+<p>一方、全微分可能性の定義から \[f-p=\|(x,y)-(x_0,y_0)\|\cdot R(x,y),\qquad R\to 0\] と書けます。前の因子も \(0\) に行くので \(f-p\to 0\)。</p>
+<p>合わせて \(f(x,y)=(f-p)+p\to f(x_0,y_0)\)、すなわち \(f\) は \((x_0,y_0)\) で連続です。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x,y)=\dfrac{x^3}{x^2+y^2}\)（原点で \(0\)）は \(|f|\le\frac{|x|^3}{x^2}=|x|\to0\) より原点で連続ですが、全微分可能ではありません（演習 7.4）。</div>
+</div>
+
+<div class="detail" id="d-m-a6" hidden>
+<span class="cap">十分性の証明 ／ 定理 7.1(3)</span>
+<h3>全微分可能 ⇒ 全方向に方向微分可能</h3>
+<p>\((x,y)=(x_0,y_0)+tv\) と取ると \(\|(x,y)-(x_0,y_0)\|=|t|\,\|v\|\) なので、全微分可能性より \[f\bigl((x_0,y_0)+tv\bigr)=f(x_0,y_0)+t\bigl(v_1f_x+v_2f_y\bigr)+|t|\,\|v\|\,R,\qquad R\to 0.\]</p>
+<p>両辺から \(f(x_0,y_0)\) を引いて \(t\) で割り、\(t\to 0\) とすれば \[\frac{\partial f}{\partial v}(x_0,y_0)=v_1\frac{\partial f}{\partial x}(x_0,y_0)+v_2\frac{\partial f}{\partial y}(x_0,y_0).\]</p>
+<p>存在するだけでなく \(v\) の \(1\) 次式になるのが要点です。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x,y)=\dfrac{x^3}{x^2+y^2}\)（原点で \(0\)）は \(\frac{\partial f}{\partial v}(0,0)=\dfrac{v_1^{\,3}}{\|v\|^2}\) がすべての \(v\) で存在しますが、\(v=(1,1)\) で \(\frac12\)、一方 \(v_1f_x+v_2f_y=1\) となって線型でない。よって全微分可能でありません（演習 6.4 / 7.4）。</div>
+</div>
+
+<div class="detail" id="d-m-a7" hidden>
+<span class="cap">十分性の証明</span>
+<h3>全方向に方向微分可能 ⇒ 偏微分可能</h3>
+<p>\(v=(1,0)\) と取れば \(\frac{\partial f}{\partial v}\) の定義式はそのまま \(f_x\) の定義式、\(v=(0,1)\) なら \(f_y\)。特別な場合を取るだけで従います。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x,y)=0\ (xy=0),\ 1\ (\text{それ以外})\) は座標軸上で \(0\) なので原点で \(f_x=f_y=0\) ですが、\(v=(1,1)\) では \(\frac{f(t,t)-0}{t}=\frac1t\) が発散し、方向微分は存在しません。</div>
+</div>
+
+<div class="detail" id="d-m-a8" hidden>
+<span class="cap">十分性の証明 ／ 定理 8.1</span>
+<h3>C<sup>2</sup> 級 ⇒ f<sub>xy</sub> = f<sub>yx</sub></h3>
+<p>証明のアイデアは「差の差」 \[\Delta=f(x_0+h,y_0+k)-f(x_0+h,y_0)-f(x_0,y_0+k)+f(x_0,y_0)\] を考えることです。</p>
+<p>\(\Delta/(hk)\) を「\(x\) 先・\(y\) 後」と読むか「\(y\) 先・\(x\) 後」と読むかで、\(f_{xy}\) にも \(f_{yx}\) にも近づく、というのが本質。実際の証明では平均値の定理を 2 回使って \(\Delta=hk\,f_{xy}(x_0+\theta_1h,\ y_0+\theta_2k)\) の形にし、\(f_{xy}\) の連続性で \(f_{xy}(x_0,y_0)\) に寄せます。</p>
+<p>だから連続性の仮定は本質的で、外すと反例があります。</p>
+<div class="rev"><b>逆は偽</b>　\(f(x,y)=\dfrac{xy(x^2-y^2)}{x^2+y^2}\)（原点で \(0\)）は \(f_x(0,y)=-y,\ f_y(x,0)=x\) より \(f_{xy}(0,0)=-1\)、\(f_{yx}(0,0)=1\)。順序交換ができないので原点の周りで \(C^2\) 級でありません（演習 8.2）。</div>
+</div>
+
+<div class="detail" id="d-m-a9" hidden>
+<span class="cap">十分性の証明 ／ 定理 9.2</span>
+<h3>全微分可能 ⇒ 連鎖律が使える</h3>
+<p>誤差比 \[R(x,y)=\frac{f(x,y)-p(x,y)}{\|(x,y)-(x_0,y_0)\|}\quad\bigl((x_0,y_0) \text{ では } 0 \text{ と定める}\bigr)\] を導入します。全微分可能性は、まさに \(R\) が \((x_0,y_0)\) で連続で \(R(x_0,y_0)=0\) だということです。</p>
+<p>\(x(t),y(t)\) は \(t_0\) で微分可能だから連続で、\(t\to t_0\) のとき \((x(t),y(t))\to(x_0,y_0)\)。連続関数の合成は連続なので \(\lim_{t\to t_0}R(x(t),y(t))=0\)。</p>
+<p>\(\frac{\varphi(t)-q(t)}{t-t_0}\) を計算すると誤差項 \[R(x(t),y(t))\sqrt{\Bigl(\frac{x(t)-x_0}{t-t_0}\Bigr)^2+\Bigl(\frac{y(t)-y_0}{t-t_0}\Bigr)^2}\] が現れますが、根号は \(\sqrt{x'(t_0)^2+y'(t_0)^2}\) という有限値に収束するので、\(R\to0\) と合わせて全体が \(0\)。これで \(\frac{d\varphi}{dt}=f_x x'+f_y y'\) が出ます。</p>
+<p>高校流の \(\frac{\Delta f}{\Delta x}\cdot\frac{\Delta x}{\Delta t}\) の議論は \(\Delta x=0\) となる場合に破綻しますが、\(R\) を使えばその心配がありません（演習 9.4）。</p>
+</div>
+</div>
+
+<h2><span class="num">03</span>反例の早見表</h2>
+<p class="sub">逆向きが偽であることを言うための道具箱。1 つずつ口頭で言えるようにしておけば試験で強い。</p>
+
+<table>
+<thead><tr><th style="width:34%">主張したい否定</th><th style="width:38%">反例</th><th style="width:28%">効くポイント</th></tr></thead>
+<tbody>
+<tr><td>C<sup>∞</sup> ⇏ C<sup>ω</sup></td><td>\(e^{-1/x^2}\ (x>0),\ 0\ (x\le0)\)</td><td>全階の微分係数が \(0\)、級数は \(\equiv 0\)</td></tr>
+<tr><td>微分可能 ⇏ C<sup>1</sup></td><td>\(x^2\sin\frac1x\)（原点で \(0\)）</td><td>\(\cos\frac1x\) が振動</td></tr>
+<tr><td>連続 ⇏ 微分可能</td><td>\(|x|\)</td><td>左右の微分係数が食い違う</td></tr>
+<tr><td>n 次近似 ⇏ n 回微分可能</td><td>\(x^3\ (x\in\mathbb{Q}),\ -x^3\ (x\notin\mathbb{Q})\)</td><td>近似は成立、連続性は崩壊</td></tr>
+<tr><td>全微分可能 ⇏ C<sup>1</sup></td><td>\((x^2+y^2)\sin\frac{1}{\sqrt{x^2+y^2}}\)</td><td>演習 7.3</td></tr>
+<tr><td>全方向に方向微分可能 ⇏ 全微分可能</td><td>\(\dfrac{x^3}{x^2+y^2}\)</td><td>\(\frac{\partial f}{\partial v}=\frac{v_1^{\,3}}{\|v\|^2}\) が非線型</td></tr>
+<tr><td>偏微分可能 ⇏ 連続</td><td>\(\dfrac{xy}{x^2+y^2}\)</td><td>直線 \(y=mx\) で値が変わる</td></tr>
+<tr><td>連続 ⇏ 偏微分可能</td><td>\(\sqrt{x^2+y^2}\)</td><td>原点で \(f(x,0)=|x|\)</td></tr>
+<tr><td>f<sub>xy</sub> = f<sub>yx</sub> ⇏ C<sup>2</sup></td><td>\(\dfrac{xy(x^2-y^2)}{x^2+y^2}\)</td><td>そもそも \(-1\ne1\) で交換不能</td></tr>
+<tr><td>直線に沿う極限一致 ⇏ 極限の存在</td><td>\(\dfrac{x^2y}{x^4+y^2}\)</td><td>放物線 \(y=x^2\) で \(\frac12\)</td></tr>
+</tbody>
+</table>
+
+<footer>
+<p>連続と偏微分可能の間には矢印がありません。どちらも全微分可能から出ますが互いを導かないので、表の 7 行目と 8 行目が両方向の反例になっています。</p>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+document.querySelectorAll('.nd').forEach(function(node){
+  var act = function(){
+    var id = node.getAttribute('data-id');
+    var target = document.getElementById('d-' + id);
+    if(!target) return;
+    var panel = target.parentNode;
+    var board = panel.previousElementSibling;
+    panel.querySelectorAll('.detail').forEach(function(d){ d.hidden = true; });
+    var hint = panel.querySelector('.hint');
+    if(hint) hint.hidden = true;
+    target.hidden = false;
+    board.querySelectorAll('.nd').forEach(function(n){ n.classList.remove('on'); });
+    node.classList.add('on');
+  };
+  node.addEventListener('click', act);
+  node.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); act(); }
+  });
+});
+window.addEventListener('load', function(){
+  if(typeof renderMathInElement === 'function'){
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: '\\[', right: '\\]', display: true},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });
+  }
+});
+</script>
+</body>
+</html>
