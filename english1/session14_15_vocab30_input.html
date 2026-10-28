@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 14 / 15 重要単語30</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#172033;--muted:#687387;--line:#d9e0ea;--navy:#14213d;--accent:#7357c7;--shadow:0 12px 30px #15213d14}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Segoe UI","Yu Gothic UI",sans-serif}
+header{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;border-bottom:4px solid var(--accent);padding:13px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.title{flex:1;min-width:250px}.eyebrow{color:#c8b8ff;font-size:11px;font-weight:900;letter-spacing:.13em}h1{margin:2px 0;font-size:clamp(19px,2vw,27px)}.subtitle{font-size:12px;color:#bac3d4}
+.controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}button,input,select{font:inherit}button,select{height:35px;border:1px solid #66738b;border-radius:8px;background:#283754;color:#fff;font-weight:750;padding:0 10px;cursor:pointer}button:hover,select:hover{background:#384b70}button.active{background:var(--accent)}.search{height:35px;width:210px;border:1px solid #66738b;border-radius:8px;padding:0 10px;outline:none}.stats{font-size:12px;color:#d6dbea;min-width:130px;text-align:right}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 80px}.intro{background:#f7f4ff;border:1px solid #d9d0f4;border-radius:13px;padding:13px 16px;margin-bottom:18px;font-size:13px;line-height:1.65}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:14px}.card{perspective:1000px;min-height:235px;cursor:pointer}.inner{position:relative;width:100%;height:100%;min-height:235px;transition:transform .42s;transform-style:preserve-3d}.card.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column}.back{transform:rotateY(180deg)}
+.num{font-size:11px;color:#7965b7;font-weight:850;margin-bottom:10px}.word{font-family:Georgia,"Times New Roman",serif;font-size:29px;font-weight:700;line-height:1.15;margin:auto 0 8px}.loc{font-size:11px;color:var(--muted);margin-bottom:auto}.tap{font-size:11px;color:#9aa3b2;margin-top:15px}.quizbox{margin-top:14px}.quizbox input{width:100%;height:38px;border:1.5px solid #9aa6ba;border-radius:8px;padding:0 10px;font-weight:750;outline:none;background:#fff;color:var(--ink)}.quizbox input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #7357c71e}.quizbox input.correct{background:#eaf8f0;border-color:#48a978;color:#176b45}.quizbox input.wrong{background:#fff0ee;border-color:#df6c62;color:#a1281d}.quizhint{font-size:10px;color:#8b95a6;margin-top:5px}.jp{font-size:21px;font-weight:850;margin:2px 0 3px;color:#4e3d8b}.pos{font-size:12px;color:var(--muted);margin-bottom:12px}.phrase{font-family:Georgia,"Times New Roman",serif;font-size:15px;line-height:1.55;border-left:3px solid #a690e5;padding-left:10px;margin-bottom:10px}.note{font-size:12px;line-height:1.55;color:#536076;margin-bottom:12px}
+.actions{display:flex;gap:6px;margin-top:auto}.actions button{height:30px;font-size:11px;flex:1}.known{background:#1f714d!important}.review{background:#a54b20!important}.card.mark-known .face{border-color:#5eaf83}.card.mark-review .face{border-color:#db8b66}
+.mode-list .grid{display:block}.mode-list .card{min-height:0;margin-bottom:8px;perspective:none}.mode-list .inner{transform:none!important;min-height:0}.mode-list .face{position:relative;backface-visibility:visible;min-height:0}.mode-list .front{display:none}.mode-list .back{transform:none}
+.dark{--bg:#0f1420;--card:#171d2a;--ink:#edf1fa;--muted:#aab4c7;--line:#354159}.dark .intro{background:#292341;border-color:#504574}.dark .search{background:#111827;color:#eef2ff}.dark .quizbox input{background:#111827;color:#eef2ff;border-color:#536079}.dark .quizbox input.correct{background:#153626;color:#8ee0b0}.dark .quizbox input.wrong{background:#421d1b;color:#ffb4ad}
+@media(max-width:700px){header{padding:10px 11px}.controls{width:100%}.search{width:100%}.stats{text-align:left}main{padding:14px 10px 70px}.grid{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><div class="title"><div class="eyebrow">ENGLISH I · VOCABULARY BOOK</div><h1>Session 14 / 15 重要単語 30</h1><div class="subtitle">各Session 30語 · 本文中の使われ方つき</div></div>
+<div class="controls"><button id="b14" onclick="setSession('14')">Session 14</button><button id="b15" onclick="setSession('15')">Session 15</button>
+<select id="direction" onchange="setDirection(this.value)"><option value="en-ja">英 → 日</option><option value="ja-en">日 → 英</option></select>
+<button onclick="shuffleCards()">Shuffle</button><button id="listBtn" onclick="toggleList()">一覧</button><button onclick="resetMarks()">記録リセット</button><button onclick="toggleDark()">☾</button>
+<input id="search" class="search" placeholder="単語・意味を検索" oninput="render()"><div class="stats" id="stats"></div></div></header>
+<main id="main"><div class="intro">各カードで答えを直接入力できます。<b>Enterで正誤判定</b>、<b>? → Enterで答え表示</b>。正解すると自動で次のカードへ進みます。カードをクリックすれば意味・用例も確認できます。<b>✓ 覚えた</b> / <b>△ 要復習</b> は保存されます。</div><div class="grid" id="grid"></div></main>
+<script>
+const DATA={"14": [{"word": "occlusion", "jp": "覆い隠すこと、隠蔽", "pos": "名詞", "loc": "(1)", "phrase": "the complete occlusion of republicanism", "note": "Session 14冒頭の中心語。共和制・村落民主制が映画から見えなくなっていること。"}, {"word": "republicanism", "jp": "共和主義、共和制", "pos": "名詞", "loc": "(1), (15), (18)", "phrase": "republicanism and village democracy", "note": "monarchy と対立する本文全体の最重要概念。"}, {"word": "kingship", "jp": "王権、王制", "pos": "名詞", "loc": "(3), (50)", "phrase": "Kingship was not unknown among the Igbos", "note": "王そのものより「王権・王制」の意味。"}, {"word": "resolution", "jp": "決議", "pos": "名詞", "loc": "(6)", "phrase": "debate a resolution to go to war", "note": "直接民主制の具体例で使われる。"}, {"word": "aristocracy", "jp": "貴族制、貴族階級", "pos": "名詞", "loc": "(7)", "phrase": "an absurd monarchy and aristocracy", "note": "monarchy と並べてイギリス側の政治制度を表す。"}, {"word": "tolerate", "jp": "容認する、耐える", "pos": "動詞", "loc": "(7)", "phrase": "they could not tolerate it", "note": "民主的なアフリカ社会を植民地支配側が容認できなかった文脈。"}, {"word": "inherently", "jp": "本質的に", "pos": "副詞", "loc": "(7)", "phrase": "the inherently anti-democratic character", "note": "inherent（本質的な）の副詞形。"}, {"word": "institute", "jp": "導入する、制定する", "pos": "動詞", "loc": "(7)", "phrase": "to institute a policy of indirect rule", "note": "制度・政策を新たに設ける。"}, {"word": "pliable", "jp": "従順な、扱いやすい", "pos": "形容詞", "loc": "(7)", "phrase": "pliable local chiefs", "note": "ここでは「植民地政府に従わせやすい」。"}, {"word": "despised", "jp": "軽蔑された", "pos": "動詞・過去分詞", "loc": "(9)", "phrase": "They were generally despised", "note": "despise = 軽蔑する。"}, {"word": "dregs", "jp": "社会の最下層、くず", "pos": "名詞", "loc": "(10)", "phrase": "the dregs of society", "note": "強い否定的表現。"}, {"word": "flagrant", "jp": "目に余る、甚だしい", "pos": "形容詞", "loc": "(10)", "phrase": "flagrant corruption", "note": "flagrant + corruption は穴埋めにしやすい組合せ。"}, {"word": "governance", "jp": "統治、統治体制", "pos": "名詞", "loc": "(11)", "phrase": "colonial and postcolonial governance", "note": "government より「統治の仕組み・過程」に近い。"}, {"word": "mediating", "jp": "仲介する", "pos": "分詞・形容詞", "loc": "(11)", "phrase": "play a mediating role", "note": "mediate = 仲介する。"}, {"word": "prominence", "jp": "重要性、目立つこと", "pos": "名詞", "loc": "(12)", "phrase": "social prominence", "note": "prominent（著名な、目立つ）の名詞形。"}, {"word": "illegitimacy", "jp": "正統性の欠如", "pos": "名詞", "loc": "(13)", "phrase": "their aura of illegitimacy", "note": "legitimate / illegitimate の語形成も要確認。"}, {"word": "alacrity", "jp": "敏速さ、性急な積極性", "pos": "名詞", "loc": "(15)", "phrase": "the alacrity with which they have jettisoned ...", "note": "難語。ここでは「あっさりと捨てた」感じ。"}, {"word": "jettisoned", "jp": "捨て去った", "pos": "動詞", "loc": "(15)", "phrase": "jettisoned their traditional republicanism", "note": "比喩的に「捨てる」。"}, {"word": "travesty", "jp": "ひどい歪曲、茶番", "pos": "名詞", "loc": "(17)", "phrase": "The degree of travesty", "note": "本来の制度を滑稽なほど変形しているという批判。"}, {"word": "displaced", "jp": "取って代わった", "pos": "動詞", "loc": "(18)", "phrase": "igwes ... displaced the memory of republicanism", "note": "displace = 置き換える、立場を奪う。"}, {"word": "anomic", "jp": "無秩序な、規範を失った", "pos": "形容詞", "loc": "(20)", "phrase": "an anomic, unhappy state", "note": "社会規範が弱い・失われた状態。"}, {"word": "reproaching", "jp": "非難している", "pos": "動詞・分詞", "loc": "(21)", "phrase": "reproaching them for the delay", "note": "reproach A for B = BについてAを非難する。"}, {"word": "normative", "jp": "規範的な、標準とされる", "pos": "形容詞", "loc": "(22)", "phrase": "a stronger, normative form", "note": "「あるべき形」とみなされる、の意。"}, {"word": "spectacle", "jp": "見世物、壮観", "pos": "名詞", "loc": "(24)", "phrase": "a crucial form of political spectacle", "note": "政治権力を視覚的に見せる儀礼・イベント。"}, {"word": "repertoire", "jp": "レパートリー、持ち合わせ", "pos": "名詞", "loc": "(27)", "phrase": "the symbolic repertoire of royal authority", "note": "象徴表現の「持ち札・レパートリー」。"}, {"word": "staple", "jp": "定番、主要なもの", "pos": "名詞", "loc": "(28)", "phrase": "a staple of Nigerian television programming", "note": "food staple だけでなく「定番」の意味。"}, {"word": "palavers", "jp": "長々しい議論、口論", "pos": "名詞", "loc": "(30)", "phrase": "the palavers of democracy", "note": "西アフリカ文脈で「長い話し合い・口論」。"}, {"word": "anathema", "jp": "忌み嫌われるもの", "pos": "名詞", "loc": "(33)", "phrase": "monarchy ... is viewed as anathema", "note": "be anathema to A = Aにとって忌むべきもの。"}, {"word": "entailed", "jp": "伴った、必然的に含んだ", "pos": "動詞", "loc": "(39)", "phrase": "they never entailed executive authority", "note": "entail = 必然的に伴う。"}, {"word": "indiscriminate", "jp": "無差別の", "pos": "形容詞", "loc": "(41)", "phrase": "wholesale and indiscriminate sale of titles", "note": "discriminate（区別する）に in- がついた形。"}], "15": [{"word": "crouches", "jp": "しゃがむ", "pos": "動詞", "loc": "ll.1–3", "phrase": "Kaylee Byers crouches ...", "note": "冒頭の現在形描写。"}, {"word": "dumpster", "jp": "大型ごみ容器", "pos": "名詞", "loc": "ll.3–5", "phrase": "a large blue dumpster", "note": "都市ネズミの生息環境を描く語。"}, {"word": "overgrown", "jp": "草木が生い茂った", "pos": "形容詞", "loc": "ll.5–6", "phrase": "an overgrown ... lot", "note": "overgrow の過去分詞形。"}, {"word": "unfussy", "jp": "気取らない、飾り気のない", "pos": "形容詞", "loc": "ll.10–12", "phrase": "an “unfussy” traditional Ethiopian restaurant", "note": "fussy = 細かくうるさい、凝った。"}, {"word": "anesthesia", "jp": "麻酔", "pos": "名詞", "loc": "ll.12–14", "phrase": "put under anesthesia", "note": "under anesthesia = 麻酔下で。"}, {"word": "anecdotally", "jp": "体験談・個別事例に基づいて", "pos": "副詞", "loc": "ll.18–20", "phrase": "exploding anecdotally", "note": "統計ではなく目撃談ベース、という重要点。"}, {"word": "boil down to", "jp": "結局～に要約される", "pos": "熟語", "loc": "ll.21–23", "phrase": "could be boiled down to a single study", "note": "受動形 boiled down to で登場。"}, {"word": "landfill", "jp": "ごみ埋立地", "pos": "名詞", "loc": "ll.21–23", "phrase": "living in a landfill", "note": "都市環境を表す語。"}, {"word": "reconsider", "jp": "考え直す", "pos": "動詞", "loc": "ll.27–28", "phrase": "made her reconsider ...", "note": "本文の価値観が転換する重要箇所。"}, {"word": "invaders", "jp": "侵入者", "pos": "名詞", "loc": "ll.27–28", "phrase": "labeling of rats as invaders", "note": "従来のネズミ観を表す。"}, {"word": "thrive", "jp": "繁栄する、よく育つ", "pos": "動詞", "loc": "l.31", "phrase": "Rats thrive as a result of people", "note": "Session 15 の重要動詞。"}, {"word": "disruptions", "jp": "攪乱、混乱", "pos": "名詞", "loc": "ll.31–33", "phrase": "modern disruptions caused by urban development", "note": "disturbance と並ぶ本文の最重要概念。"}, {"word": "ecological niches", "jp": "生態的地位、生息上の場所", "pos": "名詞句", "loc": "ll.32–33", "phrase": "new ecological niches", "note": "生態学用語。"}, {"word": "domestication", "jp": "家畜化", "pos": "名詞", "loc": "ll.35–36", "phrase": "without active domestication", "note": "domesticate の名詞形。"}, {"word": "burrow", "jp": "巣穴", "pos": "名詞", "loc": "ll.37–40", "phrase": "a place to build a burrow", "note": "生存の最低条件の1つ。"}, {"word": "bare necessities", "jp": "最低限必要なもの", "pos": "名詞句", "loc": "ll.37–40", "phrase": "In terms of the bare necessities", "note": "bare = 最低限の、むき出しの。"}, {"word": "come down to", "jp": "結局～に帰着する", "pos": "熟語", "loc": "ll.42–45", "phrase": "it comes down to where rats ...", "note": "論理をまとめる重要熟語。"}, {"word": "parasitic", "jp": "寄生的な", "pos": "形容詞", "loc": "ll.46–61", "phrase": "a parasitic response", "note": "Q5の中心語。後半で繰り返される。"}, {"word": "take advantage of", "jp": "～を利用する", "pos": "熟語", "loc": "ll.49–51", "phrase": "take advantage of the disruptions", "note": "人間が作る攪乱を利用する、という核心。"}, {"word": "opportunists", "jp": "機会を利用して生きるもの", "pos": "名詞", "loc": "ll.52–54", "phrase": "the ultimate opportunists", "note": "ネズミの生存戦略を端的に表す。"}, {"word": "intact", "jp": "損なわれていない、手つかずの", "pos": "形容詞", "loc": "ll.57–58", "phrase": "a lush, primary, intact forest", "note": "disturbed environment と対比される。"}, {"word": "bring into question", "jp": "～に疑問を投げかける", "pos": "熟語", "loc": "ll.62–63", "phrase": "brings into question the constant human quest ...", "note": "前の議論から駆除への疑問につなぐ表現。"}, {"word": "tight-knit", "jp": "結びつきの強い", "pos": "形容詞", "loc": "ll.64–66", "phrase": "tight-knit family groups", "note": "ネズミ集団の安定性を示す。"}, {"word": "ousted", "jp": "追い出された", "pos": "動詞・過去分詞", "loc": "ll.66–69", "phrase": "a rat is ousted from its family", "note": "駆除による集団崩壊の起点。"}, {"word": "quarantined", "jp": "隔離された", "pos": "動詞・過去分詞", "loc": "ll.68–69", "phrase": "effectively quarantined to that family", "note": "病原体が家族内に封じ込められていること。"}, {"word": "backfiring", "jp": "逆効果になっている", "pos": "動詞・分詞", "loc": "ll.69–71", "phrase": "could be backfiring", "note": "Q6の結論。かなり重要。"}, {"word": "absorb", "jp": "吸収する", "pos": "動詞", "loc": "ll.73–75", "phrase": "absorb a diverse collection of bacteria", "note": "“like sponges” の比喩を支える動詞。"}, {"word": "pathogens", "jp": "病原体", "pos": "名詞", "loc": "ll.77–78", "phrase": "place-specific pathogens", "note": "感染症の議論で頻出。"}, {"word": "converge", "jp": "一か所に集まる", "pos": "動詞", "loc": "ll.81–83", "phrase": "bacteria can converge, mix ...", "note": "mixing bowl の説明に直結。"}, {"word": "strain", "jp": "菌株、系統", "pos": "名詞", "loc": "ll.86–87", "phrase": "a strain of methicillin-resistant ...", "note": "細菌の具体例で使われる科学語。"}]};
+let session=localStorage.getItem('vocab30-session')||'14';
+let direction=localStorage.getItem('vocab30-direction')||'en-ja';
+let listMode=localStorage.getItem('vocab30-list')==='1';
+let dark=localStorage.getItem('vocab30-dark')==='1';
+let order={14:[...Array(30).keys()],15:[...Array(30).keys()]};
+try{const x=JSON.parse(localStorage.getItem('vocab30-order')||'null');if(x)order=x}catch(e){}
+let marks={};try{marks=JSON.parse(localStorage.getItem('vocab30-marks')||'{}')}catch(e){}
+document.documentElement.classList.toggle('dark',dark);document.getElementById('direction').value=direction;
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function key(i){return session+'|'+i}
+function save(){localStorage.setItem('vocab30-session',session);localStorage.setItem('vocab30-direction',direction);localStorage.setItem('vocab30-list',listMode?'1':'0');localStorage.setItem('vocab30-dark',dark?'1':'0');localStorage.setItem('vocab30-order',JSON.stringify(order));localStorage.setItem('vocab30-marks',JSON.stringify(marks))}
+function setSession(s){session=s;save();render();window.scrollTo({top:0,behavior:'smooth'})}
+function setDirection(d){direction=d;save();render()}
+function toggleList(){listMode=!listMode;save();render()}
+function toggleDark(){dark=!dark;document.documentElement.classList.toggle('dark',dark);save()}
+function shuffleCards(){const a=[...order[session]];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}order[session]=a;save();render()}
+function setMark(e,i,v){e.stopPropagation();const k=key(i);marks[k]=marks[k]===v?'':v;save();render()}
+function resetMarks(){if(!confirm('現在のSessionの記録を消しますか？'))return;Object.keys(marks).filter(k=>k.startsWith(session+'|')).forEach(k=>delete marks[k]);save();render()}
+function flip(el){if(!listMode)el.classList.toggle('flipped')}
+
+function normalizeAnswer(s){
+ return String(s||'').trim().toLowerCase().replace(/[’‘]/g,"'").replace(/[、，]/g,",").replace(/\s+/g,' ');
+}
+function acceptableAnswers(ans){
+ const raw=String(ans||'').trim();
+ const parts=raw.split(/[、,]/).map(x=>normalizeAnswer(x)).filter(Boolean);
+ return [normalizeAnswer(raw),...parts];
+}
+function checkAnswer(e,input){
+ if(e.key!=='Enter') return;
+ e.preventDefault();e.stopPropagation();
+ input.classList.remove('correct','wrong');
+ const answer=input.dataset.answer||'';
+ const val=normalizeAnswer(input.value);
+ if(val==='?'){
+   input.value=answer;
+   input.classList.add('correct');
+   return;
+ }
+ const ok=acceptableAnswers(answer).some(a=>a===val);
+ input.classList.add(ok?'correct':'wrong');
+ if(ok){
+   setTimeout(()=>{
+     const cards=[...document.querySelectorAll('.card')];
+     const card=input.closest('.card');
+     const idx=cards.indexOf(card);
+     if(idx>=0 && idx+1<cards.length){
+       const next=cards[idx+1].querySelector('.quizbox input');
+       if(next){next.focus();next.scrollIntoView({behavior:'smooth',block:'center'})}
+     }
+   },180);
+ }
+}
+
+function render(){
+ document.getElementById('b14').classList.toggle('active',session==='14');document.getElementById('b15').classList.toggle('active',session==='15');document.getElementById('listBtn').classList.toggle('active',listMode);document.getElementById('main').classList.toggle('mode-list',listMode);
+ const q=document.getElementById('search').value.trim().toLowerCase(),grid=document.getElementById('grid');grid.innerHTML='';let shown=0;
+ order[session].forEach(i=>{const v=DATA[session][i],hay=(v.word+' '+v.jp+' '+v.pos+' '+v.phrase+' '+v.note).toLowerCase();if(q&&!hay.includes(q))return;shown++;const m=marks[key(i)]||'';const frontMain=direction==='en-ja'?v.word:v.jp,frontSub=direction==='en-ja'?v.loc:v.pos+' · '+v.loc,backMain=direction==='en-ja'?v.jp:v.word,backSub=direction==='en-ja'?v.pos:v.jp;
+ const card=document.createElement('div');card.className='card '+(m==='known'?'mark-known':m==='review'?'mark-review':'');card.onclick=()=>flip(card);card.innerHTML=`<div class="inner"><div class="face front"><div class="num">#${String(i+1).padStart(2,'0')} · SESSION ${session}</div><div class="word">${esc(frontMain)}</div><div class="loc">${esc(frontSub)}</div>
+<div class="quizbox" onclick="event.stopPropagation()">
+ <input type="text" autocomplete="off" spellcheck="false"
+  placeholder="${direction==='en-ja'?'日本語を入力':'英単語・熟語を入力'}"
+  data-answer="${esc(direction==='en-ja'?v.jp:v.word)}"
+  onkeydown="checkAnswer(event,this)">
+ <div class="quizhint">Enterで判定 / ? → Enterで答え表示</div>
+</div>
+<div class="tap">カードをクリックすると答え・用例を確認</div></div><div class="face back"><div class="num">#${String(i+1).padStart(2,'0')} · ${esc(v.loc)}</div><div class="jp">${esc(backMain)}</div><div class="pos">${esc(backSub)}</div><div class="phrase">${esc(v.phrase)}</div><div class="note">${esc(v.note)}</div><div class="actions"><button class="known" onclick="setMark(event,${i},'known')">✓ 覚えた</button><button class="review" onclick="setMark(event,${i},'review')">△ 要復習</button></div></div></div>`;grid.appendChild(card)});
+ const known=Object.keys(marks).filter(k=>k.startsWith(session+'|')&&marks[k]==='known').length,review=Object.keys(marks).filter(k=>k.startsWith(session+'|')&&marks[k]==='review').length;document.getElementById('stats').textContent=`覚えた ${known}/30 · 要復習 ${review}`+(q?` · 表示 ${shown}`:'')
+}
+render();
+</script></body></html>
