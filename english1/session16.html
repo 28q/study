@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 16 三段対訳ビューア</title>
+<style>
+:root{
+  --ink:#172033;--muted:#667085;--line:#d8dee8;--en:#fbfcff;--lit:#fffaf2;--nat:#f8fff9;
+  --accent:#7756c6;--accent2:#f1ecff;--lit-accent:#ad6a18;--nat-accent:#237a4b;
+  --head:118px;--fs:16.5px;--panel:#fff;--shadow:0 10px 28px #18223d14;--mark:#ffe48a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#eef1f5;color:var(--ink);font-family:"Segoe UI","Yu Gothic UI",sans-serif}
+body{overflow:hidden}
+header{height:var(--head);display:flex;align-items:center;gap:15px;padding:11px 16px;background:#14213d;color:#fff;border-bottom:4px solid var(--accent);position:relative;z-index:30}
+.session{font-weight:900;letter-spacing:.09em;color:#c4afff;white-space:nowrap}
+.title{min-width:0;flex:1}
+.title h1{font-size:clamp(17px,1.8vw,25px);margin:0 0 3px}
+.title p{margin:0;color:#b9c2d3;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar{display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:65%}
+button,select,input{font:inherit}
+button,.selectlike{border:1px solid #64718a;background:#263552;color:#fff;border-radius:8px;height:33px;font-weight:700;cursor:pointer}
+button{min-width:33px;padding:0 8px}
+button:hover,.selectlike:hover{background:#36496f}
+button.on{background:#7756c6;border-color:#ad99ef}
+select.selectlike{padding:0 8px}
+.search{height:33px;width:min(220px,17vw);border:1px solid #64718a;background:white;color:#172033;border-radius:8px;padding:0 9px;outline:none}
+.counter{min-width:56px;text-align:center;font-variant-numeric:tabular-nums;font-size:12px}
+.progress{position:fixed;top:calc(var(--head) - 4px);left:0;height:4px;background:#bba3ff;z-index:35;transition:width .2s}
+.app{height:calc(100vh - var(--head));display:grid;grid-template-columns:1.1fr 1fr 1fr}
+.pane{overflow:auto;scroll-behavior:smooth;padding:18px clamp(13px,2vw,30px) 82px;font-size:var(--fs);line-height:1.78}
+.pane.en{background:var(--en);border-right:1px solid var(--line);font-family:Georgia,"Times New Roman",serif}
+.pane.literal{background:var(--lit);border-right:1px solid var(--line)}
+.pane.natural{background:var(--nat)}
+.pane-head{position:sticky;top:-18px;z-index:5;margin:-18px -7px 14px;padding:14px 7px 10px;background:inherit;border-bottom:1px solid var(--line);font:800 11px/1 "Segoe UI",sans-serif;letter-spacing:.12em;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.pane.literal .pane-head{color:var(--lit-accent)}
+.pane.natural .pane-head{color:var(--nat-accent)}
+.summarybox{margin:0 0 15px;padding:14px 16px;border:1px solid #d8d0ef;border-radius:12px;background:#f7f4ff;font-family:"Segoe UI","Yu Gothic UI",sans-serif;font-size:13.5px;line-height:1.68}
+.summarybox strong{color:#5f42aa}
+.summarybox.collapsed .sumtext{display:none}
+.card{position:relative;margin:0 0 14px;padding:17px 18px 16px 50px;border:1px solid transparent;border-radius:12px;white-space:pre-wrap;transition:.15s;min-height:92px}
+.card::before{content:attr(data-n);position:absolute;left:12px;top:18px;width:27px;height:25px;border-radius:50%;display:grid;place-items:center;background:#e8edf4;color:#536076;font:800 11px/1 "Segoe UI",sans-serif}
+.card .meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px;font:700 10px/1.3 "Segoe UI",sans-serif;color:#8892a5}
+.card .meta span{padding:3px 6px;border:1px solid var(--line);border-radius:999px;background:#ffffff80}
+.card:hover,.card.active{background:var(--accent2);border-color:#b7a3e7;box-shadow:var(--shadow)}
+.card.active{outline:2px solid var(--accent);outline-offset:-2px}
+.card.bookmarked::before{background:#fff0ad;color:#765308}
+.card.hidden-by-search{display:none}
+.terms{display:none;margin-top:11px;padding-top:10px;border-top:1px dashed #cbd3df;font:12px/1.55 "Segoe UI","Yu Gothic UI",sans-serif;color:#4d596b}
+.show-terms .terms{display:block}
+.term{display:inline-block;margin:2px 5px 2px 0;padding:3px 6px;border-radius:7px;background:#fff;border:1px solid #d9dfe8}
+.term b{color:#38445a}
+mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
+.hide-jp .pane.literal .body,.hide-jp .pane.natural .body{filter:blur(8px);user-select:none}
+.hide-jp .pane.literal .card.active .body,.hide-jp .pane.natural .card.active .body{filter:blur(5px)}
+.focus-mode .card:not(.active){opacity:.22;filter:grayscale(.45)}
+.view-en .app{grid-template-columns:1fr} .view-en .pane.literal,.view-en .pane.natural{display:none}
+.view-en-lit .app{grid-template-columns:1.08fr 1fr} .view-en-lit .pane.natural{display:none}
+.view-en-nat .app{grid-template-columns:1.08fr 1fr} .view-en-nat .pane.literal{display:none}
+.view-jp .app{grid-template-columns:1fr 1fr} .view-jp .pane.en{display:none}
+.view-lit .app{grid-template-columns:1fr} .view-lit .pane.en,.view-lit .pane.natural{display:none}
+.view-nat .app{grid-template-columns:1fr} .view-nat .pane.en,.view-nat .pane.literal{display:none}
+.floating{position:fixed;right:13px;bottom:11px;display:flex;gap:6px;z-index:20}
+.floating button{background:#16223bdd;backdrop-filter:blur(6px);font-size:11px;border-color:#536076}
+.drawer{position:fixed;right:13px;top:calc(var(--head) + 10px);width:min(410px,calc(100vw - 26px));max-height:calc(100vh - var(--head) - 22px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px #11182732;z-index:50;padding:15px;display:none}
+.drawer.open{display:block}
+.drawer h2{margin:0 0 7px;font-size:16px}
+.drawer p{margin:0 0 10px;line-height:1.55;font-size:12px;color:var(--muted)}
+.drawer textarea{width:100%;min-height:170px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px;font:14px/1.55 "Segoe UI","Yu Gothic UI",sans-serif;background:#fff;color:#172033}
+.drawer .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.toast{position:fixed;left:50%;bottom:14px;transform:translateX(-50%) translateY(18px);opacity:0;background:#111827e8;color:#fff;padding:8px 12px;border-radius:9px;font-size:12px;z-index:70;transition:.2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.dark{--ink:#e8edf7;--muted:#aab4c7;--line:#354159;--en:#171d2a;--lit:#211c17;--nat:#17231c;--accent2:#352b52;--panel:#202738;--mark:#675a21}
+.dark body{background:#0f1420}
+.dark .card::before{background:#2b3548;color:#c9d2e4}
+.dark .summarybox{background:#2a2340;border-color:#4d416e}
+.dark .drawer textarea,.dark .search{background:#111827;color:#eef2ff;border-color:#475569}
+.dark .term,.dark .card .meta span{background:#202938}
+@media(max-width:1050px){
+  :root{--head:151px;--fs:15px}
+  header{align-items:flex-start;flex-wrap:wrap;padding:10px 12px}
+  .title{order:1} .toolbar{order:2;max-width:none;width:100%;justify-content:flex-start}
+  .search{width:min(250px,40vw)}
+}
+@media(max-width:760px){
+  :root{--head:183px;--fs:14.5px}
+  .app{grid-template-columns:1fr;grid-template-rows:repeat(3,1fr)}
+  .pane{padding:14px 11px 60px}
+  .pane.en,.pane.literal{border-right:0;border-bottom:2px solid var(--line)}
+  .pane-head{top:-14px;margin:-14px 0 9px}
+  .card{padding:13px 11px 12px 45px;margin-bottom:9px}
+  .card::before{left:9px;top:14px}
+  .floating{display:none}
+  .view-en .app,.view-lit .app,.view-nat .app{grid-template-rows:1fr}
+  .view-en-lit .app,.view-en-nat .app,.view-jp .app{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+  .search{width:41vw}
+}
+
+/* 元のSession15の配色と三段表示を維持 */
+header{height:auto;min-height:118px;flex-wrap:wrap}
+#jump{max-width:220px;width:16vw;min-width:115px}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #c4afff;outline-offset:2px}
+.app{height:calc(100dvh - var(--head))}
+.source-info{margin-top:10px;padding-top:9px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.read-note{margin-top:12px;padding:9px 11px;border-left:3px solid #b68a36;background:#a77a1810;font:12px/1.7 "Segoe UI","Yu Gothic UI",sans-serif;white-space:normal;color:var(--ink)}
+.missing{border:1px dashed #b68a36;background:#a77a1810}
+.status-warning{flex:0 0 100%;font-size:12px;line-height:1.6;background:#fff1ce;color:#513c10;padding:8px 11px;border-radius:7px}
+.pane{overscroll-behavior:contain}
+@media(max-width:1050px){header{min-height:151px}#jump{width:175px}.toolbar{max-width:100%}}
+@media(max-width:760px){header{min-height:183px}#jump{width:42vw}.floating{display:flex;right:6px;bottom:6px;gap:3px}.floating button{font-size:10px;padding:0 6px}.title p{white-space:normal;font-size:11px}.pane-head{line-height:1.4}.card{overflow-wrap:anywhere}}
+@media print{body{overflow:visible}header{position:static}.toolbar,.floating,.drawer,.toast,.progress{display:none!important}.app{display:block;height:auto}.pane{overflow:visible}.card{break-inside:avoid}.hide-jp .body{filter:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="session">SESSION 16</div>
+  <div class="title">
+    <h1>The Case for Leaving City Rats Alone · Part II</h1>
+    <p>Becca Cudmore — 1段落＝1ブロック · 原文／逐語訳／自然な日本語訳</p>
+  </div>
+  <div class="toolbar">
+    <input id="search" type="search" aria-label="英語・日本語・重要語句を検索" class="search" placeholder="検索 / Search  ( / )">
+    <select id="jump" class="selectlike" aria-label="段落ジャンプ"></select>
+    <select id="view" class="selectlike" aria-label="表示モード">
+      <option value="all">3列：英・直・意</option>
+      <option value="en-lit">英＋直訳</option>
+      <option value="en-nat">英＋意訳</option>
+      <option value="jp">直訳＋意訳</option>
+      <option value="en">英語のみ</option>
+      <option value="lit">直訳のみ</option>
+      <option value="nat">意訳のみ</option>
+    </select>
+    <button id="hideJp" title="日本語を隠す">訳</button>
+    <button id="termsBtn" title="重要語句を表示">語句</button>
+    <button id="focus" title="現在段落に集中">Focus</button>
+    <button id="smaller">A−</button>
+    <button id="larger">A＋</button>
+    <button id="dark">☾</button>
+    <button id="prev">↑</button>
+    <span class="counter" id="counter">1 / 11</span>
+    <button id="next">↓</button>
+  </div>
+</header>
+<div class="progress" id="progress"></div>
+
+<main class="app">
+  <div class="pane en" id="en">
+    <div class="pane-head"><span>ENGLISH · ORIGINAL</span><span id="enHits" aria-live="polite"></span></div>
+    <div class="summarybox" id="summarybox"><strong>SUMMARY</strong><div class="sumtext" id="summarytext"></div></div>
+  </div>
+  <div class="pane literal" id="literal">
+    <div class="pane-head"><span>直訳 · STRUCTURE-FIRST</span><span id="litHits"></span></div>
+  </div>
+  <div class="pane natural" id="natural">
+    <div class="pane-head"><span>意訳 · MEANING-FIRST</span><span id="natHits"></span></div>
+  </div>
+</main>
+
+<div class="floating">
+  <button id="bookmark">☆ Bookmark</button>
+  <button id="copy">Copy 3</button>
+  <button id="note">Note</button>
+  <button id="summaryToggle">Summary</button>
+</div>
+
+<div class="drawer" id="drawer">
+  <h2 id="drawerTitle">メモ</h2>
+  <p id="drawerMeta"></p>
+  <textarea id="noteText" placeholder="この段落についてのメモ。ブラウザ内に自動保存されます。"></textarea>
+  <div class="row">
+    <button id="copyEn">Copy EN</button>
+    <button id="copyLit">Copy 直訳</button>
+    <button id="copyNat">Copy 意訳</button>
+    <button id="copyAll">Copy 3種</button>
+    <button id="closeDrawer">Close</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const blocks=[{"page":"未確認","lines":"L1–5","label":"ごみの散乱するV6A地区","en":"In V6A, it’s hard not to notice the litter around us. Garbage has bubbled out from under the lids of trashcans and a pile of empty syringes surrounds a parking lot trap. Walking across this landscape of debris, cracked concrete, and weeds, Byers stops at another trap, which is set on what she has named “Block J.”","literal":"V6Aでは、私たちの周囲にあるごみに気づかないことは難しい。ごみがごみ箱のふたの下から泡立つようにあふれ出し、空の注射器の山が駐車場の罠を取り囲んでいる。がれき、ひび割れたコンクリート、雑草からなるこの風景の中を歩きながら、バイヤーズは別の罠のところで立ち止まる。その罠は、彼女が「ブロックJ」と名付けた場所に設置されている。","natural":"V6A地区を歩くと、散乱したごみが嫌でも目に入る。ごみ箱からはごみがあふれ、駐車場に仕掛けた罠の周囲には空の注射器が山積みになっている。がれきとひび割れたコンクリート、雑草の間を進んだバイヤーズは、彼女が「ブロックJ」と呼ぶ場所の、もう一つの罠の前で足を止める。","terms":[["it’s hard not to notice","気づかないでいるのは難しい → 嫌でも目につく"],["litter","散乱したごみ"],["bubble out","泡立つようにあふれ出す"],["syringe","注射器"],["debris","がれき、散乱した残骸"],["what she has named ...","彼女が…と名付けたもの・場所"]]},{"page":"未確認","lines":"L5–11","label":"駆除はネズミの移動を引き起こすか","en":"She and two student assistants are heading the project’s second phase, which involves tracking the real-time movement of rats, using ear tags. Once these trees are mapped, she will begin to euthanize individual rats, and see how their family responds. Part of her Ph.D. work is to understand how human-caused disruptions, pest control in particular, affect how rats move throughout V6A. The hypothesis is that the disruption will send communities scurrying for new ground.","literal":"彼女と2人の学生助手は、プロジェクトの第2段階を指揮している。その段階には、耳標を使ってネズミのリアルタイムの移動を追跡することが含まれる。これらの系統樹が図にまとめられたら、彼女は個々のネズミを安楽死させ始め、その家族がどう反応するかを見る予定である。彼女の博士課程の研究の一部は、人間が引き起こす撹乱、特に害獣駆除が、ネズミのV6A全域での移動の仕方にどう影響するかを理解することである。その仮説は、撹乱が集団を新しい土地を求めて慌ただしく走り回らせる、というものである。","natural":"バイヤーズと2人の学生助手が進めているのは、研究の第2段階だ。耳に付けたタグでネズミの移動を追跡し、家族関係を整理したうえで一部の個体を取り除き、残された家族の反応を調べる。博士研究の課題は、人間による駆除などが群れの移動にどのような影響を及ぼすかを明らかにすること。駆除で生活を乱されると、ネズミの集団は新たな住みかを求めて移動するのではないか、という仮説を検証している。","note":"trees は参照会話では家系図と解釈されていますが、この語を含む転記は教材写真との照合が必要です。自然な訳も、この会話内の解釈に基づきます。","terms":[["head","ここでは動詞：指揮する"],["ear tag","個体識別用の耳標"],["euthanize","安楽死させる"],["disruption","撹乱、安定した状態を乱すこと"],["pest control","害獣・害虫の駆除"],["hypothesis","仮説"],["send A doing","Aを〜する状態に追いやる"],["scurry","小走りで急ぐ、慌ただしく動く"]]},{"page":"未確認","lines":"L11–13","label":"100個近い罠を確認する","en":"With nearly 100 cages to check today, Byers moves hastily to a trap on Block 8. No rat here, but this one did catch a skunk.","literal":"今日確認するべきかごが100個近くあるので、バイヤーズは急いでブロック8の罠へ移動する。ここにはネズミはいないが、この罠は確かにスカンクを捕まえていた。","natural":"この日は100個近くの罠を見て回らなければならず、バイヤーズは足早にブロック8へ向かう。ネズミはいなかったが、代わりにスカンクが捕まっていた。","terms":[["with + 名詞 + to不定詞","〜するべきものがあるので"],["nearly","ほぼ、〜近く"],["hastily","急いで"],["did catch","didによって「捕まえた」を強調する"],["skunk","スカンク"]]},{"page":"未確認","lines":"L14–23","label":"感染リスクは数よりも家族集団に左右される","en":"A significant finding from the project’s original phase, Byers tells me, is that not every rat in V6A carried the same disease. Rat families are generally confined to a single city block, and while one block might be wholly infected with a given bacteria, adjacent blocks were often completely disease free. “Disease risk doesn’t really relate to the number of rats you’re exposed to as much as it does to which family you interact with,” says Robbin Lindsay, a researcher at Canada’s National Microbiology Lab who assisted the Vancouver Rat Project screen for disease. If those family units are scattered, diseases could potentially spread and multiply—something Byers is hoping to figure out through her Ph.D. work.","literal":"バイヤーズが私に語るところによると、プロジェクトの最初の段階で得られた重要な発見は、V6Aのすべてのネズミが同じ病気を保有していたわけではないということだ。ネズミの家族は一般に一つの街区に限定され、ある街区が特定の細菌に完全に感染しているかもしれない一方、隣接する街区にはしばしば全く病気がなかった。「病気の危険性は、さらされるネズミの数には、どの家族と接触するかほどには関係していません」と、バンクーバー・ネズミ研究プロジェクトによる病気の検査を手助けしたカナダ国立微生物学研究所の研究者ロビン・リンゼイは言う。それらの家族単位が分散させられると、病気が広がり、増える可能性がある。これはバイヤーズが博士課程の研究を通して解明したいと考えていることである。","natural":"研究の初期に分かった重要な点は、V6Aのネズミがどれも同じ病原体を持つわけではないということだった。家族ごとの行動範囲はほぼ一つの街区に収まり、ある街区が感染していても、隣の街区は無感染ということがよくある。検査に協力したロビン・リンゼイによれば、感染の危険を左右するのは、接触するネズミの数よりも、どの家族集団のネズミと接触するかだ。群れを散り散りにすると、病気が別の場所へ広がり、増えるかもしれない。バイヤーズはその可能性を研究で確かめようとしている。","terms":[["not every","すべてが〜というわけではない（部分否定）"],["be confined to","〜に限定される"],["a given ...","ある特定の…"],["adjacent","隣接した"],["not A as much as B","AよりもむしろBに強く関係する"],["be exposed to","〜にさらされる"],["screen for disease","病気の有無を検査する"],["scatter","分散させる"],["figure out","解明する"]],"note":"not every は「すべてが〜というわけではない」という部分否定。does は relate を受け、not A as much as B は「AよりもBに強く関係する」。could potentially は可能性を述べており、駆除の影響を断定していない。"},{"page":"未確認","lines":"L24–32","label":"既存の集団を安定したまま維持するという提案","en":"If that’s true, a city’s rat policy should include doing the unthinkable: Intentionally leave them where they are. “It might be better to maintain local rat populations that already have some sort of equilibrium with the people who live there,” says Aplin. Many of the diseases that we share with rats are already part of a human disease cycle established over centuries, he says. Seen this way, rats are irrepressible—“a force of nature, a fact of our lives.” Rather than focusing on killing them, we need to try to keep their populations stable and in place—and that includes managing rat immigrants.","literal":"もしそれが本当なら、都市のネズミ政策には、考えられないことをすることも含まれるべきだ。すなわち、意図的に彼らを今いる場所に残しておくことである。「すでにそこに住む人々と何らかの均衡を持っている地域のネズミ個体群を維持するほうがよいかもしれません」とアプリンは言う。私たちがネズミと共有する病気の多くは、何世紀にもわたって確立された人間の病気の循環の一部に、すでになっていると彼は言う。このように見れば、ネズミは抑え込むことのできないもの、すなわち「自然の力、私たちの生活の現実」である。ネズミを殺すことに集中するよりも、私たちは個体群を安定した状態で今の場所に保とうとする必要があり、それには移住してくるネズミを管理することも含まれる。","natural":"仮説が正しければ、都市は常識に反する方針も考える必要がある。ネズミを、あえて今いる場所にとどめるのだ。アプリンは、地域の住民とすでに一定の均衡を保っているネズミ集団を維持するほうがよいかもしれないと話す。人とネズミが共有する感染症の多くは、何世紀もかけて形成された感染の循環に組み込まれている。ネズミは完全に抑え込めない、都市の生活に根付いた存在なのだ。殺すことだけに力を注ぐより、個体数と生息範囲を安定させ、外から入ってくるネズミの移動も管理する必要がある。","terms":[["the unthinkable","常識では考えられないこと"],["intentionally","意図的に"],["maintain","維持する"],["equilibrium","均衡、安定した釣り合い"],["over centuries","何世紀にもわたって"],["seen this way","このように見れば（受動の分詞構文）"],["irrepressible","抑え込めない"],["in place","その場に"],["rat immigrants","外から移住してくるネズミという擬人化"]],"note":"Seen this way は When rats are seen this way の意味を持つ受動の分詞構文。keep their populations stable and in place は keep＋目的語＋補語。「ネズミの移民」は外から侵入する個体を人間にたとえた表現。"},{"page":"未確認","lines":"L33–42","label":"駆除が外来ネズミのための空間を作る可能性","en":"An established rat society in a neighborhood makes it a much less viable destination for other rats, for example those entering through ports. Exotic rats can be more of a threat than those adapted to the region because each rat community evolves with its own suite of unique pathogens, which it shares with the other vertebrates in its ecosystem. New rats mean new diseases. The big question now, Aplin says, is “What happens when these different pathogens come together?” This is something that I’m just starting to think about now. If the local rat population is suppressed, if you’re actively getting rid of it, then you’re also actively opening up niches for these foreign rats to enter.","literal":"ある地域に定着したネズミ社会は、その地域を、例えば港を通って入るネズミなど、他のネズミにとってずっと定着しにくい目的地にする。外来のネズミはその地域に適応したネズミよりも大きな脅威になりうる。なぜなら各ネズミ集団は独自の病原体の一群とともに進化し、それを生態系内の他の脊椎動物と共有するからだ。新しいネズミは新しい病気を意味する。アプリンによると、今の大きな疑問は「これらの異なる病原体が一緒になると、何が起きるのか」ということである。これは私が今まさに考え始めたことである。もし地域のネズミ個体群が抑制され、あなたが積極的にそれを取り除いているなら、そのときあなたは同時に、これらの外来ネズミが入るための生態的地位を積極的に開いていることになる。","natural":"その土地にネズミの集団が定着していると、港などから入るよそのネズミは住みつきにくくなる。外来のネズミは地域のネズミより危険なこともある。それぞれの集団が、周囲の動物と共有する固有の病原体を持っているため、外から来たネズミが新しい病気を持ち込む可能性があるからだ。異なる病原体が出会ったら何が起きるのか。アプリン自身も、ようやく考え始めた問題だという。そして地元のネズミを駆除すれば、その空いた場所を外来のネズミに提供してしまうことになる。","note":"このブロックの引用符のつながりは、会話内の文ごとの文字起こしをそのまま保持しています。引用範囲は原本の再確認待ちです。","terms":[["established","定着した"],["viable destination","生存・定着に適した場所"],["exotic","外来の"],["more of a threat","より大きな脅威"],["a suite of pathogens","病原体の一群"],["vertebrate","脊椎動物"],["suppress","抑制する"],["get rid of","取り除く"],["open up niches","生物が入り込める余地を作る"]]},{"page":"未確認","lines":"L43–52（会話の区分）","label":"港のネズミにだけ見つかった外来の耳ダニ","en":"In Vancouver, this is a fact of life. “One important thing we do have right over there,” says Byers, motioning with her left hand, “is Canada’s largest shipping port.” Vancouver sits on Vancouver Harbor, which houses the great Port of Vancouver. In one of Himsworth’s earlier studies, she found mites on the ears of rats that live by the port and compared them to rats that take up residence around V6A. Port rats had malformed ears full of a strange breed of mite previously unknown to Canada—“an exotic species that’s found in Asia,” Himsworth says, which happens to be where Vancouver gets the majority of its imports. These foreign ear mites were not found on rats from any other block.","literal":"バンクーバーでは、これは生活の現実である。「すぐ向こうに確かにある重要なものの一つは」とバイヤーズは左手で身振りをしながら言う。「カナダ最大の海運港です」。バンクーバーはバンクーバー湾に位置し、その湾には大きなバンクーバー港がある。ヒムズワースの以前の研究の一つで、彼女は港の近くに住むネズミの耳にダニを発見し、それらをV6A周辺に住みついたネズミと比較した。港のネズミは、カナダでは以前知られていなかった奇妙な種類のダニでいっぱいになった、変形した耳を持っていた。それは「アジアで見つかる外来種」だとヒムズワースは言う。そしてアジアは偶然にも、バンクーバーが輸入品の大部分を得る地域である。これらの外来の耳ダニは、他のどの街区のネズミからも発見されなかった。","natural":"大きな港を持つバンクーバーにとって、外来ネズミの侵入は身近な問題だ。バイヤーズが指さす先には、カナダ最大の貿易港がある。以前、ヒムズワースは港付近のネズミとV6Aのネズミを比較した。港のネズミの耳は、カナダではそれまで確認されていなかった種類のダニに寄生され、変形していたという。そのダニは、バンクーバーの主要な輸入元でもあるアジアに生息する外来種だった。しかも、ほかの街区のネズミからは見つからなかった。","note":"Vancouver gets the majority of its imports から These foreign ear mites ... block. までの続きは、最近の会話にある教材写真で照合済み。港のネズミだけに外来ダニが見られたという事実が、次段落の緩衝作用の仮説につながる。","terms":[["a fact of life","避けられない現実"],["we do have","doはhaveの強調"],["motion","身振りで示す"],["house（動詞）","収容する、〜が存在する"],["mite","ダニ"],["take up residence","住みつく"],["malformed","変形した、正常な形でない"],["exotic species","外来種"],["the majority of","〜の大部分"]]},{"page":"未確認","lines":"L53–56","label":"定着したネズミ集団が緩衝帯になる","en":"“So I think Aplin’s theory has a lot of merit,” Himsworth says. “It seems that the established rat population at the port acts as a buffer.” Himsworth wonders if this is precisely what has kept an otherwise highly contagious mite from spreading throughout V6A.","literal":"「ですから、アプリンの理論には大いに価値があると思います」とヒムズワースは言う。「港に定着したネズミの個体群が、緩衝帯として働いているように思われます」。ヒムズワースは、そうでなければ非常に伝染性の高いダニがV6A全域に広がるのを防いできたものは、まさにこれなのだろうかと考えている。","natural":"ヒムズワースは、アプリンの説には十分な説得力があると考えている。港に定着したネズミの集団が、外来のダニを外へ広げないための防壁になっているように見えるのだ。本来なら感染力の強いダニがV6A全域へ広がるはずなのに、そうなっていないのは、この集団が歯止めをかけているからなのではないか。彼女はそう考えている。","terms":[["have a lot of merit","大いに価値・説得力がある"],["established rat population","すでに定着しているネズミの個体群"],["act as a buffer","緩衝帯・防壁として機能する"],["precisely","まさに、正確に"],["otherwise","そうでなければ"],["contagious","伝染性のある"],["keep A from doing","Aが〜するのを防ぐ"]],"note":"this は、港に定着したネズミ集団が緩衝帯として働くこと。what has kept ... は「〜を防いできたもの」という名詞節。otherwise は、こうした緩衝作用がなければ、という仮定を含む。"},{"page":"未確認","lines":"L57–68","label":"都市開発と鳥への餌やりも撹乱を生む","en":"Disruption, of course, doesn’t come from just ports and pest control. It is part and parcel of modern civilization. Vancouver’s population is growing steadily (by about 30,000 residents each year), bringing housing development, demolition, and more garbage. Even our love of birds can be a problem. Two years ago, for example, rats invaded a playground and community garden in East Vancouver, a bit outside of V6A. Several media sites reported on the visitors, which were evidently drawn in by birdseed dropped by a single individual. The area soon became known as “Rat Park.” The City of Vancouver urged the garden’s coordinator to put up signage asking people to avoid feeding the birds and to pick up their overripe vegetables. An exterminator was hired as well—adding more disruption still.","literal":"撹乱は、もちろん、港と害獣駆除だけから生じるのではない。それは近代文明の不可欠な一部である。バンクーバーの人口は着実に増加しており、毎年約3万人ずつ増えて、住宅開発、取り壊し、そしてより多くのごみをもたらしている。私たちの鳥への愛情さえ問題になりうる。例えば2年前、ネズミはV6Aから少し外れたイースト・バンクーバーの遊び場と共同菜園に侵入した。いくつかのメディアサイトがその訪問者たちについて報じたが、彼らは明らかに、たった1人の人物がまいた鳥の餌に引き寄せられたのだった。その地域は間もなく「ラット・パーク」として知られるようになった。バンクーバー市は菜園の責任者に、鳥に餌をやることを避け、熟しすぎた自分たちの野菜を回収するよう人々に求める看板を設置することを強く促した。害獣駆除業者も雇われ、それがさらに一層の撹乱を加えた。","natural":"ネズミの生活を乱すのは、港からの侵入や駆除だけではない。撹乱は現代の都市生活そのものと切り離せない。バンクーバーでは毎年約3万人ずつ人口が増え、住宅の建設や取り壊しが進み、ごみも増えている。鳥をかわいがる気持ちさえ、問題を招くことがある。2年前、V6Aの少し外側にあるイースト・バンクーバーの遊び場と共同菜園にネズミが入り込んだ。報道によれば、たった1人がまいた鳥の餌がネズミを引き寄せたらしい。やがて「ラット・パーク」と呼ばれるようになったその場所で、市は菜園の責任者に、鳥への餌やりをやめ、熟しすぎた野菜を片付けるよう呼びかける看板の設置を求めた。駆除業者も雇われたが、それはネズミの生活をさらに乱すことにもなった。","terms":[["part and parcel of","〜と切り離せない一部"],["steadily","着実に"],["demolition","取り壊し、解体"],["community garden","共同菜園、市民菜園"],["evidently","明らかに、見たところ"],["be drawn in by","〜に引き寄せられる"],["birdseed","鳥の餌となる種子"],["urge A to do","Aに〜するよう強く促す"],["signage","標識・看板類"],["overripe","熟しすぎた"],["exterminator","害獣・害虫の駆除業者"],["still","ここでは比較を強めて「さらに」"]],"note":"visitors は侵入したネズミを指す婉曲的な表現。which were ... はそのネズミを説明する。adding more disruption still は、駆除業者を雇ったことの結果を付け加える分詞構文で、解決策が新たな撹乱を生む皮肉を示す。"},{"page":"未確認","lines":"L69–83","label":"行政の対策と、見過ごされる貧困地域のリスク","en":"Himsworth hopes the new science will sway Vancouver’s existing policy on rats, which, she stresses, is currently “essentially nonexistent.” This bothers her a lot. “I know that Vancouver Coastal Health essentially has the standpoint that, ‘Well, we don’t see the disease in people so we don’t worry about it,’” she says of the region’s publicly funded healthcare authority. Homeowners with rat infestations can ring 311, Canada’s 411, to report an infestation, but that’s not a preventative response. “Rats are pests, and we don’t spend healthcare dollars to track pests,” said media officer Anna Marie D’Angelo of Vancouver Coastal Health. It was a message echoed by Issues Management Communications Coordinator Jag Sandhu of the City of Vancouver: “The City of Vancouver does not track the rat population.” To Himsworth, this is shortsighted. “They’re not taking the rat disease risk seriously because they haven’t seen it in humans yet—but that’s not where diseases start.” She also believes the issue is, in part, one of social justice. Rats typically affect poor areas, like V6A, that have little political clout.","literal":"ヒムズワースは、新しい科学がバンクーバーの既存のネズミ政策を動かすことを望んでいる。その政策は、彼女が強調するところによれば、現在は「本質的に存在していない」。このことは彼女を大いに悩ませている。「バンクーバー・コースタル・ヘルスは、基本的に『人にその病気が見られないので、心配していない』という立場なのだと私は理解しています」と、彼女はその地域の公費で運営される保健医療当局について言う。ネズミが大量発生している住宅の所有者は、カナダの411に当たる311に電話して発生を報告できるが、それは予防的な対応ではない。「ネズミは害獣であり、私たちは害獣の追跡に医療費を使いません」と、バンクーバー・コースタル・ヘルスの広報担当者アンナ・マリー・ダンジェロは述べた。それは、バンクーバー市の問題対応・広報調整担当者ジャグ・サンドゥーも繰り返したメッセージだった。「バンクーバー市はネズミの個体群を追跡していません」。ヒムズワースには、これは近視眼的である。「人間ではまだ見られていないので、彼らはネズミが媒介する病気のリスクを真剣に受け止めていません。しかし、病気が始まるのはそこではありません」。彼女はまた、この問題は部分的には社会的公正の問題であると考えている。ネズミは通常、V6Aのような、政治的影響力がほとんどない貧しい地域に被害を及ぼす。","natural":"ヒムズワースは、研究の進展によって市のネズミ対策が変わることを期待している。今は、対策と呼べるものが実質的にないに等しいと彼女は強調し、その現状を深く憂慮する。地域の保健医療当局は、人に感染症が確認されていないから心配していない、という姿勢だという。住民はネズミの大量発生を311に通報できるが、発生を未然に防ぐ仕組みにはなっていない。保健医療当局の広報担当者は、害獣であるネズミの追跡には医療予算を使わないと述べ、市の広報担当者も、ネズミの生息状況は追跡していないと説明した。ヒムズワースは、その考え方を目先のことしか見ていないと批判する。人間で確認される前から病気は生まれているのだから、人の患者が出ていないことだけでは安心できないというのだ。さらに、被害が集中するのはV6Aのように政治的な発言力の弱い貧困地域であり、社会的公正にも関わる問題だと考えている。","terms":[["sway","方針・考え方を動かす、影響を及ぼす"],["essentially nonexistent","実質的に存在しない"],["standpoint","立場、見解"],["publicly funded","公費で運営・支援される"],["infestation","害獣・害虫の大量発生、はびこること"],["ring","電話する"],["preventative","予防的な"],["track","追跡・継続把握する"],["echo","同じ意見を繰り返す"],["shortsighted","近視眼的な、先を見通さない"],["take ... seriously","〜を真剣に受け止める"],["social justice","社会的公正"],["political clout","政治的影響力"]],"note":"which は Vancouver’s existing policy on rats を受け、she stresses は挿入句。that’s not where diseases start の where は「病気が生まれる場所・段階」で、人間に患者が出る前の過程を問題にしている。311・411や行政の姿勢は教材本文に記された当時の説明。"},{"page":"未確認","lines":"L84–90","label":"クマネズミと、新たな感染症が生まれる可能性","en":"Back inside one of Byers’s traps in V6A, needle-like nails are lightly scraping on the metal. “It’s a black rat,” Byers tells me—the famed carrier of the Black Death. Byers says she isn’t concerned about bubonic plague, which, in North America, is mainly carried by prairie dogs. But there were 13 rat-driven bubonic plague outbreaks in seven countries between 2009 and 2013. And there are plenty of new diseases cooking.","literal":"V6Aにあるバイヤーズの罠の一つの中に話を戻すと、針のような爪が金属を軽くひっかいている。「クマネズミです」とバイヤーズは私に言う。それは黒死病を運ぶことで有名な動物である。バイヤーズは腺ペストについて心配していないと言う。それは北米では主としてプレーリードッグによって運ばれる。しかし、2009年から2013年の間に、7か国でネズミに起因する腺ペストの集団発生が13件あった。そして、調理されつつある新しい病気がたくさんある。","natural":"再び、V6Aに仕掛けられたバイヤーズの罠の中へと視点が戻る。針のように鋭い爪が、金属をかすかにひっかいている。「クマネズミです」と彼女は言う。黒死病の媒介動物として知られるネズミだ。北米で腺ペストを主に媒介するのはプレーリードッグなので、バイヤーズは腺ペスト自体を心配してはいないという。それでも、2009〜2013年には7か国で、ネズミによる腺ペストの集団発生が13件あった。そして今も、多くの新たな感染症が生まれつつある。","terms":[["needle-like","針のような"],["scrape","ひっかく、こする"],["black rat","クマネズミ"],["famed","有名な"],["carrier","病原体を媒介する動物・保有者"],["the Black Death","黒死病"],["bubonic plague","腺ペスト"],["prairie dog","プレーリードッグ"],["rat-driven","ネズミに起因する"],["outbreak","感染症などの集団発生"],["plenty of","たくさんの"],["cooking","ここでは比喩：生まれつつある、進行中の"]],"note":"冒頭の Back ... で、行政への批判から罠のある取材現場へ戻る。the famed carrier は black rat の同格的説明。最後の cooking は「調理中」の比喩で、新しい感染症が生まれつつあることを表し、既知のペストから未知の病気へ読者の注意を移す。"}];
+const summary="ネズミの駆除は安定した家族集団を分散させ、病原体の拡散や外来ネズミの侵入を招く可能性がある。港に定着した集団が外来ダニの拡散を抑えているという仮説から、ネズミを殺すだけでなく、個体群と生息環境を安定させる視点が提示される。一方、都市開発や鳥への餌やりも撹乱を生み、市と保健医療当局の予防的な対応は不十分だと研究者は批判する。被害が政治的発言力の弱い貧困地域に集中する点では社会的公正の問題でもあり、結末は既知のペストだけでなく、新たに生まれる感染症にも目を向ける。";
+const sourceInfo="全文収録：L1–50は会話「文字起こしと解答メモ整理」の転記、L51–90は最近の会話「英文内容の確認」に添付された教材写真2枚を使用（2026年11月10日確認）。L1–50の写真照合と正確なページ番号は未確認。前半の段落・行の区分は会話の記載に基づく。後半は原本の段落を維持し、分綴を接続。";
+const KEY='session16-triple-viewer-v1';
+const defaults={current:0,fs:16.5,view:'all',hideJp:false,terms:false,focus:false,dark:false,bookmarks:[],notes:{},summaryCollapsed:false};
+let saved={};
+try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}
+const state=Object.assign({},defaults,saved);
+state.notes=state.notes&&typeof state.notes==='object'?state.notes:{};
+state.bookmarks=Array.isArray(state.bookmarks)?state.bookmarks:[];
+if(state.contentRevision!==2){
+  const remap=i=>Number(i)===8?10:Number(i);
+  state.current=remap(state.current||0);
+  state.bookmarks=state.bookmarks.map(remap);
+  state.notes=Object.fromEntries(Object.entries(state.notes).map(([i,v])=>[remap(i),v]));
+  state.contentRevision=2;
+}
+const initialState={...state};
+const $=id=>document.getElementById(id);
+const panes={en:$('en'),literal:$('literal'),natural:$('natural')};
+const counter=$('counter'),progress=$('progress'),jump=$('jump'),search=$('search');
+let noteIndex=0,matched=blocks.map((_,i)=>i);
+let current=Math.max(0,Math.min(blocks.length-1,state.current||0)),locked=-1,syncing=false,fs=state.fs||16.5;
+
+$('summarytext').textContent=summary;
+const sourceEl=document.createElement('div');sourceEl.className='source-info';sourceEl.textContent=sourceInfo;$('summarytext').append(sourceEl);
+
+function makeTerms(arr){
+  const d=document.createElement('div');d.className='terms';
+  arr.forEach(([a,b])=>{
+    const s=document.createElement('span');s.className='term';
+    const strong=document.createElement('b');strong.textContent=a+' ';s.append(strong,document.createTextNode('— '+b));d.appendChild(s);
+  });
+  return d;
+}
+blocks.forEach((b,i)=>{
+  const opt=document.createElement('option');opt.value=i;opt.textContent=`${String(i+1).padStart(2,'0')} · ${b.lines} · ${b.label}`;jump.appendChild(opt);
+  for(const [key,pane] of Object.entries(panes)){
+    const c=document.createElement('section');c.className='card';c.dataset.index=i;c.dataset.n=String(i+1).padStart(2,'0');c.dataset.raw=b[key];
+    const body=document.createElement('div');body.className='body';body.textContent=b[key];c.appendChild(body);
+    const meta=document.createElement('div');meta.className='meta';
+    const p=document.createElement('span');p.textContent=b.lines+(b.page==='未確認'?'':' · p.'+b.page);
+    const l=document.createElement('span');l.textContent=b.label;meta.append(p,l);c.appendChild(meta);
+    if(b.missing)c.classList.add('missing');
+    c.appendChild(makeTerms(b.terms));
+    if(b.note){const note=document.createElement('div');note.className='read-note';note.textContent=b.note;c.appendChild(note)}
+    pane.appendChild(c);
+  }
+});
+const cards={en:[...panes.en.querySelectorAll('.card')],literal:[...panes.literal.querySelectorAll('.card')],natural:[...panes.natural.querySelectorAll('.card')]};
+const allCards=()=>[...cards.en,...cards.literal,...cards.natural];
+
+function persist(){
+  state.current=current;state.fs=fs;state.view=$('view').value;
+  state.hideJp=document.body.classList.contains('hide-jp');
+  state.terms=document.body.classList.contains('show-terms');
+  state.focus=document.body.classList.contains('focus-mode');
+  state.dark=document.documentElement.classList.contains('dark');
+  state.summaryCollapsed=$('summarybox').classList.contains('collapsed');
+  try{localStorage.setItem(KEY,JSON.stringify(state))}catch{toast('このブラウザでは保存できません。メモはコピーして保管してください。')}
+}
+function toast(msg){
+  const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),1100);
+}
+function visiblePaneKeys(){
+  return Object.keys(panes).filter(k=>panes[k].offsetParent!==null);
+}
+function applyBookmarks(){
+  allCards().forEach(c=>c.classList.toggle('bookmarked',state.bookmarks.includes(+c.dataset.index)));
+  $('bookmark').textContent=state.bookmarks.includes(current)?'★ Bookmarked':'☆ Bookmark';
+}
+function mark(i,lock=false,scroll=false){
+  current=Math.max(0,Math.min(blocks.length-1,i));
+  allCards().forEach(c=>c.classList.remove('active'));
+  Object.values(cards).forEach(list=>list[current].classList.add('active'));
+  counter.textContent=`${current+1} / ${blocks.length}`;jump.value=current;
+  progress.style.width=`${((current+1)/blocks.length)*100}%`;
+  if(lock)locked=current;
+  if(scroll){
+    visiblePaneKeys().forEach(k=>cards[k][current].scrollIntoView({block:'center',behavior:'smooth'}));
+  }
+  applyBookmarks();persist();
+}
+Object.entries(cards).forEach(([key,list])=>list.forEach((c,i)=>{
+  c.addEventListener('mouseenter',()=>{
+    if(locked<0){
+      mark(i);
+      visiblePaneKeys().filter(k=>k!==key).forEach(k=>cards[k][i].scrollIntoView({block:'center',behavior:'smooth'}));
+    }
+  });
+  c.addEventListener('click',()=>{
+    if(document.body.classList.contains('hide-jp') && key!=='en'){
+      c.querySelector('.body').style.filter='none';
+      setTimeout(()=>c.querySelector('.body').style.filter='',1600);return;
+    }
+    mark(i,true,true);
+  });
+}));
+
+function sync(sourceKey){
+  if(syncing)return;
+  const a=panes[sourceKey];if(!a.offsetParent)return;syncing=true;
+  const maxA=Math.max(1,a.scrollHeight-a.clientHeight),ratio=a.scrollTop/maxA;
+  visiblePaneKeys().filter(k=>k!==sourceKey).forEach(k=>{
+    const b=panes[k],maxB=Math.max(1,b.scrollHeight-b.clientHeight);b.scrollTop=ratio*maxB;
+  });
+  requestAnimationFrame(()=>syncing=false);
+}
+Object.keys(panes).forEach(k=>panes[k].addEventListener('scroll',()=>sync(k)));
+
+function setView(v){
+  ['view-en','view-en-lit','view-en-nat','view-jp','view-lit','view-nat'].forEach(x=>document.body.classList.remove(x));
+  if(v!=='all')document.body.classList.add('view-'+v);
+  $('view').value=v;persist();
+}
+function setFont(n){
+  fs=Math.max(13,Math.min(24,n));document.documentElement.style.setProperty('--fs',fs+'px');persist();
+}
+function escRe(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+function highlight(card,q){
+  const body=card.querySelector('.body'),raw=card.dataset.raw;
+  if(!q){body.textContent=raw;return 0}
+  const re=new RegExp(escRe(q),'gi');let count=0,last=0,m;body.textContent='';
+  while((m=re.exec(raw))){
+    count++;body.append(document.createTextNode(raw.slice(last,m.index)));
+    const mk=document.createElement('mark');mk.textContent=m[0];body.append(mk);last=m.index+m[0].length;if(!m[0].length)re.lastIndex++;
+  }
+  body.append(document.createTextNode(raw.slice(last)));return count;
+}
+function runSearch(){
+  const q=search.value.trim();matched=[];let counts={en:0,literal:0,natural:0},visible=0;
+  blocks.forEach((b,i)=>{
+    const hay=(b.en+' '+b.literal+' '+b.natural+' '+b.label+' '+b.terms.flat().join(' ')).toLowerCase();
+    const match=!q||hay.includes(q.toLowerCase());
+    Object.keys(cards).forEach(k=>cards[k][i].classList.toggle('hidden-by-search',!match));
+    Object.keys(cards).forEach(k=>counts[k]+=highlight(cards[k][i],q));if(match){visible++;matched.push(i)}jump.options[i].disabled=!match;
+  });
+  $('enHits').textContent=q?counts.en+' hits':'';
+  $('litHits').textContent=q?counts.literal+' hits':'';
+  $('natHits').textContent=q?counts.natural+' hits':'';
+  if(q){$('enHits').textContent=`${visible} / ${blocks.length} 段落 · ${counts.en} hits`;if(matched.length&&!matched.includes(current))mark(matched[0],true,true);else if(!matched.length)toast('該当する段落はありません')}
+  $('prev').disabled=$('next').disabled=!matched.length;
+}
+search.addEventListener('input',runSearch);
+
+function step(dir){const pos=matched.indexOf(current);const next=pos<0?(dir>0?0:matched.length-1):Math.max(0,Math.min(matched.length-1,pos+dir));if(matched.length)mark(matched[next],true,true)}
+$('prev').onclick=()=>step(-1);
+$('next').onclick=()=>step(1);
+$('smaller').onclick=()=>setFont(fs-0.5);
+$('larger').onclick=()=>setFont(fs+0.5);
+jump.onchange=()=>{if(jump.options[jump.selectedIndex].disabled)return;mark(+jump.value,true,true)};
+$('view').onchange=e=>setView(e.target.value);
+$('hideJp').onclick=()=>{document.body.classList.toggle('hide-jp');$('hideJp').classList.toggle('on');persist()};
+$('termsBtn').onclick=()=>{document.body.classList.toggle('show-terms');$('termsBtn').classList.toggle('on');persist()};
+$('focus').onclick=()=>{document.body.classList.toggle('focus-mode');$('focus').classList.toggle('on');persist()};
+$('dark').onclick=()=>{document.documentElement.classList.toggle('dark');$('dark').classList.toggle('on');persist()};
+$('summaryToggle').onclick=()=>{$('summarybox').classList.toggle('collapsed');persist()};
+$('summarybox').onclick=()=>{$('summarybox').classList.toggle('collapsed');persist()};
+$('bookmark').onclick=()=>{
+  const x=state.bookmarks.indexOf(current);if(x>=0)state.bookmarks.splice(x,1);else state.bookmarks.push(current);
+  applyBookmarks();persist();
+};
+async function copyText(t){try{await navigator.clipboard.writeText(t);toast('コピーしました')}catch{const box=document.createElement('textarea');box.value=t;box.style.cssText='position:fixed;left:0;top:0;opacity:0';document.body.append(box);box.select();const ok=document.execCommand('copy');box.remove();toast(ok?'コピーしました':'コピーできませんでした')}}
+function triple(i){return `ENGLISH\n${blocks[i].en}\n\n直訳\n${blocks[i].literal}\n\n意訳\n${blocks[i].natural}`;}
+$('copy').onclick=()=>copyText(triple(current));
+$('copyEn').onclick=()=>copyText(blocks[noteIndex].en);
+$('copyLit').onclick=()=>copyText(blocks[noteIndex].literal);
+$('copyNat').onclick=()=>copyText(blocks[noteIndex].natural);
+$('copyAll').onclick=()=>copyText(triple(noteIndex));
+
+function openNote(){
+  noteIndex=current;
+  $('drawerTitle').textContent=`段落 ${current+1} · ${blocks[current].lines}`;
+  $('drawerMeta').textContent=blocks[current].label;
+  $('noteText').value=state.notes[current]||'';
+  $('drawer').classList.add('open');setTimeout(()=>$('noteText').focus(),30);
+}
+$('note').onclick=openNote;
+$('closeDrawer').onclick=()=>{$('drawer').classList.remove('open')};
+$('noteText').addEventListener('input',e=>{state.notes[noteIndex]=e.target.value;persist()});
+
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea,select')){
+    if(e.key==='Escape'){e.target.blur();$('drawer').classList.remove('open')}return;
+  }
+  if(['ArrowDown','ArrowRight','j','J'].includes(e.key)){e.preventDefault();step(1)}
+  if(['ArrowUp','ArrowLeft','k','K'].includes(e.key)){e.preventDefault();step(-1)}
+  if(e.key==='Escape'){locked=-1;$('drawer').classList.remove('open');mark(current)}
+  if(e.key==='/'){e.preventDefault();search.focus()}
+  if(e.key==='t'||e.key==='T')$('hideJp').click();
+  if(e.key==='g'||e.key==='G')$('termsBtn').click();
+  if(e.key==='b'||e.key==='B')$('bookmark').click();
+  if(e.key==='n'||e.key==='N')openNote();
+  if(e.key==='f'||e.key==='F')$('focus').click();
+  if(e.key==='d'||e.key==='D')$('dark').click();
+});
+
+Object.assign(state,initialState);
+const startup={...initialState};
+setFont(fs);setView(startup.view||'all');
+document.body.classList.toggle('hide-jp',!!startup.hideJp);$('hideJp').classList.toggle('on',!!startup.hideJp);
+document.body.classList.toggle('show-terms',!!startup.terms);$('termsBtn').classList.toggle('on',!!startup.terms);
+document.body.classList.toggle('focus-mode',!!startup.focus);$('focus').classList.toggle('on',!!startup.focus);
+document.documentElement.classList.toggle('dark',!!startup.dark);$('dark').classList.toggle('on',!!startup.dark);
+$('summarybox').classList.toggle('collapsed',!!startup.summaryCollapsed);
+applyBookmarks();mark(current,false,false);
+const resizeHeader=()=>document.documentElement.style.setProperty('--head',Math.ceil(document.querySelector('header').getBoundingClientRect().height)+'px');
+new ResizeObserver(resizeHeader).observe(document.querySelector('header'));resizeHeader();
+setTimeout(()=>mark(current,false,true),80);
+</script>
+</body>
+</html>

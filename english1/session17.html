@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session 17 三段対訳ビューア</title>
+<style>
+:root{
+  --ink:#172033;--muted:#667085;--line:#d8dee8;--en:#fbfcff;--lit:#fffaf2;--nat:#f8fff9;
+  --accent:#7756c6;--accent2:#f1ecff;--lit-accent:#ad6a18;--nat-accent:#237a4b;
+  --head:118px;--fs:16.5px;--panel:#fff;--shadow:0 10px 28px #18223d14;--mark:#ffe48a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#eef1f5;color:var(--ink);font-family:"Segoe UI","Yu Gothic UI",sans-serif}
+body{overflow:hidden}
+header{height:var(--head);display:flex;align-items:center;gap:15px;padding:11px 16px;background:#14213d;color:#fff;border-bottom:4px solid var(--accent);position:relative;z-index:30}
+.session{font-weight:900;letter-spacing:.09em;color:#c4afff;white-space:nowrap}
+.title{min-width:0;flex:1}
+.title h1{font-size:clamp(17px,1.8vw,25px);margin:0 0 3px}
+.title p{margin:0;color:#b9c2d3;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar{display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:65%}
+button,select,input{font:inherit}
+button,.selectlike{border:1px solid #64718a;background:#263552;color:#fff;border-radius:8px;height:33px;font-weight:700;cursor:pointer}
+button{min-width:33px;padding:0 8px}
+button:hover,.selectlike:hover{background:#36496f}
+button.on{background:#7756c6;border-color:#ad99ef}
+select.selectlike{padding:0 8px}
+.search{height:33px;width:min(220px,17vw);border:1px solid #64718a;background:white;color:#172033;border-radius:8px;padding:0 9px;outline:none}
+.counter{min-width:56px;text-align:center;font-variant-numeric:tabular-nums;font-size:12px}
+.progress{position:fixed;top:calc(var(--head) - 4px);left:0;height:4px;background:#bba3ff;z-index:35;transition:width .2s}
+.app{height:calc(100vh - var(--head));display:grid;grid-template-columns:1.1fr 1fr 1fr}
+.pane{overflow:auto;scroll-behavior:smooth;padding:18px clamp(13px,2vw,30px) 82px;font-size:var(--fs);line-height:1.78}
+.pane.en{background:var(--en);border-right:1px solid var(--line);font-family:Georgia,"Times New Roman",serif}
+.pane.literal{background:var(--lit);border-right:1px solid var(--line)}
+.pane.natural{background:var(--nat)}
+.pane-head{position:sticky;top:-18px;z-index:5;margin:-18px -7px 14px;padding:14px 7px 10px;background:inherit;border-bottom:1px solid var(--line);font:800 11px/1 "Segoe UI",sans-serif;letter-spacing:.12em;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.pane.literal .pane-head{color:var(--lit-accent)}
+.pane.natural .pane-head{color:var(--nat-accent)}
+.summarybox{margin:0 0 15px;padding:14px 16px;border:1px solid #d8d0ef;border-radius:12px;background:#f7f4ff;font-family:"Segoe UI","Yu Gothic UI",sans-serif;font-size:13.5px;line-height:1.68}
+.summarybox strong{color:#5f42aa}
+.summarybox.collapsed .sumtext{display:none}
+.card{position:relative;margin:0 0 14px;padding:17px 18px 16px 50px;border:1px solid transparent;border-radius:12px;white-space:pre-wrap;transition:.15s;min-height:92px}
+.card::before{content:attr(data-n);position:absolute;left:12px;top:18px;width:27px;height:25px;border-radius:50%;display:grid;place-items:center;background:#e8edf4;color:#536076;font:800 11px/1 "Segoe UI",sans-serif}
+.card .meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px;font:700 10px/1.3 "Segoe UI",sans-serif;color:#8892a5}
+.card .meta span{padding:3px 6px;border:1px solid var(--line);border-radius:999px;background:#ffffff80}
+.card:hover,.card.active{background:var(--accent2);border-color:#b7a3e7;box-shadow:var(--shadow)}
+.card.active{outline:2px solid var(--accent);outline-offset:-2px}
+.card.bookmarked::before{background:#fff0ad;color:#765308}
+.card.hidden-by-search{display:none}
+.terms{display:none;margin-top:11px;padding-top:10px;border-top:1px dashed #cbd3df;font:12px/1.55 "Segoe UI","Yu Gothic UI",sans-serif;color:#4d596b}
+.show-terms .terms{display:block}
+.term{display:inline-block;margin:2px 5px 2px 0;padding:3px 6px;border-radius:7px;background:#fff;border:1px solid #d9dfe8}
+.term b{color:#38445a}
+mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
+.hide-jp .pane.literal .body,.hide-jp .pane.natural .body{filter:blur(8px);user-select:none}
+.hide-jp .pane.literal .card.active .body,.hide-jp .pane.natural .card.active .body{filter:blur(5px)}
+.focus-mode .card:not(.active){opacity:.22;filter:grayscale(.45)}
+.view-en .app{grid-template-columns:1fr} .view-en .pane.literal,.view-en .pane.natural{display:none}
+.view-en-lit .app{grid-template-columns:1.08fr 1fr} .view-en-lit .pane.natural{display:none}
+.view-en-nat .app{grid-template-columns:1.08fr 1fr} .view-en-nat .pane.literal{display:none}
+.view-jp .app{grid-template-columns:1fr 1fr} .view-jp .pane.en{display:none}
+.view-lit .app{grid-template-columns:1fr} .view-lit .pane.en,.view-lit .pane.natural{display:none}
+.view-nat .app{grid-template-columns:1fr} .view-nat .pane.en,.view-nat .pane.literal{display:none}
+.floating{position:fixed;right:13px;bottom:11px;display:flex;gap:6px;z-index:20}
+.floating button{background:#16223bdd;backdrop-filter:blur(6px);font-size:11px;border-color:#536076}
+.drawer{position:fixed;right:13px;top:calc(var(--head) + 10px);width:min(410px,calc(100vw - 26px));max-height:calc(100vh - var(--head) - 22px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px #11182732;z-index:50;padding:15px;display:none}
+.drawer.open{display:block}
+.drawer h2{margin:0 0 7px;font-size:16px}
+.drawer p{margin:0 0 10px;line-height:1.55;font-size:12px;color:var(--muted)}
+.drawer textarea{width:100%;min-height:170px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px;font:14px/1.55 "Segoe UI","Yu Gothic UI",sans-serif;background:#fff;color:#172033}
+.drawer .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.toast{position:fixed;left:50%;bottom:14px;transform:translateX(-50%) translateY(18px);opacity:0;background:#111827e8;color:#fff;padding:8px 12px;border-radius:9px;font-size:12px;z-index:70;transition:.2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.dark{--ink:#e8edf7;--muted:#aab4c7;--line:#354159;--en:#171d2a;--lit:#211c17;--nat:#17231c;--accent2:#352b52;--panel:#202738;--mark:#675a21}
+.dark body{background:#0f1420}
+.dark .card::before{background:#2b3548;color:#c9d2e4}
+.dark .summarybox{background:#2a2340;border-color:#4d416e}
+.dark .drawer textarea,.dark .search{background:#111827;color:#eef2ff;border-color:#475569}
+.dark .term,.dark .card .meta span{background:#202938}
+@media(max-width:1050px){
+  :root{--head:151px;--fs:15px}
+  header{align-items:flex-start;flex-wrap:wrap;padding:10px 12px}
+  .title{order:1} .toolbar{order:2;max-width:none;width:100%;justify-content:flex-start}
+  .search{width:min(250px,40vw)}
+}
+@media(max-width:760px){
+  :root{--head:183px;--fs:14.5px}
+  .app{grid-template-columns:1fr;grid-template-rows:repeat(3,1fr)}
+  .pane{padding:14px 11px 60px}
+  .pane.en,.pane.literal{border-right:0;border-bottom:2px solid var(--line)}
+  .pane-head{top:-14px;margin:-14px 0 9px}
+  .card{padding:13px 11px 12px 45px;margin-bottom:9px}
+  .card::before{left:9px;top:14px}
+  .floating{display:none}
+  .view-en .app,.view-lit .app,.view-nat .app{grid-template-rows:1fr}
+  .view-en-lit .app,.view-en-nat .app,.view-jp .app{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+  .search{width:41vw}
+}
+
+/* 元のSession15の配色と三段表示を維持 */
+header{height:auto;min-height:118px;flex-wrap:wrap}
+#jump{max-width:220px;width:16vw;min-width:115px}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #c4afff;outline-offset:2px}
+.app{height:calc(100dvh - var(--head))}
+.source-info{margin-top:10px;padding-top:9px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.read-note{margin-top:12px;padding:9px 11px;border-left:3px solid #b68a36;background:#a77a1810;font:12px/1.7 "Segoe UI","Yu Gothic UI",sans-serif;white-space:normal;color:var(--ink)}
+.missing{border:1px dashed #b68a36;background:#a77a1810}
+.status-warning{flex:0 0 100%;font-size:12px;line-height:1.6;background:#fff1ce;color:#513c10;padding:8px 11px;border-radius:7px}
+.pane{overscroll-behavior:contain}
+@media(max-width:1050px){header{min-height:151px}#jump{width:175px}.toolbar{max-width:100%}}
+@media(max-width:760px){header{min-height:183px}#jump{width:42vw}.floating{display:flex;right:6px;bottom:6px;gap:3px}.floating button{font-size:10px;padding:0 6px}.title p{white-space:normal;font-size:11px}.pane-head{line-height:1.4}.card{overflow-wrap:anywhere}}
+@media print{body{overflow:visible}header{position:static}.toolbar,.floating,.drawer,.toast,.progress{display:none!important}.app{display:block;height:auto}.pane{overflow:visible}.card{break-inside:avoid}.hide-jp .body{filter:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="session">SESSION 17</div>
+  <div class="title">
+    <h1>Crossing the Bay of Bengal · Part I</h1>
+    <p>Sunil S. Amrith — 1段落＝1ブロック · 原文／逐語訳／自然な日本語訳</p>
+  </div>
+  <div class="toolbar">
+    <input id="search" type="search" aria-label="英語・日本語・重要語句を検索" class="search" placeholder="検索 / Search  ( / )">
+    <select id="jump" class="selectlike" aria-label="段落ジャンプ"></select>
+    <select id="view" class="selectlike" aria-label="表示モード">
+      <option value="all">3列：英・直・意</option>
+      <option value="en-lit">英＋直訳</option>
+      <option value="en-nat">英＋意訳</option>
+      <option value="jp">直訳＋意訳</option>
+      <option value="en">英語のみ</option>
+      <option value="lit">直訳のみ</option>
+      <option value="nat">意訳のみ</option>
+    </select>
+    <button id="hideJp" title="日本語を隠す">訳</button>
+    <button id="termsBtn" title="重要語句を表示">語句</button>
+    <button id="focus" title="現在段落に集中">Focus</button>
+    <button id="smaller">A−</button>
+    <button id="larger">A＋</button>
+    <button id="dark">☾</button>
+    <button id="prev">↑</button>
+    <span class="counter" id="counter">1 / 11</span>
+    <button id="next">↓</button>
+  </div>
+</header>
+<div class="progress" id="progress"></div>
+
+<main class="app">
+  <div class="pane en" id="en">
+    <div class="pane-head"><span>ENGLISH · ORIGINAL</span><span id="enHits" aria-live="polite"></span></div>
+    <div class="summarybox" id="summarybox"><strong>SUMMARY</strong><div class="sumtext" id="summarytext"></div></div>
+  </div>
+  <div class="pane literal" id="literal">
+    <div class="pane-head"><span>直訳 · STRUCTURE-FIRST</span><span id="litHits"></span></div>
+  </div>
+  <div class="pane natural" id="natural">
+    <div class="pane-head"><span>意訳 · MEANING-FIRST</span><span id="natHits"></span></div>
+  </div>
+</main>
+
+<div class="floating">
+  <button id="bookmark">☆ Bookmark</button>
+  <button id="copy">Copy 3</button>
+  <button id="note">Note</button>
+  <button id="summaryToggle">Summary</button>
+</div>
+
+<div class="drawer" id="drawer">
+  <h2 id="drawerTitle">メモ</h2>
+  <p id="drawerMeta"></p>
+  <textarea id="noteText" placeholder="この段落についてのメモ。ブラウザ内に自動保存されます。"></textarea>
+  <div class="row">
+    <button id="copyEn">Copy EN</button>
+    <button id="copyLit">Copy 直訳</button>
+    <button id="copyNat">Copy 意訳</button>
+    <button id="copyAll">Copy 3種</button>
+    <button id="closeDrawer">Close</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const blocks=[{"page":"136","lines":"L1–19","label":"陸の変化から、海そのものの変化へ","en":"The changes in the world’s oceans are remarkably recent. “With an ever-accelerating tide of human impact,” a leading marine biologist writes, “the oceans have changed more in the last thirty years than in all of human history before.” And so, in our biography of the Bay of Bengal, the changes in the sea come last. The ease of crossing the water transformed the landscape. The force of capital turned virgin forests into plantations. The demands of commerce implanted cities along the banks of rivers and at their mouths, where they met the seas. Throughout all these changes, “the oceans themselves seemed changeless,” and “contrasted with the world above water, where landscapes underwent dramatic alterations.” This contrast holds no more. Starting around the 1950s, and with accelerating effects since the 1970s, a concatenation of changes has altered the sea’s substance: human population has grown rapidly; large coastal cities have burgeoned, and continue to expand; the “fishing frontier” extends farther into the deep sea, propelled by commercial trawling; the parts of the world once under European colonial rule have undergone substantial if uneven industrialization; agricultural production has intensified, buoyed by massive pesticide use; and the region’s appetite for fossil fuels has become insatiable.","literal":"世界の海洋における変化は、驚くほど最近のものである。「ますます加速する人間の影響の潮流とともに」と、ある第一人者の海洋生物学者は書く。「海洋は、これまでの人類史全体におけるよりも、過去30年間で大きく変化した」。したがって、私たちのベンガル湾の伝記では、海の変化は最後に来る。海を渡ることの容易さが、陸の景観を変えた。資本の力が原生林をプランテーションに変えた。商業の需要が、川岸と、川が海に出会うその河口に、都市を植え付けた。こうしたすべての変化を通して、「海洋そのものは変わらないように見え」、「景観が劇的な変容を経験した水上の世界と対照をなしていた」。この対比は、もはや成り立たない。1950年代ごろに始まり、1970年代以降には影響を加速させながら、一連の変化が海そのものを変えてきた。人間の人口は急速に増加した。大きな沿岸都市は急成長し、拡大を続けている。「漁業のフロンティア」は商業的なトロール漁業に推し進められて、さらに深海へと延びている。かつてヨーロッパの植民地支配下にあった世界の諸地域は、不均等ではあるにせよ大幅な工業化を経験した。農業生産は大量の農薬使用に支えられて集約化した。そして、この地域の化石燃料への欲求は、満たすことができないほどになった。","natural":"世界の海が大きく変わり始めたのは、実はごく最近のことだ。ある著名な海洋生物学者によれば、人間が海に及ぼす影響は加速し、海は過去30年の間に、それ以前の人類史全体よりも大きく変化したという。そのため、このベンガル湾の歴史でも、海自体の変化を扱うのは最後になる。かつては海を容易に行き来できることが陸上の環境を変えていた。資本は原生林を農園へと変え、交易の発展は川沿いや河口に都市を生み出した。それでも、激変する陸とは対照的に、海そのものは変わらないように見えた。だが、今は違う。1950年代ごろから複数の変化が重なり、1970年代以降はその影響が加速して、海自体が変質してきた。人口と沿岸都市の急拡大、沖合・深海へと進む商業漁業、旧植民地での工業化、大量の農薬に支えられた集約農業、そして膨らみ続ける化石燃料の需要が、その変化を引き起こしている。","terms":[["ever-accelerating","ますます加速する"],["virgin forest","原生林"],["plantation","大規模農園"],["hold no more","もはや成り立たない"],["a concatenation of changes","連鎖する一連の変化"],["substance","ここでは海そのもの・その性質"],["burgeon","急速に発展・増大する"],["trawling","トロール漁業、底引き網漁"],["substantial if uneven","不均等ではあるが大幅な（if は譲歩）"],["intensify","集約化する、強化する"],["buoyed by","〜に支えられて"],["insatiable","満たすことのできない"]],"note":"This contrast は、激変した陸の景観と、変わらないように見えた海との対比を指す。holds は「成り立つ」、no more は「もはや〜ない」。第9文のコロン以降は、a concatenation of changes の具体例をセミコロンで列挙している。"},{"page":"136–138","lines":"L20–45","label":"帝国と国民国家が変えた人の移動と経済","en":"The forces that now choke the life from the Bay of Bengal began as unintended, initially unseen consequences of the political choices that states and peoples made as a new world arose from the ruins of war and the remnants of empires. This is only partly a story of blindness to consequence. The policies that finally “extended human dominion to the sea”—projects to increase food security, schemes of industrialization to provide employment—represented an advance in human freedom around the Bay of Bengal. They emerged in reaction to an imperial world where lives were cheap; where labor was uprooted for the profit of European planters; where migrant workers were denied their humanity; where colonial policies left millions to starve. The Bay’s imperial world of specialization and migration had permitted its own margins of freedom: the freedom to move in search of fortune, or at least to avert family catastrophe. When these margins narrowed, in the 1930s and 1940s, it was at least partly in order to secure a different—and, many felt, greater—freedom: the political rights of citizens of free nations, and the rights to livelihood that these new nations would provide. Starting in the mid-twentieth century, the Bay’s political and economic fragmentation had important consequences, which are clear only in retrospect. As the avenues of emigration and interregional trade were closed off by new national borders, the growing populations of the region could be sustained only by a massive intensification of domestic agricultural production. As they turned away from oceanic commerce, coastal cities grew rapidly: port cities turned inland and became industrial centers. The final enclosure of the Bay—the treatment of the sea as an extension of national territory—facilitated its overexploitation as a resource.","literal":"今やベンガル湾から生命を締め出している諸力は、戦争の廃墟と帝国の残存物から新しい世界が生まれたときに、国家と人々が行った政治的選択の、意図せず、当初は見えなかった結果として始まった。これは、結果に対して盲目であったというだけの物語ではない。ついに「人間の支配を海にまで広げた」政策、すなわち食料安全保障を高める計画や、雇用を提供するための工業化計画は、ベンガル湾周辺の人間の自由の前進を表していた。それらは、人の命が安く扱われ、ヨーロッパ人の農園主の利益のために労働者が故郷から引き離され、移住労働者が人間性を否定され、植民地政策が何百万人もの人々を飢えさせた帝国の世界への反動として現れた。専門化と移住からなる湾の帝国の世界は、それ自身の自由の余地を認めていた。それは、財産を求めて、少なくとも家族の破局を避けるために、移動する自由である。1930年代と1940年代にこの余地が狭くなったとき、それは少なくとも一部には、別の、そして多くの人がより大きいと感じた自由を確保するためだった。すなわち、自由な国家の市民としての政治的権利と、これらの新国家が提供するはずの生計への権利である。20世紀半ばに始まった湾の政治的・経済的な分断は、振り返って初めて明らかになる重大な結果をもたらした。国外移住と地域間貿易への道が新たな国境によって閉ざされると、この地域の増大する人口は、国内農業生産を大幅に集約化することによってのみ支えることができた。沿岸都市は海洋交易から離れるにつれて急速に成長した。港湾都市は内陸へと目を向け、工業中心地になった。湾の最後の囲い込み、すなわち海を国土の延長として扱うことが、資源としての海の過剰利用を促進した。","natural":"現在ベンガル湾の生命を脅かしているものは、戦争と帝国支配の終わりから新しい世界が生まれる中で、国家や人々が選んだ政策の、当初は予想も認識もされなかった結果だった。ただし、単に先を見通せなかったという話ではない。食料の安定供給や工業化による雇用創出を目指し、人間の支配を海にまで広げた政策は、湾岸の人々の自由を広げるものでもあった。こうした政策の背景には、人命を軽視し、農園主の利益のために労働者を移住させ、移民労働者を人間として扱わず、何百万人もの餓死者を出した植民地支配への反発があった。一方、植民地時代にも、豊かさを求めたり家族の危機を逃れたりするために移動できる自由は、ある程度残されていた。1930〜40年代にその自由が狭まったのは、独立国家の市民としての政治的権利や、生計を保障される権利という、別の、より大きいと考えられた自由を得るためでもあった。しかし20世紀半ば以降、国境による政治・経済の分断は大きな影響をもたらした。移住や地域間交易が難しくなると、増える人口を養うために国内農業を大幅に集約化する必要が生じた。港湾都市も海の交易から国内の工業へと軸足を移して成長した。そして、海を国家の領域の延長として区切って扱うことが、海洋資源の過剰な利用を進めたのである。","terms":[["choke the life from","〜の生命を締め出す、衰弱させる"],["unintended consequences","意図しなかった結果"],["remnants of empires","帝国の残存物"],["dominion","支配、支配権"],["food security","食料安全保障、食料の安定確保"],["uproot","故郷・生活の基盤から引き離す"],["specialization","専門化、ここでは特定産品への生産の特化"],["margins of freedom","自由の余地"],["avert","避ける、防ぐ"],["livelihood","生計、暮らしの手段"],["in retrospect","振り返ってみると"],["close off","閉ざす、遮断する"],["enclosure","囲い込み"],["overexploitation","過剰利用、乱獲・乱開発"]],"note":"This is only partly a story of blindness to consequence. は、結果を見通せなかったという説明だけでは不十分だ、という意味。政策は植民地支配からの自由を広げた一方、移住・交易の経路を閉じ、国内生産と海洋資源利用の集約化を促した。"},{"page":"138","lines":"L46–57","label":"マングローブの消失と沿岸の防御力の低下","en":"The coastline is shifting. Deforestation and aquaculture encroach on the mangrove swamps that provide coastal zones with their best natural flood defenses. And aquaculture expands as deep-sea fishing provides diminishing returns. “Mangroves,” Rachel Carson wrote, “are among the far migrants of the plant kingdom, forever sending their young stages off to establish pioneer colonies.” Since her lyrical account, penned in 1955, her beloved mangroves have almost everywhere been pushed back, their “colonies” disbanded. Mangroves excelled in “creating land where once there was sea.” As they give way to industrial (and often state-subsidized) shrimp farms, the land recedes with the loss of the “complex matrix of roots and stems” that “traps and binds sediment and stabilizes the coast.”","literal":"海岸線は移動している。森林伐採と水産養殖は、沿岸地域にとって最良の自然の洪水防御を提供するマングローブの湿地に侵入している。そして、外洋漁業が次第に小さくなる収益をもたらすにつれて、水産養殖は拡大する。「マングローブは」とレイチェル・カーソンは書いた。「植物界の遠距離移住者の仲間であり、開拓者のコロニーを築くために、絶えず自分たちの若い生育段階のものを送り出している」。1955年の彼女の叙情的な記述以来、彼女が愛したマングローブは、ほとんどあらゆる場所で後退させられ、その「コロニー」は解散させられてきた。マングローブは「かつて海であったところに陸を作る」ことに優れていた。だが、それらが工業的な、しばしば国家の補助を受けるエビ養殖場に道を譲るにつれて、「堆積物を捕らえて固定し、海岸を安定させる」「複雑な根と茎の網目」が失われ、陸地は後退する。","natural":"海岸線は姿を変えつつある。沿岸を洪水から守る自然の防壁であるマングローブ林が、伐採や養殖場の開発によって侵食されている。外洋漁業で得られる利益が減るほど、養殖はさらに広がる。レイチェル・カーソンは1955年、マングローブを、若い個体を遠くへ送り出して新天地に群落を築く「植物界の移住者」と詩的に描いた。しかし、それ以来、彼女が愛したマングローブは各地で追いやられ、群落は失われてきた。マングローブの複雑に絡む根や茎は土砂を捕らえて固定し、海岸を安定させ、ときには海だった場所に新たな陸地を作ってきた。その森が大規模なエビ養殖場へと変えられ、政府の補助金が開発を後押しすることさえある。根や茎の網目という防御を失った海岸では、今度は陸地が削られていく。","terms":[["aquaculture","水産養殖"],["encroach on","〜に侵入する、侵食する"],["mangrove swamp","マングローブの湿地"],["diminishing returns","次第に減少する収益・成果"],["young stages","若い生育段階の個体・繁殖体"],["pioneer colony","新天地を開拓する群落"],["lyrical","叙情的な"],["disband","解散させる"],["give way to","〜に取って代わられる"],["state-subsidized","国の補助金を受けた"],["recede","後退する"],["matrix of roots and stems","根と茎の網目状の構造"],["trap and bind sediment","土砂を捕らえて固定する"]],"note":"as は「〜につれて」、give way to は「〜に取って代わられる」。根や茎が土砂を捕らえて固定する機能を失うことで、海岸が後退する。マングローブの colonies を人間の植民地になぞらえた比喩にも注目。"},{"page":"138–140","lines":"L58–76","label":"ダムが遮る土砂と、沈みゆくデルタ","en":"The coasts are destabilized, so much so that many of the world’s river deltas are sinking. On one account, the deltas—which host some of the largest concentrations of population on earth—are sinking at up to four times the rate at which sea levels are rising. In the past decade, more than 10 million people each year have experienced severe flooding due to storm surges alone: most of them live along Asia’s littorals. As a result of human intervention, much less sediment reaches the river deltas than would occur naturally—sediment that is essential for the deltas to sustain and replenish themselves. The “predominant” role is played by projects of hydraulic engineering, epitomized by large dams, which proliferated in the second half of the twentieth century. The trapping of sediment by dams far outstrips the effects of land clearance and construction in displacing it; rather, bypassing “an important natural filtration system,” storm surges and floods carry displaced sediment directly to the sea, while large quantities remain trapped in reservoirs. The attempt to “engineer away” the smaller tributaries that feed the great rivers breaks the “critical links between channels and their flood-plains” and “starves delta systems of necessary sediments.” Reservoirs have increased by 600 or 700 percent the volume of water held by rivers.","literal":"海岸は不安定にされており、その程度は、世界の多くの河川デルタが沈下しているほどである。ある報告によれば、地球上でも有数の人口集中地を抱えるデルタは、海面が上昇する速さの最大4倍の速さで沈下している。過去10年間、高潮だけによって、毎年1,000万人を超える人々が深刻な洪水を経験してきた。そのほとんどはアジアの沿岸部に住んでいる。人間の介入の結果、自然に起こる場合と比べて、はるかに少ない土砂しか河川デルタに到達しない。その土砂は、デルタが自らを維持し、補充するために不可欠なものである。「最も支配的な」役割を果たすのは、20世紀後半に急増した大型ダムに代表される水利工学の事業である。土砂を移動させることに関する土地の伐採・開墾と建設の影響を、ダムによる土砂の捕捉ははるかに上回る。むしろ、高潮や洪水は「重要な自然の濾過システム」を迂回し、移動させられた土砂を海へ直接運ぶ一方、大量の土砂が貯水池に捕らわれたままになっている。大河に水を供給する小さな支流を「工学によって取り除く」試みは、「水路とその氾濫原との決定的に重要なつながり」を断ち切り、「デルタのシステムから必要な堆積物を奪う」。貯水池は、河川に保持される水の量を600％または700％増加させた。","natural":"海岸は不安定になり、世界各地のデルタが沈み始めている。ある報告では、人口が密集するデルタの沈下速度は、海面上昇の最大4倍に達する。本文が扱う時点までの10年間には、高潮だけでも毎年1,000万人以上が深刻な洪水に遭い、その多くがアジアの沿岸住民だった。大きな原因は、デルタを作り直し、維持するための土砂が、人間の介入で届きにくくなったことにある。特に影響が大きいのが、20世紀後半に急増した大型ダムなどの水利事業だ。開墾や建設で土砂が動く影響以上に、ダムが土砂をせき止める影響が大きい。大量の土砂が貯水池にたまる一方、高潮や洪水で運ばれる土砂は、本来自然が持つ濾過の仕組みを通らず、直接海へ流れ出してしまう。さらに、大河へ注ぐ小さな支流を改変してなくすと、水路と氾濫原のつながりが切れ、デルタに必要な土砂が供給されなくなる。貯水池の建設で河川に蓄えられる水量は600〜700％も増加したが、その過程で土砂の流れは大きく変わったのである。","terms":[["destabilize","不安定にする"],["so much so that","その程度が大きく、その結果〜するほど"],["river delta","河川の三角州・デルタ"],["at up to four times the rate","最大4倍の速さで"],["storm surge","高潮"],["littoral","沿岸部"],["sediment","堆積物、土砂"],["replenish","補充する、回復させる"],["hydraulic engineering","水利工学"],["epitomized by","〜に代表される"],["proliferate","急増する"],["outstrip","はるかに上回る"],["bypass","迂回する"],["tributary","支流"],["flood-plain","氾濫原"],["starve A of B","Aから必要なBを奪う"]],"note":"so much so that は、前述の不安定さが「デルタが沈むほど」であることを表す。in displacing it の it は sediment。600 or 700 percent は原文の数値で、600〜700％「増加」なら元の約7〜8倍になる。 that feed the great rivers は smaller tributaries を修飾し、feed は「水を供給する」。"},{"page":"140","lines":"L77–93","label":"取水と資源採掘、海面上昇を歴史に位置づける","en":"Governments around Asia retain their enthusiasm for dam building, despite their many social and environmental costs: since so many of Asia’s great rivers flow out into the Bay of Bengal, it will be particularly badly affected. So much water is diverted for irrigation that the Kaveri River, among others, is reduced to a trickle by the time it reaches the Bay through some of its tributaries. A further cause of the subsidence of deltas is the sediment compaction caused by the overextraction of groundwater for urban and agricultural use—a perennial problem in India and China—and, increasingly, the effects of removing oil and natural gas from the delta’s underlying sediments. The sinking deltas of the Bay of Bengal, particularly around its northern basin, are among the most densely populated on earth—and there offshore drilling is only just beginning. Half a billion people face a greatly increased risk of flooding in the coming decades. Geologists write that the current state of the world’s river deltas “represents the legacy of natural history, human decisions, and ongoing sea-level rise”; to account fully for this process is the task of a new sort of environmental history, one that we are only beginning to write.","literal":"アジア各地の政府は、ダム建設に伴う多くの社会的・環境的な代償にもかかわらず、その建設への熱意を保っている。アジアの多くの大河がベンガル湾へ流れ出るので、湾はとりわけ大きな悪影響を受けるだろう。非常に多くの水が灌漑のために向け変えられるため、カーヴェーリ川などは、その支流の一部を通じて湾に達するまでには、細い流れにまで減らされている。デルタの沈下のさらなる原因は、都市用・農業用の地下水の過剰採取によって引き起こされる堆積物の圧密であり、これはインドと中国で長年の問題である。そして、デルタの下にある堆積層から石油と天然ガスを取り出す影響も、次第に大きくなっている。ベンガル湾の沈みゆくデルタ、とりわけ湾の北部のものは、地球上でも特に人口密度が高い地域である。そしてそこでは、沖合掘削がようやく始まったばかりである。5億人の人々が、今後数十年間に大幅に増大する洪水の危険に直面している。地質学者たちは、世界の河川デルタの現状は「自然史、人間の決定、そして進行中の海面上昇が残した遺産を表している」と書いている。この過程を十分に説明することは、私たちがようやく書き始めている、新しい種類の環境史の課題である。","natural":"それでもアジアの政府は、社会や環境への負担が大きいダム建設を進めようとしている。多くの大河が流れ込むベンガル湾は、その影響を特に強く受ける。灌漑のために水が大量に取られ、カーヴェーリ川などでは、支流を経て湾に着くころにはごくわずかな流れしか残らない。都市や農業向けに地下水をくみ上げすぎると、地中の堆積層が圧縮され、デルタの沈下が進む。これはインドや中国で長く続く問題であり、石油・天然ガスの採掘も、ますます沈下を招く要因になっている。湾の北部など、沈下が進むデルタには世界有数の密度で人々が暮らすが、沖合の資源掘削はまだ始まったばかりだ。今後数十年には、5億人の洪水リスクが大幅に高まるという。地質学者が指摘するように、現在のデルタの姿には、自然の歴史、人間が下した決定、そして進行中の海面上昇の影響が積み重なっている。この過程の全体を解き明かすことが、私たちがようやく書き始めた新しい環境史の役割なのである。","terms":[["retain one’s enthusiasm for","〜への熱意を保つ"],["divert water for irrigation","灌漑用に水を振り向ける"],["be reduced to a trickle","ごく細い流れにまで減る"],["subsidence","地盤沈下"],["sediment compaction","堆積物の圧密"],["overextraction","過剰な採取・くみ上げ"],["perennial problem","長年続く問題"],["underlying sediments","下にある堆積層"],["offshore drilling","沖合での掘削"],["half a billion","5億"],["legacy","歴史が残した遺産・影響"],["account fully for","〜を十分に説明する"]],"note":"最終文の one は a new sort of environmental history を指し、account for は「〜を説明する」。洪水リスクを海面上昇だけで捉えず、ダム建設・取水・地下資源利用など、人間の歴史的な選択と結び付けるのが結論。数値や将来予測は原著が扱う時点の記述。"}];
+const summary="ベンガル湾の環境変化は、海だけに由来するものではない。植民地支配と独立後の国家政策が人や物の移動を変え、農業・工業の拡大を促した。その後、マングローブの破壊、養殖、ダムによる土砂の遮断、地下水の過剰採取などが沿岸の防御力を弱め、デルタの沈下と洪水リスクを高めている。本文は、現在の海面上昇を理解するためにも、この人間と環境の歴史をたどる必要があると論じる。";
+const sourceInfo="教材写真 p.136・138・140 の本文を再照合し、会話「Session17解説」の訂正内容を確認（2026年11月10日）。改行による分綴をつなぎ、原本の5段落を維持。欄外注釈・写真キャプションは本文に含めない。";
+const KEY='session17-triple-viewer-v1';
+const defaults={current:0,fs:16.5,view:'all',hideJp:false,terms:false,focus:false,dark:false,bookmarks:[],notes:{},summaryCollapsed:false};
+let saved={};
+try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}
+const state=Object.assign({},defaults,saved);
+state.notes=state.notes&&typeof state.notes==='object'?state.notes:{};
+state.bookmarks=Array.isArray(state.bookmarks)?state.bookmarks:[];
+const initialState={...state};
+const $=id=>document.getElementById(id);
+const panes={en:$('en'),literal:$('literal'),natural:$('natural')};
+const counter=$('counter'),progress=$('progress'),jump=$('jump'),search=$('search');
+let noteIndex=0,matched=blocks.map((_,i)=>i);
+let current=Math.max(0,Math.min(blocks.length-1,state.current||0)),locked=-1,syncing=false,fs=state.fs||16.5;
+
+$('summarytext').textContent=summary;
+const sourceEl=document.createElement('div');sourceEl.className='source-info';sourceEl.textContent=sourceInfo;$('summarytext').append(sourceEl);
+
+function makeTerms(arr){
+  const d=document.createElement('div');d.className='terms';
+  arr.forEach(([a,b])=>{
+    const s=document.createElement('span');s.className='term';
+    const strong=document.createElement('b');strong.textContent=a+' ';s.append(strong,document.createTextNode('— '+b));d.appendChild(s);
+  });
+  return d;
+}
+blocks.forEach((b,i)=>{
+  const opt=document.createElement('option');opt.value=i;opt.textContent=`${String(i+1).padStart(2,'0')} · ${b.lines} · ${b.label}`;jump.appendChild(opt);
+  for(const [key,pane] of Object.entries(panes)){
+    const c=document.createElement('section');c.className='card';c.dataset.index=i;c.dataset.n=String(i+1).padStart(2,'0');c.dataset.raw=b[key];
+    const body=document.createElement('div');body.className='body';body.textContent=b[key];c.appendChild(body);
+    const meta=document.createElement('div');meta.className='meta';
+    const p=document.createElement('span');p.textContent=b.lines+(b.page==='未確認'?'':' · p.'+b.page);
+    const l=document.createElement('span');l.textContent=b.label;meta.append(p,l);c.appendChild(meta);
+    if(b.missing)c.classList.add('missing');
+    c.appendChild(makeTerms(b.terms));
+    if(b.note){const note=document.createElement('div');note.className='read-note';note.textContent=b.note;c.appendChild(note)}
+    pane.appendChild(c);
+  }
+});
+const cards={en:[...panes.en.querySelectorAll('.card')],literal:[...panes.literal.querySelectorAll('.card')],natural:[...panes.natural.querySelectorAll('.card')]};
+const allCards=()=>[...cards.en,...cards.literal,...cards.natural];
+
+function persist(){
+  state.current=current;state.fs=fs;state.view=$('view').value;
+  state.hideJp=document.body.classList.contains('hide-jp');
+  state.terms=document.body.classList.contains('show-terms');
+  state.focus=document.body.classList.contains('focus-mode');
+  state.dark=document.documentElement.classList.contains('dark');
+  state.summaryCollapsed=$('summarybox').classList.contains('collapsed');
+  try{localStorage.setItem(KEY,JSON.stringify(state))}catch{toast('このブラウザでは保存できません。メモはコピーして保管してください。')}
+}
+function toast(msg){
+  const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),1100);
+}
+function visiblePaneKeys(){
+  return Object.keys(panes).filter(k=>panes[k].offsetParent!==null);
+}
+function applyBookmarks(){
+  allCards().forEach(c=>c.classList.toggle('bookmarked',state.bookmarks.includes(+c.dataset.index)));
+  $('bookmark').textContent=state.bookmarks.includes(current)?'★ Bookmarked':'☆ Bookmark';
+}
+function mark(i,lock=false,scroll=false){
+  current=Math.max(0,Math.min(blocks.length-1,i));
+  allCards().forEach(c=>c.classList.remove('active'));
+  Object.values(cards).forEach(list=>list[current].classList.add('active'));
+  counter.textContent=`${current+1} / ${blocks.length}`;jump.value=current;
+  progress.style.width=`${((current+1)/blocks.length)*100}%`;
+  if(lock)locked=current;
+  if(scroll){
+    visiblePaneKeys().forEach(k=>cards[k][current].scrollIntoView({block:'center',behavior:'smooth'}));
+  }
+  applyBookmarks();persist();
+}
+Object.entries(cards).forEach(([key,list])=>list.forEach((c,i)=>{
+  c.addEventListener('mouseenter',()=>{
+    if(locked<0){
+      mark(i);
+      visiblePaneKeys().filter(k=>k!==key).forEach(k=>cards[k][i].scrollIntoView({block:'center',behavior:'smooth'}));
+    }
+  });
+  c.addEventListener('click',()=>{
+    if(document.body.classList.contains('hide-jp') && key!=='en'){
+      c.querySelector('.body').style.filter='none';
+      setTimeout(()=>c.querySelector('.body').style.filter='',1600);return;
+    }
+    mark(i,true,true);
+  });
+}));
+
+function sync(sourceKey){
+  if(syncing)return;
+  const a=panes[sourceKey];if(!a.offsetParent)return;syncing=true;
+  const maxA=Math.max(1,a.scrollHeight-a.clientHeight),ratio=a.scrollTop/maxA;
+  visiblePaneKeys().filter(k=>k!==sourceKey).forEach(k=>{
+    const b=panes[k],maxB=Math.max(1,b.scrollHeight-b.clientHeight);b.scrollTop=ratio*maxB;
+  });
+  requestAnimationFrame(()=>syncing=false);
+}
+Object.keys(panes).forEach(k=>panes[k].addEventListener('scroll',()=>sync(k)));
+
+function setView(v){
+  ['view-en','view-en-lit','view-en-nat','view-jp','view-lit','view-nat'].forEach(x=>document.body.classList.remove(x));
+  if(v!=='all')document.body.classList.add('view-'+v);
+  $('view').value=v;persist();
+}
+function setFont(n){
+  fs=Math.max(13,Math.min(24,n));document.documentElement.style.setProperty('--fs',fs+'px');persist();
+}
+function escRe(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+function highlight(card,q){
+  const body=card.querySelector('.body'),raw=card.dataset.raw;
+  if(!q){body.textContent=raw;return 0}
+  const re=new RegExp(escRe(q),'gi');let count=0,last=0,m;body.textContent='';
+  while((m=re.exec(raw))){
+    count++;body.append(document.createTextNode(raw.slice(last,m.index)));
+    const mk=document.createElement('mark');mk.textContent=m[0];body.append(mk);last=m.index+m[0].length;if(!m[0].length)re.lastIndex++;
+  }
+  body.append(document.createTextNode(raw.slice(last)));return count;
+}
+function runSearch(){
+  const q=search.value.trim();matched=[];let counts={en:0,literal:0,natural:0},visible=0;
+  blocks.forEach((b,i)=>{
+    const hay=(b.en+' '+b.literal+' '+b.natural+' '+b.label+' '+b.terms.flat().join(' ')).toLowerCase();
+    const match=!q||hay.includes(q.toLowerCase());
+    Object.keys(cards).forEach(k=>cards[k][i].classList.toggle('hidden-by-search',!match));
+    Object.keys(cards).forEach(k=>counts[k]+=highlight(cards[k][i],q));if(match){visible++;matched.push(i)}jump.options[i].disabled=!match;
+  });
+  $('enHits').textContent=q?counts.en+' hits':'';
+  $('litHits').textContent=q?counts.literal+' hits':'';
+  $('natHits').textContent=q?counts.natural+' hits':'';
+  if(q){$('enHits').textContent=`${visible} / ${blocks.length} 段落 · ${counts.en} hits`;if(matched.length&&!matched.includes(current))mark(matched[0],true,true);else if(!matched.length)toast('該当する段落はありません')}
+  $('prev').disabled=$('next').disabled=!matched.length;
+}
+search.addEventListener('input',runSearch);
+
+function step(dir){const pos=matched.indexOf(current);const next=pos<0?(dir>0?0:matched.length-1):Math.max(0,Math.min(matched.length-1,pos+dir));if(matched.length)mark(matched[next],true,true)}
+$('prev').onclick=()=>step(-1);
+$('next').onclick=()=>step(1);
+$('smaller').onclick=()=>setFont(fs-0.5);
+$('larger').onclick=()=>setFont(fs+0.5);
+jump.onchange=()=>{if(jump.options[jump.selectedIndex].disabled)return;mark(+jump.value,true,true)};
+$('view').onchange=e=>setView(e.target.value);
+$('hideJp').onclick=()=>{document.body.classList.toggle('hide-jp');$('hideJp').classList.toggle('on');persist()};
+$('termsBtn').onclick=()=>{document.body.classList.toggle('show-terms');$('termsBtn').classList.toggle('on');persist()};
+$('focus').onclick=()=>{document.body.classList.toggle('focus-mode');$('focus').classList.toggle('on');persist()};
+$('dark').onclick=()=>{document.documentElement.classList.toggle('dark');$('dark').classList.toggle('on');persist()};
+$('summaryToggle').onclick=()=>{$('summarybox').classList.toggle('collapsed');persist()};
+$('summarybox').onclick=()=>{$('summarybox').classList.toggle('collapsed');persist()};
+$('bookmark').onclick=()=>{
+  const x=state.bookmarks.indexOf(current);if(x>=0)state.bookmarks.splice(x,1);else state.bookmarks.push(current);
+  applyBookmarks();persist();
+};
+async function copyText(t){try{await navigator.clipboard.writeText(t);toast('コピーしました')}catch{const box=document.createElement('textarea');box.value=t;box.style.cssText='position:fixed;left:0;top:0;opacity:0';document.body.append(box);box.select();const ok=document.execCommand('copy');box.remove();toast(ok?'コピーしました':'コピーできませんでした')}}
+function triple(i){return `ENGLISH\n${blocks[i].en}\n\n直訳\n${blocks[i].literal}\n\n意訳\n${blocks[i].natural}`;}
+$('copy').onclick=()=>copyText(triple(current));
+$('copyEn').onclick=()=>copyText(blocks[noteIndex].en);
+$('copyLit').onclick=()=>copyText(blocks[noteIndex].literal);
+$('copyNat').onclick=()=>copyText(blocks[noteIndex].natural);
+$('copyAll').onclick=()=>copyText(triple(noteIndex));
+
+function openNote(){
+  noteIndex=current;
+  $('drawerTitle').textContent=`段落 ${current+1} · ${blocks[current].lines}`;
+  $('drawerMeta').textContent=blocks[current].label;
+  $('noteText').value=state.notes[current]||'';
+  $('drawer').classList.add('open');setTimeout(()=>$('noteText').focus(),30);
+}
+$('note').onclick=openNote;
+$('closeDrawer').onclick=()=>{$('drawer').classList.remove('open')};
+$('noteText').addEventListener('input',e=>{state.notes[noteIndex]=e.target.value;persist()});
+
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea,select')){
+    if(e.key==='Escape'){e.target.blur();$('drawer').classList.remove('open')}return;
+  }
+  if(['ArrowDown','ArrowRight','j','J'].includes(e.key)){e.preventDefault();step(1)}
+  if(['ArrowUp','ArrowLeft','k','K'].includes(e.key)){e.preventDefault();step(-1)}
+  if(e.key==='Escape'){locked=-1;$('drawer').classList.remove('open');mark(current)}
+  if(e.key==='/'){e.preventDefault();search.focus()}
+  if(e.key==='t'||e.key==='T')$('hideJp').click();
+  if(e.key==='g'||e.key==='G')$('termsBtn').click();
+  if(e.key==='b'||e.key==='B')$('bookmark').click();
+  if(e.key==='n'||e.key==='N')openNote();
+  if(e.key==='f'||e.key==='F')$('focus').click();
+  if(e.key==='d'||e.key==='D')$('dark').click();
+});
+
+Object.assign(state,initialState);
+const startup={...initialState};
+setFont(fs);setView(startup.view||'all');
+document.body.classList.toggle('hide-jp',!!startup.hideJp);$('hideJp').classList.toggle('on',!!startup.hideJp);
+document.body.classList.toggle('show-terms',!!startup.terms);$('termsBtn').classList.toggle('on',!!startup.terms);
+document.body.classList.toggle('focus-mode',!!startup.focus);$('focus').classList.toggle('on',!!startup.focus);
+document.documentElement.classList.toggle('dark',!!startup.dark);$('dark').classList.toggle('on',!!startup.dark);
+$('summarybox').classList.toggle('collapsed',!!startup.summaryCollapsed);
+applyBookmarks();mark(current,false,false);
+const resizeHeader=()=>document.documentElement.style.setProperty('--head',Math.ceil(document.querySelector('header').getBoundingClientRect().height)+'px');
+new ResizeObserver(resizeHeader).observe(document.querySelector('header'));resizeHeader();
+setTimeout(()=>mark(current,false,true),80);
+</script>
+</body>
+</html>
